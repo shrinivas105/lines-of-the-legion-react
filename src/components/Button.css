@@ -1,0 +1,86 @@
+.btn {
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: transform var(--duration-base) var(--ease-standard),
+              box-shadow var(--duration-base) var(--ease-standard),
+              background var(--duration-base) var(--ease-standard),
+              border-color var(--duration-base) var(--ease-standard),
+              filter var(--duration-base) var(--ease-standard);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+}
+
+.btn:active:not(:disabled) { transform: translateY(1px) scale(0.99); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn:hover:not(:disabled) { transform: scale(1.02); }
+
+.btn--sm { padding: 6px 12px; font-size: 0.68rem; }
+.btn--md { padding: 11px 22px; font-size: 0.78rem; }
+.btn--lg { padding: 15px 32px; font-size: 0.88rem; }
+
+/* Primary — a gold-bronze plaque catching light. Gold-dominant at rest so
+   the dark text stays legible (ink-on-bronze alone falls under 4.5:1 at
+   this font size); bronze remains as the pressed edge and ambient glow. */
+.btn--primary {
+  background: linear-gradient(180deg, #e3c585, var(--gold));
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 4px 0 #5c4527, 0 8px 20px rgba(138,106,59,0.3);
+}
+.btn--primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ecd5a0, #e6c87f);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 4px 0 #5c4527, 0 10px 28px var(--gold-glow);
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Silver — same plaque weight as primary, cool metal instead of gold.
+   Used for the Club campaign so it reads as a deliberate counterpart to
+   Master (gold), not a generic/secondary option. */
+.btn--silver {
+  background: linear-gradient(180deg, #e8eaec, var(--silver));
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 4px 0 #5c6166, 0 8px 20px rgba(199,204,209,0.2);
+}
+.btn--silver:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f2f3f4, #d7dadd);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 4px 0 #5c6166, 0 10px 28px var(--silver-glow);
+  transform: translateY(-1px) scale(1.02);
+}
+
+.btn--secondary {
+  background: var(--umber);
+  color: var(--marble);
+  border-color: var(--hairline);
+}
+.btn--secondary:hover:not(:disabled) {
+  border-color: var(--bronze-dim);
+  background: #221c15;
+  box-shadow: var(--elev-sm);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--marble-dim);
+  border: 1.5px dashed var(--hairline);
+}
+.btn--ghost:hover:not(:disabled) {
+  color: var(--marble);
+  border-color: var(--bronze-dim);
+}
+
+.btn--danger {
+  background: transparent;
+  color: var(--oxblood-text);
+  border-color: var(--oxblood-dim);
+}
+.btn--danger:hover:not(:disabled) {
+  background: rgba(122,31,31,0.12);
+}
