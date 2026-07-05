@@ -132,3 +132,39 @@
   color: var(--oxblood-text);
   line-height: 1.4;
 }
+
+@media (max-width: 600px) {
+  .battle-history {
+    margin-top: 6px;
+    padding-top: 6px;
+  }
+
+  .battle-history__row {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .battle-history__badges {
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .battle-history__badge-item {
+    gap: 2px;
+  }
+
+  .battle-history__tooltip-content {
+    width: min(92vw, 320px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 10px;
+  }
+
+  .battle-history__legend-row {
+    font-size: 0.62rem;
+  }
+
+  .battle-history__warning {
+    font-size: 0.6rem;
+  }
+}

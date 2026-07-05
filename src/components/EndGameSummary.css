@@ -124,3 +124,69 @@
   text-decoration: none !important;
   font-size: 0.68rem;
 }
+
+@media (max-width: 600px) {
+  .end-summary {
+    padding: 10px 10px 8px;
+    border-radius: 8px;
+    font-size: 0.74rem;
+  }
+
+  .end-summary__heading {
+    font-size: 0.92rem;
+    margin-bottom: 6px;
+  }
+
+  .end-summary__stats {
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .end-summary__stat {
+    padding: 6px;
+    font-size: 0.6rem;
+  }
+
+  .end-summary__stat strong {
+    font-size: 0.9rem;
+  }
+
+  .end-summary__quote {
+    font-size: 0.54rem;
+  }
+
+  .end-summary__sub {
+    font-size: 0.46rem;
+    margin-bottom: 6px;
+  }
+
+  .end-summary__ladder {
+    gap: 3px;
+    margin-bottom: 6px;
+  }
+
+  .end-summary__ladder-step {
+    font-size: 0.5rem;
+    padding: 2px 5px;
+  }
+
+  .end-summary__buttons {
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .end-summary__buttons .btn {
+    width: 100%;
+    max-width: 180px;
+  }
+
+  .end-summary__practice-note {
+    font-size: 0.5rem;
+  }
+
+  .end-summary__donate-btn {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.62rem;
+  }
+}
