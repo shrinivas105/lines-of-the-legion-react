@@ -1,0 +1,33 @@
+.color-choice {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  gap: var(--space-5);
+}
+
+.color-choice__path-panel {
+  padding-bottom: var(--space-3);
+}
+
+.color-choice__start {
+  display: flex;
+  justify-content: center;
+}
+
+.color-choice__notice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+  border-color: var(--bronze-dim);
+}
+.color-choice__notice p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--marble-dim);
+}

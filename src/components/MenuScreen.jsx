@@ -7,9 +7,6 @@
 // calls app.resetStats() behind a confirm dialog, matching the button's own
 // label and the existing (already-implemented) resetStats() method.
 import { useState } from 'react';
-import { Panel } from './Panel';
-import { Button } from './Button';
-import { LegionCard } from './LegionCard';
 import { RomanBattleEffects } from '../logic/romanBattleEffects';
 import './MenuScreen.css';
 
@@ -20,6 +17,12 @@ export function MenuScreen({ app }) {
     if (typeof RomanBattleEffects !== 'undefined') {
       RomanBattleEffects.playMenuFanfare();
     }
+
+    if (source === 'practice') {
+      app.startPracticePicker();
+      return;
+    }
+
     app.selectSource(source);
   };
 
@@ -31,117 +34,118 @@ export function MenuScreen({ app }) {
 
   return (
     <div className="menu-screen page-transition">
-      <header className="menu-screen__hero">
-        <div className="menu-screen__hero-backdrop" aria-hidden="true">
-          <div className="menu-screen__hero-map" />
-          <div className="menu-screen__hero-eagle">𓅃</div>
+      <div className="menu-screen__wrap">
+        <h1 className="menu-title">LINES OF THE LEGION</h1>
+        <p className="menu-subtitle">Master opening theory through Roman military ranks</p>
+
+        <div className="game-description">
+          <p>
+            Enter the battlefield where chess mastery meets Roman military glory. Every move you make is judged against
+            the greatest games in history. Will you rise through the ranks from humble <strong>Recruit</strong> to legendary
+            <strong>Legatus</strong>?
+          </p>
+          <p>
+            Each battle tests your knowledge of opening theory. Play moves that match the masters, maintain strong positions,
+            and prove your tactical prowess. Earn merit through discipline and excellence, but beware—poor performance leads
+            to demotion and disgrace.
+          </p>
+          <p>
+            Choose your campaign and step onto the field of glory. <em>Veni, vidi, vici!</em>
+          </p>
         </div>
-        <p className="menu-screen__kicker">Roman Command Center</p>
-        <h1 className="menu-screen__title">Lines of the Legion</h1>
-        <p className="menu-screen__subtitle">Master chess openings like a Roman commander</p>
-      </header>
 
-      <Panel className="menu-screen__intro">
-        <p>
-          Enter the battlefield where chess mastery meets Roman military glory. Every move you make is judged against
-          the greatest games in history. Will you rise through the ranks from humble <strong>Recruit</strong> to legendary{' '}
-          <strong>Legatus</strong>?
-        </p>
-        <p>
-          Each battle tests your knowledge of opening theory. Play moves that match the masters, maintain strong positions,
-          and prove your tactical prowess. Earn merit through discipline and excellence, but beware — poor performance leads
-          to demotion and disgrace.
-        </p>
-        <p className="menu-screen__tagline">
-          Choose your campaign and step onto the field of glory. <em>Veni, vidi, vici!</em>
-        </p>
-      </Panel>
-
-      <div className="menu-screen__legions">
-        <Panel><LegionCard app={app} source="master" label="Masters Legion" /></Panel>
-        <Panel><LegionCard app={app} source="lichess" label="Club Legion" /></Panel>
-      </div>
-
-      <div className="menu-screen__campaigns">
-        <Button variant="primary" size="lg" onClick={() => handleSelectSource('master')}>
-          🏆 Master Campaign
-        </Button>
-        <Button variant="silver" size="lg" onClick={() => handleSelectSource('lichess')}>
-          ♟ Club Campaign
-        </Button>
-        <Button variant="secondary" size="lg" onClick={() => app.startPracticePicker()}>
-          📖 Practice Mode
-        </Button>
-        <Button variant="ghost" size="sm" onClick={handleReset}>
-          ↺ Reset Progress
-        </Button>
-      </div>
-
-      <Panel className="menu-screen__rules">
-        <button className="menu-screen__rules-toggle" onClick={() => setRulesOpen(v => !v)}>
-          <span>📜 Game Rules</span>
-          <span>{rulesOpen ? '▲' : '▼'}</span>
-        </button>
-        {rulesOpen && (
-          <div className="menu-screen__rules-content">
-            <p>
-              Your ultimate aim is to earn 1,750 Merit and ascend to <strong>Legatus</strong> — the highest rank of the Roman army.
-            </p>
-
-            <h4>1. The Battle</h4>
-            <ul>
-              <li><strong>Masters Mode:</strong> Elite games. The battle ends if the resulting position has fewer than 5 games in history.</li>
-              <li><strong>Club Mode:</strong> Club games. The battle ends if the resulting position has fewer than 20 games in history.</li>
-              <li>One hint per battle (Top 5 moves)</li>
-            </ul>
-
-            <h4>2. Merit Scoring</h4>
-            <ul>
-              <li>Number of moves played while staying within theory</li>
-              <li>Quality of moves compared to top historical choices</li>
-              <li>Final position evaluation when the battle ends</li>
-            </ul>
-
-            <h4>3. Battle Ranks</h4>
-            <p>🪖 Levy (0–39) · 🛡️ Hastatus (40–54) · ⚔️ Principes (55–69)<br />🦅 Triarius (70–84) · 👑 Imperator (85–100)</p>
-
-            <h4>4. Legion Ranks</h4>
-            <p>🌱 Recruit (0) → 🛡️ Legionary (200) → ⚔️ Optio (500)<br />🦅 Centurion (900) → 🏅 Tribunus (1300) → 🏆 Legatus (1750)</p>
-
-            <h4>5. Demotion &amp; Discipline</h4>
-            <table className="menu-screen__rules-table">
-              <thead>
-                <tr><th>Current Rank</th><th>Poor Performance (Last 5 Battles)</th><th>Demoted To</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>Recruit</td><td className="dim">N/A</td><td className="dim">N/A</td></tr>
-                <tr><td>Legionary</td><td>2 Levy battles</td><td>Recruit (or reset to 200 if 350+ merit)</td></tr>
-                <tr><td>Optio</td><td>2 Levy OR 2 Hastatus OR 1 Levy + 1 Hastatus</td><td>Legionary (or reset to 500 if 700+ merit)</td></tr>
-                <tr><td>Centurion</td><td>ANY Levy/Hastatus OR no Triarius/Imperator in 5 battles</td><td>Optio (or reset to 900 if 1100+ merit)</td></tr>
-                <tr><td>Tribunus</td><td>ANY Levy/Hastatus OR less than 3 Triarius/Imperator</td><td>Centurion (or reset to 1300 if 1525+ merit)</td></tr>
-                <tr><td>Legatus</td><td className="dim">N/A</td><td className="dim">N/A</td></tr>
-              </tbody>
-            </table>
-
-            <h4>6. Promotion Requirements</h4>
-            <ul>
-              <li><strong>Recruit → Legionary:</strong> 200 merit (no other requirements)</li>
-              <li><strong>Legionary → Optio:</strong> 500 merit (avoid 2 Levy)</li>
-              <li><strong>Optio → Centurion:</strong> 900 merit (avoid demotion triggers)</li>
-              <li><strong>Centurion → Tribunus:</strong> 1300 merit + at least 1 Triarius/Imperator</li>
-              <li><strong>Tribunus → Legatus:</strong> 1750 merit + at least 3 Triarius/Imperator</li>
-            </ul>
-
-            <h4>7. Safety Net (50% Rule)</h4>
-            <p>
-              If you reach 50% progress toward your next rank, demotion resets you to the start of your current rank instead of dropping you to the previous rank.<br />
-              <strong>Safety Thresholds:</strong> Legionary (350), Optio (700), Centurion (1100), Tribunus (1525)
-            </p>
+        <div className="menu-home">
+          <div className="menu-campaigns">
+            <h3 className="menu-campaigns__title">Choose Your Campaign</h3>
+            <button className="menu-btn campaign-btn gold-btn" type="button" onClick={() => handleSelectSource('master')}>
+              <span className="campaign-btn-icon">🏆</span>
+              <span className="campaign-btn-label">Master</span>
+            </button>
+            <button className="menu-btn campaign-btn silver-btn" type="button" onClick={() => handleSelectSource('lichess')}>
+              <span className="campaign-btn-icon">♟️</span>
+              <span className="campaign-btn-label">Club</span>
+            </button>
+            <button className="menu-btn campaign-btn bronze-btn" type="button" onClick={() => handleSelectSource('practice')}>
+              <span className="campaign-btn-icon">📖</span>
+              <span className="campaign-btn-label">Practice</span>
+            </button>
+            <button className="menu-btn campaign-btn silver-btn" type="button" onClick={handleReset}>
+              <span className="campaign-btn-icon">↺</span>
+              <span className="campaign-btn-label">Reset Progress</span>
+            </button>
           </div>
-        )}
-      </Panel>
 
-      <Footer />
+          <div className="menu-rules">
+            <button className="rules-toggle" type="button" onClick={() => setRulesOpen(v => !v)}>
+              <span>📜 GAME RULES</span>
+              <span>{rulesOpen ? '▲' : '▼'}</span>
+            </button>
+            {rulesOpen && (
+              <div className="rules-content">
+                <p>
+                  Your ultimate aim is to earn 1,750 Merit and ascend to <strong>Legatus</strong> — the highest rank of the Roman army.
+                </p>
+
+                <h4>1. THE BATTLE</h4>
+                <ul>
+                  <li><strong>Masters Mode:</strong> Elite games. The battle ends if the resulting position has fewer than 5 games in history.</li>
+                  <li><strong>Club Mode:</strong> Club games. The battle ends if the resulting position has fewer than 20 games in history.</li>
+                  <li>One hint per battle (Top 5 moves)</li>
+                </ul>
+
+                <h4>2. MERIT SCORING</h4>
+                <ul>
+                  <li>Number of moves played while staying within theory</li>
+                  <li>Quality of moves compared to top historical choices</li>
+                  <li>Final position evaluation when the battle ends</li>
+                </ul>
+
+                <h4>3. BATTLE RANKS</h4>
+                <p>🪖 Levy (0–39) · 🛡️ Hastatus (40–54) · ⚔️ Principes (55–69)<br />🦅 Triarius (70–84) · 👑 Imperator (85–100)</p>
+
+                <h4>4. LEGION RANKS</h4>
+                <p>🌱 Recruit (0) → 🛡️ Legionary (200) → ⚔️ Optio (500)<br />🦅 Centurion (900) → 🏅 Tribunus (1300) → 🏆 Legatus (1750)</p>
+
+                <h4>5. DEMOTION &amp; DISCIPLINE</h4>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Current Rank</th>
+                      <th>Poor Performance<br />(Last 5 Battles)</th>
+                      <th>Demoted To</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Recruit</td><td style={{ color: '#777' }}>N/A</td><td style={{ color: '#777' }}>N/A</td></tr>
+                    <tr><td>Legionary</td><td>2 Levy battles</td><td>Recruit (or reset to 200 if 350+ merit)</td></tr>
+                    <tr><td>Optio</td><td>2 Levy OR<br />2 Hastatus OR<br />1 Levy + 1 Hastatus</td><td>Legionary (or reset to 500 if 700+ merit)</td></tr>
+                    <tr><td>Centurion</td><td>ANY Levy/Hastatus OR<br />No Triarius/Imperator in 5 battles</td><td>Optio (or reset to 900 if 1100+ merit)</td></tr>
+                    <tr><td>Tribunus</td><td>ANY Levy/Hastatus OR<br />Less than 3 Triarius/Imperator</td><td>Centurion (or reset to 1300 if 1525+ merit)</td></tr>
+                    <tr><td>Legatus</td><td style={{ color: '#777' }}>N/A</td><td style={{ color: '#777' }}>N/A</td></tr>
+                  </tbody>
+                </table>
+
+                <h4>6. PROMOTION REQUIREMENTS</h4>
+                <ul>
+                  <li><strong>Recruit → Legionary:</strong> 200 merit (no other requirements)</li>
+                  <li><strong>Legionary → Optio:</strong> 500 merit (avoid 2 Levy)</li>
+                  <li><strong>Optio → Centurion:</strong> 900 merit (avoid demotion triggers)</li>
+                  <li><strong>Centurion → Tribunus:</strong> 1300 merit + at least 1 Triarius/Imperator</li>
+                  <li><strong>Tribunus → Legatus:</strong> 1750 merit + at least 3 Triarius/Imperator</li>
+                </ul>
+
+                <h4>7. SAFETY NET (50% RULE)</h4>
+                <p>
+                  If you reach 50% progress toward your next rank, demotion resets you to the start of your current rank instead of dropping you to the previous rank.<br />
+                  <strong>Safety Thresholds:</strong> Legionary (350), Optio (700), Centurion (1100), Tribunus (1525)
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <Footer />
+      </div>
     </div>
   );
 }
@@ -174,7 +178,7 @@ function Footer() {
         rel="noopener noreferrer"
         className="menu-screen__donate"
       >
-        ☕ Enjoyed this game? Leave a tip using PayPal
+        ☕ Enjoyed this game ? Leave a tip using Paypal
       </a>
 
       {SUPPORTERS.length > 0 && (

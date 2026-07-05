@@ -1,21 +1,155 @@
 .color-choice {
-  max-width: 560px;
+  max-width: 860px;
   margin: 0 auto;
   padding: var(--space-7) var(--space-4);
+}
+
+.color-choice__wrap {
+  position: relative;
+  padding: var(--space-6) var(--space-6) var(--space-5);
+  border: 2px solid rgba(216, 182, 107, 0.35);
+  border-radius: 14px;
+  background: rgba(15, 10, 5, 0.72);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(212, 175, 55, 0.3),
+    0 0 30px rgba(212, 175, 55, 0.2);
+}
+
+.color-choice__status {
+  padding: 16px 18px;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  margin-bottom: 14px;
+}
+
+.color-choice__status--master {
+  box-shadow: inset 0 0 0 1px rgba(216, 182, 107, 0.1), 0 0 14px rgba(216, 182, 107, 0.12);
+}
+
+.color-choice__status--club {
+  box-shadow: inset 0 0 0 1px rgba(199, 204, 209, 0.1), 0 0 14px rgba(199, 204, 209, 0.08);
+}
+
+.color-choice__status-tag {
+  margin-bottom: 10px;
+  text-align: center;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.color-choice__status-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.color-choice__status-titles {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-height: 100vh;
-  gap: var(--space-5);
+  gap: 4px;
+}
+
+.color-choice__status-source {
+  font-size: 0.75rem;
+  color: #ddd;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+}
+
+.color-choice__status-rank {
+  font-size: 1rem;
+  color: var(--marble);
+  font-family: 'Cinzel', serif;
+}
+
+.color-choice__progress-track {
+  height: 10px;
+  margin-top: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.color-choice__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), #d4af37);
+  transition: width 0.3s ease;
+}
+
+.color-choice__progress-label {
+  margin-top: 6px;
+  text-align: center;
+  color: #aaa;
+  font-size: 0.72rem;
 }
 
 .color-choice__path-panel {
-  padding-bottom: var(--space-3);
+  padding: 10px 0 6px;
 }
 
-.color-choice__start {
+.color-choice__path-title {
+  margin-bottom: 8px;
+  text-align: center;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.color-choice__banner {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 4px;
+  padding: 10px 12px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.color-choice__banner-image-wrap {
+  flex: 0 0 auto;
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
+.color-choice__banner-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.color-choice__banner-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
+}
+
+.color-choice__banner-title {
+  margin-bottom: 4px;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.color-choice__banner-text {
+  color: #ddd;
+  font-size: 0.74rem;
+  line-height: 1.35;
 }
 
 .color-choice__notice {
@@ -23,11 +157,41 @@
   flex-direction: column;
   gap: var(--space-3);
   align-items: flex-start;
-  border-color: var(--bronze-dim);
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
 }
+
 .color-choice__notice p {
   margin: 0;
   font-size: 0.82rem;
   line-height: 1.6;
   color: var(--marble-dim);
+}
+
+.color-choice__start {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.color-choice__start-btn {
+  width: auto;
+  padding: 10px 20px;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .color-choice__status-head,
+  .color-choice__banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .color-choice__banner-image-wrap {
+    width: 96px;
+    height: 96px;
+  }
 }

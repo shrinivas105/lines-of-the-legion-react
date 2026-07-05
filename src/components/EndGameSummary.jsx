@@ -124,7 +124,7 @@ export function EndGameSummary({ app }) {
           rel="noopener noreferrer"
           className="end-summary__donate-btn"
         >
-          ☕ Enjoyed this game? Leave a tip using PayPal
+          ☕ Enjoyed this game ? Leave a tip using Paypal
         </a>
       </div>
     </Panel>

@@ -49,6 +49,7 @@ export class ChessTheoryApp {
     this.recentGames = [];
     this.pieceImages = pieces;
     this.rankChangeMessage = null;
+    this.rankChangeType = null;
     this.currentPGN = null;
     this.accuracyBonus = 0;
     this.accuracyTier = null;
@@ -81,7 +82,72 @@ export class ChessTheoryApp {
 
   async init() {
     await this.auth.initialize();
+    await this.checkForAbandonedBattle();
     this.render();
+  }
+
+  saveActiveGameState() {
+    if (this.mode === 'practice' || !this.aiSource || !this.playerColor) return;
+
+    try {
+      localStorage.setItem('chessTheoryActiveGame', JSON.stringify({
+        fen: this.game.fen(),
+        mode: this.mode,
+        aiSource: this.aiSource,
+        playerColor: this.playerColor,
+        playerMoves: this.playerMoves,
+        topMoveChoices: this.topMoveChoices,
+        qualityTrackedMoves: this.qualityTrackedMoves,
+        hintUsed: this.hintUsed,
+        gameCount: this.gameCount,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      console.error('Failed to save active game state:', e);
+    }
+  }
+
+  clearActiveGameState() {
+    localStorage.removeItem('chessTheoryActiveGame');
+  }
+
+  async checkForAbandonedBattle() {
+    const saved = localStorage.getItem('chessTheoryActiveGame');
+    if (!saved) return;
+
+    localStorage.removeItem('chessTheoryActiveGame');
+
+    let state;
+    try {
+      state = JSON.parse(saved);
+    } catch (e) {
+      return;
+    }
+
+    if (!state || state.mode === 'practice' || !state.fen || !state.aiSource || !state.playerColor) {
+      return;
+    }
+
+    try {
+      this.game.load(state.fen);
+    } catch (e) {
+      console.error('Could not restore abandoned battle position:', e);
+      return;
+    }
+
+    this.mode = state.mode;
+    this.aiSource = state.aiSource;
+    this.playerColor = state.playerColor;
+    this.playerMoves = state.playerMoves || 0;
+    this.topMoveChoices = state.topMoveChoices || 0;
+    this.qualityTrackedMoves = state.qualityTrackedMoves || 0;
+    this.hintUsed = state.hintUsed || false;
+    this.gameCount = state.gameCount || 0;
+    this.topGames = [];
+    this.recentGames = [];
+
+    console.log('⚠️ Resolving abandoned battle as a forfeit at the position it was left in.');
+    await this.stopGameDueToThinTheory();
   }
 
   goHome() {
@@ -137,13 +203,17 @@ export class ChessTheoryApp {
     if (demotionCheck && demotionCheck.demote) {
       newMerit = demotionCheck.newMerit;
       this.rankChangeMessage = demotionCheck.message;
+      this.rankChangeType = demotionCheck.isReset ? 'reset' : 'demotion';
       rankChanged = true;
       this.setRecentBattleRanks(this.aiSource, []);
     } else if (Scoring.canPromote(oldLegion.title, newMerit, recentRanks) && tempLegion.level > oldLegion.level) {
       newMerit = tempLegion.thresholds[tempLegion.level];
       this.rankChangeMessage = `⚔️ Commander: You have been promoted to ${tempLegion.title}! A cup of Falernian wine for the glory you've won. 🏺`;
+      this.rankChangeType = 'promotion';
       rankChanged = true;
       this.setRecentBattleRanks(this.aiSource, []);
+    } else {
+      this.rankChangeType = null;
     }
 
     this.legionMerits[meritKey] = newMerit;
@@ -334,6 +404,7 @@ export class ChessTheoryApp {
 
         const moveUCI = move.from + move.to + (move.promotion || '');
         await this.checkMoveQuality(preMoveFEN, moveUCI);
+        this.saveActiveGameState();
         this.selected = null;
         this.theoryMessageVisible = false;
         this.render();
@@ -387,6 +458,7 @@ export class ChessTheoryApp {
 
     const moveUCI = move.from + move.to + (move.promotion || '');
     await this.checkMoveQuality(preMoveFEN, moveUCI);
+    this.saveActiveGameState();
     this.selected = null;
     this.theoryMessageVisible = false;
     this.render();
@@ -718,6 +790,13 @@ export class ChessTheoryApp {
           }
         }
 
+        this.saveActiveGameState();
+
+        if (this.game.isGameOver()) {
+          await this.stopGameDueToThinTheory();
+          return;
+        }
+
         // Matches original's `this.ui.renderBoard(); this.queryExplorer();`
         // here — a direct repaint followed by one explorer query, not the
         // full render() dispatcher (which would also re-evaluate AI-move
@@ -732,6 +811,7 @@ export class ChessTheoryApp {
 
   endGameApiError() {
     // End the game cleanly — API was unreachable, no scoring or rank/merit changes applied.
+    this.clearActiveGameState();
     // NOTE: the original does NOT call render() here — it directly paints an
     // error screen and returns, bypassing render()'s routing/side-effect logic
     // entirely. This matters: render()'s queryExplorer()-trigger guard checks
@@ -746,6 +826,7 @@ export class ChessTheoryApp {
   }
 
   async stopGameDueToThinTheory() {
+    this.clearActiveGameState();
     const fen = this.game.fen();
     const rawEval = await ChessAPI.getEvaluation(fen, this.evalCache);
     this.finalPlayerEval = Scoring.getPlayerEval(rawEval, this.playerColor);
