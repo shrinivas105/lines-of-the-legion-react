@@ -15,7 +15,7 @@ export const BATTLE_RANK_COLORS = {
   Hastatus:   '#ecf0f1',
   Principes:  '#e74c3c',
   Triarius:   '#3498db',
-  Imperator:  '#ab6ec0',
+  Imperator:  '#9b59b6',
 };
 
 // Escalating Legion-rank ramp (Recruit -> Legatus): starts dull (you

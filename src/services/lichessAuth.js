@@ -70,7 +70,14 @@ export async function startLogin() {
     state:                 state,
   });
 
-  window.location.href = `${LICHESS_HOST}/oauth?${params}`;
+  try {
+    // Use top-level navigation to avoid the OAuth page loading inside an
+    // embedded frame or container that only covers the chess board.
+    (window.top || window).location.href = `${LICHESS_HOST}/oauth?${params}`;
+  } catch (e) {
+    // Fallback if cross-origin access to window.top is blocked.
+    window.location.href = `${LICHESS_HOST}/oauth?${params}`;
+  }
 }
 
 /**

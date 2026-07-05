@@ -101,13 +101,11 @@ export function EndGameSummary({ app }) {
 
       <div className="end-summary__buttons">
         <Button variant="secondary" size="sm" onClick={() => app.showAnalysis()}>📊 Analyze</Button>
-        {!isPractice && (
-          <>
-            <Button variant="secondary" size="sm" onClick={() => app.downloadPGN()}>📥 PGN</Button>
-            <Button variant="secondary" size="sm" onClick={() => app.copyPGN()}>📋 Copy</Button>
-          </>
+        {isPractice ? (
+          <Button variant="secondary" size="sm" onClick={handleTryAgain}>🔄 Try Again</Button>
+        ) : (
+          <Button variant="secondary" size="sm" onClick={() => app.startBattle()}>⚔️ Continue Campaign</Button>
         )}
-        <Button variant="secondary" size="sm" onClick={handleTryAgain}>🔄 Try Again</Button>
         <Button variant="secondary" size="sm" onClick={() => app.goHome()}>🏠 Home</Button>
       </div>
 

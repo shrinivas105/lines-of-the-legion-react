@@ -53,11 +53,21 @@ export async function signInWithGoogle() {
       provider: 'google',
       options: {
         redirectTo: redirectUrl,
-        skipBrowserRedirect: false,
+        // Ask Supabase to return the provider URL instead of redirecting
+        // directly, so we can perform a top-level redirect ourselves.
+        skipBrowserRedirect: true,
         queryParams: { access_type: 'offline', prompt: 'select_account' }
       }
     });
     if (error) throw error;
+    // If Supabase returned a redirect URL, navigate top-level to it.
+    if (data && data.url) {
+      try {
+        (window.top || window).location.href = data.url;
+      } catch (e) {
+        window.location.href = data.url;
+      }
+    }
     return data;
   } catch (e) {
     console.error('signInWithGoogle error:', e);

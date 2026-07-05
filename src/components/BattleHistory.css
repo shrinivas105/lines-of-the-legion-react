@@ -1,27 +1,27 @@
 .battle-history {
-  margin-top: var(--space-4);
-  padding-top: var(--space-4);
+  margin-top: 8px;
+  padding-top: 8px;
   border-top: 1px solid var(--hairline);
 }
 
 .battle-history__title {
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--marble-dim);
-  margin-bottom: var(--space-2);
+  margin-bottom: 6px;
 }
 
 .battle-history__row {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 6px;
 }
 
 .battle-history__badges {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .battle-history__badge-item {
@@ -33,7 +33,7 @@
 
 .battle-history__badge-label {
   font-family: var(--font-mono);
-  font-size: 0.55rem;
+  font-size: 0.5rem;
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
@@ -69,18 +69,18 @@
   background: var(--ink);
   border: 1px solid var(--bronze-dim);
   border-radius: var(--radius-md);
-  padding: var(--space-4);
+  padding: 10px 12px;
   box-shadow: var(--shadow-deep);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
 }
 
 .battle-history__tooltip-title {
   font-family: var(--font-display);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  font-size: 0.7rem;
+  font-size: 0.66rem;
   color: var(--gold);
-  margin-bottom: var(--space-2);
+  margin-bottom: 6px;
 }
 
 .battle-history__tooltip-title--second {
@@ -98,15 +98,15 @@
 .battle-history__legend-row {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  font-size: 0.74rem;
+  gap: 8px;
+  font-size: 0.68rem;
   font-weight: 600;
 }
 
 .demotion-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.66rem;
+  font-size: 0.6rem;
 }
 .demotion-table th, .demotion-table td {
   border: 1px solid var(--hairline);
@@ -127,8 +127,8 @@
 }
 
 .battle-history__warning {
-  margin-top: var(--space-2);
-  font-size: 0.7rem;
+  margin-top: 6px;
+  font-size: 0.66rem;
   color: var(--oxblood-text);
   line-height: 1.4;
 }
