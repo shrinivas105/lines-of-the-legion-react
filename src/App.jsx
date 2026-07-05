@@ -50,12 +50,14 @@ function App() {
   }
 
   return (
-    <>
+    <div className="app-shell">
       <Atmosphere />
-      {showHome && !app.showingAnalysis && <HomeButton app={app} />}
-      <AuthBar app={app} />
+      <div className="app-shell__topbar">
+        {showHome && !app.showingAnalysis && <HomeButton app={app} />}
+        <AuthBar app={app} />
+      </div>
       {screen}
-    </>
+    </div>
   );
 }
 

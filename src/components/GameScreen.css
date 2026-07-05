@@ -1,7 +1,7 @@
 .game-screen {
   display: flex;
   justify-content: center;
-  padding: 60px 8px 20px;
+  padding: 8px 6px 12px;
 }
 
 .game-screen__board-area,
@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   width: 100%;
   max-width: 560px;
 }
@@ -18,7 +18,7 @@
 .info-line {
   margin: 1px 0;
   font-family: 'Cinzel', serif;
-  font-size: 0.5rem;
+  font-size: 0.45rem;
   font-weight: 600;
   color: #ffffff;
   letter-spacing: 0.04em;
@@ -61,13 +61,13 @@
 .game-screen__theory-message,
 .theory-message {
   width: 100%;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: 8px;
   border: 2px solid rgba(212, 175, 55, 0.4);
   background: rgba(20, 10, 5, 0.95);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  font-size: 0.525rem;
-  line-height: 1.5;
+  font-size: 0.48rem;
+  line-height: 1.4;
   color: var(--marble);
 }
 
@@ -78,8 +78,8 @@
 .action-buttons {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 6px;
+  margin-top: 2px;
   flex-wrap: wrap;
 }
 
@@ -94,7 +94,9 @@
 @media (max-width: 600px) {
   .game-screen { padding: 4px 2px 8px; }
   .game-screen__board-area,
-  .game-container { max-width: 100%; }
+  .game-container { max-width: 100%; gap: 3px; }
   .game-screen__actions,
   .action-buttons { gap: 4px; }
+  .game-screen__info-line,
+  .info-line { font-size: 0.41rem; }
 }

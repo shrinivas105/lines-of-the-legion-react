@@ -1,7 +1,7 @@
 .auth-bar {
-  position: fixed;
-  top: var(--space-3);
-  right: var(--space-3);
+  position: relative;
+  top: auto;
+  right: auto;
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -51,8 +51,11 @@
 
 @media (max-width: 480px) {
   .auth-bar {
-    top: var(--space-2);
-    right: var(--space-2);
+    gap: 6px;
   }
   .auth-bar__email { display: none; }
+  .auth-bar__signin,
+  .auth-bar__signout {
+    font-size: 0.64rem;
+  }
 }

@@ -1,7 +1,7 @@
 .home-btn {
-  position: fixed;
-  top: var(--space-3);
-  left: var(--space-3);
+  position: relative;
+  top: auto;
+  left: auto;
   z-index: 1000;
   display: inline-flex;
   align-items: center;
