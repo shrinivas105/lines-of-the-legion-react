@@ -1,6 +1,11 @@
 .end-summary {
   width: 100%;
   text-align: center;
+  background: rgba(20, 10, 5, 0.98);
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
   animation: end-summary-rise var(--duration-slow) var(--ease-standard) both;
 }
 
@@ -14,21 +19,21 @@
 }
 
 .end-summary__rank-change {
-  font-size: 0.8rem;
+  font-size: 0.68rem;
   padding: var(--space-3);
   border-radius: var(--radius-sm);
   margin-bottom: var(--space-3);
   line-height: 1.5;
 }
 .end-summary__rank-change--promo {
-  background: var(--verdigris-dim);
-  border: 1px solid var(--verdigris);
-  color: var(--marble);
+  background: linear-gradient(135deg, rgba(39, 174, 96, 0.9), rgba(27, 143, 78, 0.9));
+  border: 1px solid #27ae60;
+  color: #fff;
 }
 .end-summary__rank-change--demo {
-  background: var(--oxblood-dim);
-  border: 1px solid var(--oxblood);
-  color: var(--marble);
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.95), rgba(178, 34, 34, 0.95));
+  border: 1px solid #ff0000;
+  color: #fff;
 }
 
 .end-summary__medal {
@@ -38,8 +43,10 @@
 }
 
 .end-summary__heading {
-  font-size: 1rem;
+  font-size: 0.95rem;
   margin-bottom: var(--space-3);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .end-summary__stats {
@@ -61,18 +68,18 @@
 }
 .end-summary__stat strong {
   font-size: 1.05rem;
-  color: var(--marble);
+  color: var(--gold);
   font-family: var(--font-mono);
 }
 
 .end-summary__quote {
   font-style: italic;
-  color: var(--marble-dim);
-  font-size: 0.78rem;
+  color: var(--gold);
+  font-size: 0.58rem;
   margin-bottom: 4px;
 }
 .end-summary__sub {
-  font-size: 0.7rem;
+  font-size: 0.47rem;
   color: var(--marble-dim);
   margin-bottom: var(--space-3);
 }
@@ -85,7 +92,7 @@
   margin-bottom: var(--space-4);
 }
 .end-summary__ladder-step {
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   padding: 4px 8px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--hairline);
@@ -101,7 +108,7 @@
 }
 
 .end-summary__practice-note {
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   color: var(--marble-dim);
   margin-bottom: var(--space-3);
 }

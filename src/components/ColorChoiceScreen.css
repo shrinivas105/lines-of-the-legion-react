@@ -112,6 +112,7 @@
   border: 1px solid rgba(212, 175, 55, 0.3);
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
 }
 
 .color-choice__banner-image-wrap {
@@ -142,14 +143,86 @@
   margin-bottom: 4px;
   color: var(--gold);
   font-family: 'Cinzel', serif;
-  font-size: 0.72rem;
+  font-size: 0.63rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .color-choice__banner-text {
   color: #ddd;
-  font-size: 0.74rem;
+  font-size: 0.53rem;
   line-height: 1.35;
+}
+
+.rank-banner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.rank-banner-image-wrap {
+  flex: 0 0 auto;
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
+.rank-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.rank-banner-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
+}
+
+.rank-banner-title {
+  margin-bottom: 4px;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: 0.63rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rank-banner-text {
+  color: #ddd;
+  font-size: 0.53rem;
+  line-height: 1.35;
+}
+
+.rank-fact {
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.18);
+  border-radius: 10px;
+}
+
+.rank-fact-title {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.rank-fact-text {
+  font-size: 0.52rem;
+  color: #eee;
+  line-height: 1.45;
 }
 
 .color-choice__notice {
@@ -190,7 +263,8 @@
     align-items: flex-start;
   }
 
-  .color-choice__banner-image-wrap {
+  .color-choice__banner-image-wrap,
+  .rank-banner-image-wrap {
     width: 96px;
     height: 96px;
   }

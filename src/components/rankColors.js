@@ -50,10 +50,10 @@ export const BATTLE_RANK_ICONS = {
 // Images live in /public/ranks/ so they're served as static assets (not
 // bundled/inlined).
 export const LEGION_RANK_PORTRAITS = {
-  Recruit: '/ranks/recruit.png',
-  Legionary: '/ranks/legionary.png',
-  Optio: '/ranks/optio.png',
-  Centurion: '/ranks/centurion.png',
-  Tribunus: '/ranks/tribunus.png',
-  Legatus: '/ranks/legatus.png',
+  Recruit: '/ranks/Recruit_new.png',
+  Legionary: '/ranks/Legionary_new.png',
+  Optio: '/ranks/Optio_new.png',
+  Centurion: '/ranks/Centurion_new.png',
+  Tribunus: '/ranks/Tribunus_new.png',
+  Legatus: '/ranks/Legatus_new.png',
 };

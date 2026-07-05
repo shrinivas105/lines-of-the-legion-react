@@ -22,7 +22,7 @@ export function ChessBoard({ app }) {
   }, [app.selected, app.game]);
 
   return (
-    <div className="cb-board" id="board">
+    <div className="board-wrapper" id="board">
       {renderedBoard.map((row, r) =>
         row.map((square, c) => {
           const actualRow = isFlipped ? 7 - r : r;
@@ -38,13 +38,13 @@ export function ChessBoard({ app }) {
             <div
               key={sqName}
               className={[
-                'cb-square',
-                isLight ? 'cb-square--light' : 'cb-square--dark',
-                isSelected ? 'cb-square--selected' : '',
-                isLastMove ? 'cb-square--last-move' : '',
-                isMoveTarget ? 'cb-square--target' : '',
-                !isPlayerTurn ? 'cb-square--disabled' : '',
-                isDragOver ? 'cb-square--drag-over' : '',
+                'square',
+                isLight ? 'light' : 'dark',
+                isSelected ? 'selected' : '',
+                isLastMove ? 'last-move' : '',
+                isMoveTarget ? 'move-target' : '',
+                !isPlayerTurn ? 'disabled' : '',
+                isDragOver ? 'drag-over' : '',
               ].filter(Boolean).join(' ')}
               onClick={() => app.handleClick(actualRow, actualCol)}
               onMouseDown={(e) => e.preventDefault()}
@@ -69,7 +69,7 @@ export function ChessBoard({ app }) {
               {square && (
                 <img
                   src={app.pieceImages[square.color + square.type]}
-                  className="cb-piece"
+                  className="piece"
                   alt={`${square.color}${square.type}`}
                   draggable={isPlayerTurn && square.color === app.playerColor}
                   onDragStart={(e) => {

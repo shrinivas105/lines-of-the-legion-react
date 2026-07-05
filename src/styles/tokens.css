@@ -12,6 +12,11 @@
   --umber:      #1c1712;   /* panel background, aged bronze in shadow */
   --iron:       #3f4347;   /* iron gray — structural accents, dividers, inactive metal */
   --marble:     #e6ddc4;   /* primary text, warm parchment-marble */
+  --roman-gold: #d4af37;
+  --roman-silver: #c0c0c0;
+  --maroon-costume: #800003;
+  --board-white: #b7ada8;
+  --board-maroon: #8b6f47;
   --marble-dim: #a89a82;   /* secondary text, weathered stone */
   --bronze:     #8a6a3b;   /* structural bronze — frames, borders, base metal */
   --gold:       #d8b66b;   /* bright accent — hover states, active glow, medal highlights */
@@ -84,15 +89,13 @@ html, body, #root {
 
 body {
   margin: 0;
-  background: var(--ink);
-  background-image:
-    radial-gradient(ellipse at top, rgba(216,182,107,0.05), transparent 60%),
-    linear-gradient(180deg, var(--ink) 0%, #14110d 100%);
+  background: url('/roman.png') center/cover no-repeat fixed;
   color: var(--marble);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   position: relative;
+  padding: 0;
 }
 
 /* ── Atmosphere: vignette + slow fog drift + sparse dust + bronze shimmer.

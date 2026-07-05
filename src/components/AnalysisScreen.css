@@ -9,9 +9,12 @@
 }
 
 .analysis-screen__title {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: var(--gold);
   text-align: center;
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .analysis-board-wrap {
@@ -48,6 +51,10 @@
 .analysis-screen__legend {
   width: 100%;
   padding: var(--space-3) var(--space-4);
+  background: rgba(20, 10, 5, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .analysis-compare__placeholder {
@@ -112,7 +119,7 @@
 .analysis-movelist__item {
   padding: 5px 8px;
   border-radius: var(--radius-sm);
-  border: none;
+  border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.04);
   color: var(--marble);
   text-align: left;

@@ -30,7 +30,7 @@ export function GameScreen({ app }) {
   }
 
   return (
-    <div className="game-screen page-transition">
+    <div className="game-container page-transition">
       <div className="game-screen__board-area">
         <div className="war-table">
           <div className="war-table__corner war-table__corner--tl" aria-hidden="true" />

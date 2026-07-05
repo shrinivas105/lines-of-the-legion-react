@@ -9,9 +9,18 @@ export function Button({
   className = '',
   ...rest
 }) {
+  const variantClass = {
+    primary: 'btn--primary',
+    secondary: 'btn--primary',
+    silver: 'btn--silver',
+    bronze: 'btn--bronze',
+    ghost: 'btn--ghost',
+    danger: 'btn--danger',
+  }[variant] || 'btn--primary';
+
   return (
     <button
-      className={`btn btn--${variant} btn--${size} ${className}`}
+      className={`btn ${variantClass} btn--${size} ${className}`.trim()}
       disabled={disabled}
       {...rest}
     >

@@ -33,7 +33,7 @@ export function MenuScreen({ app }) {
   };
 
   return (
-    <div className="menu-screen page-transition">
+    <div className="menu page-transition">
       <div className="menu-screen__wrap">
         <h1 className="menu-title">LINES OF THE LEGION</h1>
         <p className="menu-subtitle">Master opening theory through Roman military ranks</p>

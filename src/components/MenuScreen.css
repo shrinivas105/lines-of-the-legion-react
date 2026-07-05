@@ -1,36 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap');
 
-.menu-screen {
+.menu {
   max-width: 960px;
   margin: 0 auto;
-  padding: var(--space-8) var(--space-4) var(--space-7);
+  padding: 60px 8px 20px;
 }
 
 .menu-screen__wrap {
   position: relative;
-  padding: var(--space-6) var(--space-6) var(--space-5);
-  border: 2px solid rgba(216, 182, 107, 0.35);
-  border-radius: 14px;
-  background: rgba(15, 10, 5, 0.72);
+  padding: 28px 24px 22px;
+  border: 2px solid rgba(212, 175, 55, 0.35);
+  border-radius: 12px;
+  background: rgba(20, 10, 5, 0.74);
   box-shadow:
     0 20px 50px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(212, 175, 55, 0.3),
-    0 0 30px rgba(212, 175, 55, 0.2);
+    inset 0 1px 0 rgba(212, 175, 55, 0.25),
+    0 0 30px rgba(212, 175, 55, 0.16);
   backdrop-filter: blur(0.5px);
   -webkit-backdrop-filter: blur(0.5px);
 }
 
 .menu-title {
-  text-align: center;
   margin-bottom: 8px;
+  text-align: center;
   font-family: 'Cinzel', serif;
   font-size: clamp(1.8rem, 3.7vw, 2.6rem);
   letter-spacing: 3px;
-  background: linear-gradient(to bottom, #f6e27a 0%, #ffd700 30%, #cb9b51 60%, #b8860b 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.45), 0 4px 8px rgba(0, 0, 0, 0.5);
+  color: #f7e7a8;
+  text-shadow: 0 0 16px rgba(255, 215, 0, 0.35), 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .menu-subtitle {
@@ -39,11 +36,9 @@
   font-family: 'Cinzel', serif;
   font-size: 0.7rem;
   font-style: italic;
-  color: #ffffff;
-  background: linear-gradient(to right, #a0a0a0 0%, #ffffff 30%, #e8e8e8 50%, #ffffff 70%, #a0a0a0 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.06em;
+  color: #e9d9b4;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .game-description {
@@ -58,21 +53,10 @@
   line-height: 1.6;
 }
 
-.game-description p {
-  margin: 0 0 10px;
-}
-
-.game-description p:last-child {
-  margin-bottom: 0;
-}
-
-.game-description strong {
-  color: var(--gold);
-}
-
-.game-description em {
-  color: #f7e0b0;
-}
+.game-description p { margin: 0 0 10px; }
+.game-description p:last-child { margin-bottom: 0; }
+.game-description strong { color: var(--gold); }
+.game-description em { color: #f7e0b0; }
 
 .menu-home {
   display: grid;
@@ -121,9 +105,7 @@
   cursor: pointer;
 }
 
-.rules-toggle:hover {
-  color: #ffd700;
-}
+.rules-toggle:hover { color: #ffd700; }
 
 .rules-content {
   max-height: 400px;
@@ -136,9 +118,7 @@
 
 .rules-content p,
 .rules-content ul,
-.rules-content table {
-  margin: 8px 0;
-}
+.rules-content table { margin: 8px 0; }
 
 .rules-content h4 {
   margin-top: 10px;
@@ -149,9 +129,7 @@
   letter-spacing: 0.8px;
 }
 
-.rules-content ul {
-  padding-left: 16px;
-}
+.rules-content ul { padding-left: 16px; }
 
 .rules-content table {
   width: 100%;
@@ -248,23 +226,16 @@
   max-width: 240px;
 }
 
-.campaign-btn-icon {
-  font-size: 0.9rem;
-  line-height: 1;
-}
-
-.campaign-btn-label {
-  font-size: 0.6rem;
-  letter-spacing: 1px;
-}
+.campaign-btn-icon { font-size: 0.9rem; line-height: 1; }
+.campaign-btn-label { font-size: 0.6rem; letter-spacing: 1px; }
 
 .menu-screen__footer {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  margin-top: 28px;
-  padding-top: 18px;
+  margin-top: 24px;
+  padding-top: 16px;
   border-top: 1px solid rgba(212, 175, 55, 0.15);
 }
 

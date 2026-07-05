@@ -3,6 +3,7 @@ import { LichessConnectButton } from './LichessConnectButton';
 import { RankBadge } from './RankBadge';
 import { Scoring } from '../logic/scoring';
 import { isConnected } from '../services/lichessAuth';
+import { LEGION_RANK_PORTRAITS } from './rankColors';
 import './ColorChoiceScreen.css';
 
 export function ColorChoiceScreen({ app }) {
@@ -18,13 +19,22 @@ export function ColorChoiceScreen({ app }) {
     ? Math.min(100, Math.max(0, ((merit - prevThreshold) / span) * 100))
     : 100;
 
-  const currentRankImage = isMaster ? 'master-rank.png' : 'club-rank.png';
+  const currentRankImage = LEGION_RANK_PORTRAITS[legion.title] || '/ranks/recruit.png';
+  const rankFacts = {
+    Recruit: 'The recruit still learns the discipline of the legion, one opening line at a time.',
+    Legionary: 'The legionary keeps the line steady and converts small edges into lasting pressure.',
+    Optio: 'The optio organizes the battle, spotting tactical ideas before the enemy can react.',
+    Centurion: 'The centurion commands the field with clear plans and ruthless tempo.',
+    Tribunus: 'The tribunus reads the fight like a campaign map, predicting the enemy’s next move.',
+    Legatus: 'The legatus turns theory into domination, striking with precision and authority.',
+  };
   const currentRankInfo = {
     label: legion.title,
     text: isMaster
       ? 'A master legionnaire commands the opening lines with ruthless precision and iron discipline.'
       : 'The club legion advances through theory by steady practice, patience, and disciplined calculation.'
   };
+  const currentRankFact = rankFacts[legion.title] || 'The legion marches onward when discipline and study are kept in balance.';
 
   return (
     <div className="color-choice page-transition">
@@ -57,13 +67,17 @@ export function ColorChoiceScreen({ app }) {
           <LegionPath legion={legion} />
         </div>
 
-        <div className="color-choice__banner">
-          <div className="color-choice__banner-image-wrap">
-            <img src={currentRankImage} alt={legion.title} className="color-choice__banner-image" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+        <div className="rank-banner color-choice__banner">
+          <div className="rank-banner-image-wrap color-choice__banner-image-wrap">
+            <img src={currentRankImage} alt={legion.title} className="rank-banner-img color-choice__banner-image" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
           </div>
-          <div className="color-choice__banner-info">
-            <div className="color-choice__banner-title">{legion.icon} {currentRankInfo.label}</div>
-            <div className="color-choice__banner-text">{currentRankInfo.text}</div>
+          <div className="rank-banner-info color-choice__banner-info">
+            <div className="rank-banner-title color-choice__banner-title">{legion.icon} {currentRankInfo.label}</div>
+            <div className="rank-banner-text color-choice__banner-text">{currentRankInfo.text}</div>
+            <div className="rank-fact">
+              <div className="rank-fact-title">Did you know?</div>
+              <div className="rank-fact-text">{currentRankFact}</div>
+            </div>
           </div>
         </div>
 
