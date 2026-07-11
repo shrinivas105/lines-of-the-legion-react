@@ -148,7 +148,7 @@
 .color-choice__rank-info-body {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .rank-fact {
@@ -157,8 +157,8 @@
 
 .color-choice__rank-info-portrait-wrap {
   flex: 0 0 auto;
-  width: 108px;
-  height: 108px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid rgba(212, 175, 55, 0.45);
@@ -180,35 +180,37 @@
 }
 
 .color-choice__rank-info-title {
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
   color: var(--gold);
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: 0.88rem;
   font-weight: 700;
   letter-spacing: 0.03em;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .color-choice__rank-info-text {
-  margin: 0 0 var(--space-3);
+  margin: 0 0 var(--space-2);
   color: var(--marble-dim);
-  font-size: 0.82rem;
-  line-height: 1.6;
+  font-size: 0.72rem;
+  line-height: 1.45;
 }
 
-/* Rank fact text — kept compact and inline so it doesn't become a separate card. */
+/* "Did you know?" fact — set apart in its own bordered box so it reads as
+   a distinct aside from the rank description above it, not a run-on of
+   the same paragraph. */
 .rank-fact {
   width: 100%;
-  padding: 0;
-  background: transparent;
-  border: 0;
-  border-radius: 0;
+  padding: 6px 8px;
+  background: rgba(212, 175, 55, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 6px;
 }
 
 .rank-fact-title {
   display: inline-block;
   margin-right: var(--space-1);
-  font-size: 0.74rem;
+  font-size: 0.64rem;
   font-weight: 700;
   color: var(--gold);
   text-transform: uppercase;
@@ -217,8 +219,8 @@
 
 .rank-fact-text {
   display: inline;
-  font-size: 0.78rem;
-  line-height: 1.55;
+  font-size: 0.68rem;
+  line-height: 1.4;
   color: var(--marble-dim);
 }
 
@@ -280,27 +282,31 @@
 
   .color-choice__rank-info-body {
     text-align: left;
-    gap: var(--space-2);
+    gap: var(--space-1);
   }
 
   .color-choice__rank-info-portrait-wrap {
-    width: 72px;
-    height: 72px;
-    flex: 0 0 72px;
+    width: 92px;
+    height: 92px;
+    flex: 0 0 92px;
   }
 
   .color-choice__rank-info-title {
-    font-size: 0.92rem;
+    font-size: 0.8rem;
   }
 
   .color-choice__rank-info-text {
     margin-bottom: var(--space-1);
-    font-size: 0.76rem;
+    font-size: 0.66rem;
+  }
+
+  .rank-fact {
+    padding: 5px 7px;
   }
 
   .rank-fact-title,
   .rank-fact-text {
-    font-size: 0.72rem;
+    font-size: 0.62rem;
   }
 
   .color-choice__panel-actions {
