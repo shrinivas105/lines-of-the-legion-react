@@ -107,6 +107,16 @@
   letter-spacing: 0.8px;
 }
 
+.battle-rank {
+  font-weight: 700;
+}
+
+.battle-rank--levy { color: #5ccf7a; }
+.battle-rank--hastatus { color: #f3f0e8; }
+.battle-rank--principes { color: #ff6f6f; }
+.battle-rank--triarius { color: #7eb7ff; }
+.battle-rank--imperator { color: #ffd166; }
+
 .rules-content ul { padding-left: 16px; }
 
 .rules-content table {
