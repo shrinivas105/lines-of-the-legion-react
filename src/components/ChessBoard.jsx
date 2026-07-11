@@ -5,7 +5,7 @@
 // legacy renderBoard() in ui-renderer.js. This component only differs in HOW
 // it paints (JSX instead of raw DOM creation); the move logic itself is
 // untouched and lives in chessTheoryApp.js.
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import './ChessBoard.css';
 
@@ -39,7 +39,6 @@ function CustomPieceImage({ src }) {
 }
 
 export function ChessBoard({ app }) {
-  const [boardWidth, setBoardWidth] = useState(520);
   const isPlayerTurn = app.game.turn() === app.playerColor;
 
   const legalTargets = useMemo(() => {
@@ -47,17 +46,6 @@ export function ChessBoard({ app }) {
       ? new Set(app.game.moves({ square: app.selected, verbose: true }).map(m => m.to))
       : new Set();
   }, [app.selected, app.game]);
-
-  useEffect(() => {
-    const updateBoardWidth = () => {
-      const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 520;
-      setBoardWidth(Math.min(560, Math.max(300, viewportWidth - 28)));
-    };
-
-    updateBoardWidth();
-    window.addEventListener('resize', updateBoardWidth);
-    return () => window.removeEventListener('resize', updateBoardWidth);
-  }, []);
 
   const customSquareStyles = useMemo(() => {
     const styles = {};
@@ -71,14 +59,14 @@ export function ChessBoard({ app }) {
     if (app.lastMove?.from) {
       styles[app.lastMove.from] = {
         ...styles[app.lastMove.from],
-        background: 'linear-gradient(135deg, rgba(32, 78, 170, 0.42), rgba(32, 78, 170, 0.18))',
+        backgroundImage: 'linear-gradient(135deg, rgba(32, 78, 170, 0.42), rgba(32, 78, 170, 0.18))',
       };
     }
 
     if (app.lastMove?.to) {
       styles[app.lastMove.to] = {
         ...styles[app.lastMove.to],
-        background: 'linear-gradient(135deg, rgba(32, 78, 170, 0.48), rgba(32, 78, 170, 0.22))',
+        backgroundImage: 'linear-gradient(135deg, rgba(32, 78, 170, 0.48), rgba(32, 78, 170, 0.22))',
       };
     }
 
@@ -143,7 +131,7 @@ export function ChessBoard({ app }) {
 
   return (
     <div className="board-shell" id="board">
-      <div style={{ width: boardWidth, height: boardWidth }}>
+      <div className="board-shell__frame">
         <Chessboard options={chessboardOptions} />
       </div>
     </div>
