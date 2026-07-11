@@ -46,7 +46,10 @@ export function ChessBoard({ app }) {
                 !isPlayerTurn ? 'disabled' : '',
                 isDragOver ? 'drag-over' : '',
               ].filter(Boolean).join(' ')}
-              onClick={() => app.handleClick(actualRow, actualCol)}
+              onClick={() => {
+                console.log('[ChessBoard click]', { sqName, actualRow, actualCol, isFlipped, piece: square?.type || null, pieceColor: square?.color || null });
+                app.handleClick(actualRow, actualCol);
+              }}
               onMouseDown={(e) => e.preventDefault()}
               onDragOver={(e) => {
                 if (isPlayerTurn && app.dragSource) e.preventDefault();

@@ -381,8 +381,10 @@ export class ChessTheoryApp {
   }
 
   async handleClick(row, col) {
+    console.log('[ChessTheoryApp handleClick]', { row, col, playerColor: this.playerColor, turn: this.game.turn(), selected: this.selected, gameOver: this.game.isGameOver() });
     if (this.game.turn() !== this.playerColor || this.game.isGameOver()) return;
     const square = 'abcdefgh'[col] + (8 - row);
+    console.log('[ChessTheoryApp square]', { row, col, square, selected: this.selected });
 
     if (this.selected) {
       const moveOptions = { from: this.selected, to: square, promotion: 'q' };

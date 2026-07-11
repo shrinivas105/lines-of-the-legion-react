@@ -127,10 +127,10 @@
 
 .color-choice__start-btn {
   width: auto;
-  min-width: 160px;
-  padding: 8px 20px;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
+  min-width: 120px;
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
 }
 
 /* ── Rank-info content within the same panel ──────────────────────── */
@@ -196,17 +196,19 @@
   line-height: 1.6;
 }
 
-/* Shared "Did you know?" fact box — also used by other rank displays. */
+/* Rank fact text — kept compact and inline so it doesn't become a separate card. */
 .rank-fact {
-  padding: var(--space-3);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 215, 0, 0.18);
-  border-radius: var(--radius-md);
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 }
 
 .rank-fact-title {
-  margin-bottom: var(--space-1);
-  font-size: 0.7rem;
+  display: inline-block;
+  margin-right: var(--space-1);
+  font-size: 0.74rem;
   font-weight: 700;
   color: var(--gold);
   text-transform: uppercase;
@@ -214,6 +216,7 @@
 }
 
 .rank-fact-text {
+  display: inline;
   font-size: 0.78rem;
   line-height: 1.55;
   color: var(--marble-dim);
@@ -269,18 +272,35 @@
   }
 
   .color-choice__rank-info {
-    flex-direction: column;
-    text-align: center;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
     gap: var(--space-3);
   }
 
   .color-choice__rank-info-body {
-    text-align: center;
+    text-align: left;
+    gap: var(--space-2);
   }
 
   .color-choice__rank-info-portrait-wrap {
-    width: 88px;
-    height: 88px;
+    width: 72px;
+    height: 72px;
+    flex: 0 0 72px;
+  }
+
+  .color-choice__rank-info-title {
+    font-size: 0.92rem;
+  }
+
+  .color-choice__rank-info-text {
+    margin-bottom: var(--space-1);
+    font-size: 0.76rem;
+  }
+
+  .rank-fact-title,
+  .rank-fact-text {
+    font-size: 0.72rem;
   }
 
   .color-choice__panel-actions {
