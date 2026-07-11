@@ -39,7 +39,9 @@ export function GameScreen({ app }) {
           <div className="war-table__corner war-table__corner--br" aria-hidden="true" />
           <ChessBoard app={app} />
         </div>
-        <div className="game-screen__info-line">{gameCountText}</div>
+        {!app.gameEnded && (
+          <div className="game-screen__info-line">{gameCountText}</div>
+        )}
 
         {app.theoryMessageVisible && app.theoryMessage && (
           <Panel className="game-screen__theory-message">
