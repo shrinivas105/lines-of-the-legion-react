@@ -138,27 +138,26 @@
   display: flex;
   align-items: flex-start;
   gap: var(--space-4);
-  padding: 0;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+  padding: var(--space-3);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 10px;
+  background: rgba(8, 5, 3, 0.26);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .color-choice__rank-info-body {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-}
-
-.rank-fact {
-  width: 100%;
+  gap: var(--space-2);
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
 }
 
 .color-choice__rank-info-portrait-wrap {
   flex: 0 0 auto;
-  width: 108px;
-  height: 108px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid rgba(212, 175, 55, 0.45);
@@ -173,42 +172,35 @@
   object-position: center;
 }
 
-.color-choice__rank-info-body {
-  flex: 1 1 auto;
-  min-width: 0;
-  text-align: left;
-}
-
 .color-choice__rank-info-title {
-  margin-bottom: var(--space-2);
+  margin-bottom: 0;
   color: var(--gold);
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-weight: 700;
   letter-spacing: 0.03em;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .color-choice__rank-info-text {
-  margin: 0 0 var(--space-3);
+  margin: 0;
   color: var(--marble-dim);
-  font-size: 0.82rem;
-  line-height: 1.6;
+  font-size: 0.74rem;
+  line-height: 1.45;
 }
 
-/* Rank fact text — kept compact and inline so it doesn't become a separate card. */
 .rank-fact {
   width: 100%;
-  padding: 0;
-  background: transparent;
-  border: 0;
-  border-radius: 0;
+  padding: var(--space-2) var(--space-3);
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.26);
+  border-radius: 8px;
 }
 
 .rank-fact-title {
-  display: inline-block;
-  margin-right: var(--space-1);
-  font-size: 0.74rem;
+  display: block;
+  margin-bottom: 2px;
+  font-size: 0.68rem;
   font-weight: 700;
   color: var(--gold);
   text-transform: uppercase;
@@ -216,9 +208,8 @@
 }
 
 .rank-fact-text {
-  display: inline;
-  font-size: 0.78rem;
-  line-height: 1.55;
+  font-size: 0.72rem;
+  line-height: 1.45;
   color: var(--marble-dim);
 }
 
@@ -276,6 +267,7 @@
     align-items: center;
     text-align: left;
     gap: var(--space-3);
+    padding: var(--space-2);
   }
 
   .color-choice__rank-info-body {
@@ -284,23 +276,31 @@
   }
 
   .color-choice__rank-info-portrait-wrap {
-    width: 72px;
-    height: 72px;
-    flex: 0 0 72px;
+    width: 92px;
+    height: 92px;
+    flex: 0 0 92px;
   }
 
   .color-choice__rank-info-title {
-    font-size: 0.92rem;
+    font-size: 0.84rem;
   }
 
   .color-choice__rank-info-text {
-    margin-bottom: var(--space-1);
-    font-size: 0.76rem;
+    font-size: 0.7rem;
+    line-height: 1.4;
   }
 
-  .rank-fact-title,
+  .rank-fact {
+    padding: var(--space-2);
+  }
+
+  .rank-fact-title {
+    font-size: 0.64rem;
+  }
+
   .rank-fact-text {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
+    line-height: 1.4;
   }
 
   .color-choice__panel-actions {

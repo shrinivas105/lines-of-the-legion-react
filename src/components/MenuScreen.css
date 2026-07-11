@@ -159,7 +159,7 @@
 
 .gold-btn {
   background: linear-gradient(135deg, #f4d976, var(--gold) 45%, #8a6d1f);
-  color: #2a1a00;
+  color: var(--text-on-light);
   border-color: #f4d976;
   box-shadow: 0 3px 0 #7a5c14, 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 10px rgba(196, 30, 58, 0.35);
 }
@@ -171,7 +171,7 @@
 
 .silver-btn {
   background: linear-gradient(135deg, #f4f4f4, var(--silver) 45%, #6b6b6b);
-  color: #1a1a1a;
+  color: var(--text-on-light);
   border-color: #f4f4f4;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   box-shadow: 0 3px 0 #5c5c5c, 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 10px rgba(196, 30, 58, 0.35);
@@ -184,7 +184,7 @@
 
 .bronze-btn {
   background: linear-gradient(135deg, #e0a868, #b87333 45%, #5c3a17);
-  color: #fff3dd;
+  color: var(--text-on-light);
   border-color: #e0a868;
   box-shadow: 0 3px 0 #4a2f10, 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 10px rgba(196, 30, 58, 0.35);
 }
