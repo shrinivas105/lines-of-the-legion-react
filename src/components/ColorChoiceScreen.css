@@ -1,22 +1,22 @@
 .color-choice {
   max-width: 720px;
   margin: 0 auto;
-  padding: var(--space-5) var(--space-4) var(--space-7);
+  padding: var(--space-3) var(--space-4) var(--space-6);
 }
 
 .color-choice__wrap {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-4);
 }
 
 /* ── Main panel ─────────────────────────────────────────────────────── */
 .color-choice__panel {
-  padding: var(--space-5) var(--space-5) var(--space-6);
+  padding: var(--space-4) var(--space-5) var(--space-5);
 }
 
 .color-choice__panel-title {
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
   padding-bottom: var(--space-3);
   border-bottom: 1px solid var(--hairline);
   text-align: center;
@@ -39,7 +39,7 @@
 
 /* ── Current rank line ──────────────────────────────────────────────── */
 .color-choice__rank-line {
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-4);
   text-align: center;
   font-family: var(--font-display);
   font-size: 1.1rem;
@@ -58,23 +58,12 @@
 
 /* ── Road to Legatus ────────────────────────────────────────────────── */
 .color-choice__road {
-  margin-bottom: var(--space-6);
-}
-
-.color-choice__road-title {
-  margin-bottom: var(--space-2);
-  text-align: center;
-  color: var(--gold);
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  margin-bottom: var(--space-4);
 }
 
 /* ── Promotion progress ─────────────────────────────────────────────── */
 .color-choice__progress-section {
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
 }
 
 .color-choice__progress-heading {
@@ -110,27 +99,10 @@
   color: var(--marble-dim);
 }
 
-/* ── Safety net + battle count ──────────────────────────────────────── */
+/* ── Battle count ────────────────────────────────────────────────────── */
 .color-choice__meta-row {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
   justify-content: center;
-  gap: var(--space-3) var(--space-4);
-}
-
-.color-choice__pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--verdigris-dim);
-  background: rgba(74, 114, 104, 0.12);
-  color: var(--verdigris-text);
-  font-size: 0.75rem;
-  line-height: 1.5;
-  white-space: nowrap;
 }
 
 .color-choice__battles {
@@ -138,10 +110,16 @@
   font-size: 0.78rem;
   line-height: 1.5;
   color: var(--marble-dim);
-  white-space: nowrap;
 }
 
-/* ── Start battle button ────────────────────────────────────────────── */
+/* ── Action section inside the main panel ─────────────────────────── */
+.color-choice__panel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
 .color-choice__start {
   display: flex;
   justify-content: center;
@@ -155,16 +133,16 @@
   letter-spacing: 0.06em;
 }
 
-/* ── Rank-info card ──────────────────────────────────────────────────── */
+/* ── Rank-info content within the same panel ──────────────────────── */
 .color-choice__rank-info {
   display: flex;
   align-items: center;
   gap: var(--space-5);
-  padding: var(--space-4) var(--space-5);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-lg);
-  background: var(--umber);
-  box-shadow: var(--elev-sm);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .color-choice__rank-info-portrait-wrap {
@@ -253,34 +231,31 @@
 /* ── Narrow viewports ────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .color-choice {
-    padding: var(--space-4) var(--space-3) var(--space-6);
+    padding: var(--space-2) var(--space-3) var(--space-5);
   }
 
   .color-choice__panel {
-    padding: var(--space-4) var(--space-3) var(--space-5);
+    padding: var(--space-3) var(--space-3) var(--space-4);
   }
 
   .color-choice__panel-title {
+    margin-bottom: var(--space-3);
     font-size: 1.05rem;
     letter-spacing: 0.08em;
   }
 
   .color-choice__rank-line {
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-3);
     font-size: 0.92rem;
     line-height: 1.45;
   }
 
-  .color-choice__meta-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--space-2);
+  .color-choice__road {
+    margin-bottom: var(--space-3);
   }
 
-  .color-choice__pill,
-  .color-choice__battles {
-    text-align: center;
-    white-space: normal;
+  .color-choice__progress-section {
+    margin-bottom: var(--space-3);
   }
 
   .color-choice__rank-info {
@@ -296,6 +271,11 @@
   .color-choice__rank-info-portrait-wrap {
     width: 88px;
     height: 88px;
+  }
+
+  .color-choice__panel-actions {
+    gap: var(--space-3);
+    margin-top: var(--space-3);
   }
 
   .color-choice__start-btn {

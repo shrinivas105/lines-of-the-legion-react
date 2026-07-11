@@ -36,10 +36,6 @@ export function ColorChoiceScreen({ app }) {
     : 100;
   const progressPctRounded = Math.round(progressPct);
 
-  // Safety net is only meaningful mid-ladder — Recruit has nothing to be
-  // demoted from, Legatus has nowhere higher to fall from either.
-  const safetyNetValue = Scoring.getSafetyNetThreshold(legion.title);
-
   const currentRankImage = LEGION_RANK_PORTRAITS[legion.title] || '/ranks/recruit.png';
   const currentRankInfo = {
     label: legion.title,
@@ -63,7 +59,6 @@ export function ColorChoiceScreen({ app }) {
           </div>
 
           <div className="color-choice__road">
-            <div className="color-choice__road-title">Road to Legatus</div>
             <LegionPath legion={legion} />
           </div>
 
@@ -82,39 +77,36 @@ export function ColorChoiceScreen({ app }) {
           </div>
 
           <div className="color-choice__meta-row">
-            {safetyNetValue != null && (
-              <span className="color-choice__pill">
-                🛡️ Demotion Safety Net: {safetyNetValue} merit
-              </span>
-            )}
             <span className="color-choice__battles">Battles Fought: {battlesFought}</span>
           </div>
-        </Panel>
 
-        <div className="color-choice__start">
-          <button className="menu-btn gold-btn color-choice__start-btn" type="button" onClick={() => app.startBattle()}>
-            ⚔️ Start Battle
-          </button>
-        </div>
+          <div className="color-choice__panel-actions">
+            <div className="color-choice__start">
+              <button className="menu-btn gold-btn color-choice__start-btn" type="button" onClick={() => app.startBattle()}>
+                ⚔️ Start Battle
+              </button>
+            </div>
 
-        <div className="color-choice__rank-info">
-          <div className="color-choice__rank-info-portrait-wrap">
-            <img
-              src={currentRankImage}
-              alt={legion.title}
-              className="color-choice__rank-info-portrait"
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
-            />
-          </div>
-          <div className="color-choice__rank-info-body">
-            <div className="color-choice__rank-info-title">{legion.icon} {currentRankInfo.label}</div>
-            <p className="color-choice__rank-info-text">{currentRankInfo.text}</p>
-            <div className="rank-fact">
-              <div className="rank-fact-title">Did you know?</div>
-              <div className="rank-fact-text">{currentRankFact}</div>
+            <div className="color-choice__rank-info">
+              <div className="color-choice__rank-info-portrait-wrap">
+                <img
+                  src={currentRankImage}
+                  alt={legion.title}
+                  className="color-choice__rank-info-portrait"
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                />
+              </div>
+              <div className="color-choice__rank-info-body">
+                <div className="color-choice__rank-info-title">{legion.icon} {currentRankInfo.label}</div>
+                <p className="color-choice__rank-info-text">{currentRankInfo.text}</p>
+                <div className="rank-fact">
+                  <div className="rank-fact-title">Did you know?</div>
+                  <div className="rank-fact-text">{currentRankFact}</div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </Panel>
 
         {needsLichessAuth && (
           <div className="color-choice__notice">
