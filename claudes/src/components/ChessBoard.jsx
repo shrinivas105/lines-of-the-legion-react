@@ -5,14 +5,23 @@
 // legacy renderBoard() in ui-renderer.js. This component only differs in HOW
 // it paints (JSX instead of raw DOM creation); the move logic itself is
 // untouched and lives in chessTheoryApp.js.
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { Chessboard } from 'react-chessboard';
 import './ChessBoard.css';
 
+function algebraicToCoords(square) {
+  const file = square.charCodeAt(0) - 97;
+  const rank = Number(square[1]);
+  return { row: 8 - rank, col: file };
+}
+
+function toReactChessboardPieceKey(pieceKey) {
+  if (!pieceKey) return null;
+  return pieceKey[0].toUpperCase() + pieceKey[1].toUpperCase();
+}
+
 export function ChessBoard({ app }) {
-  const [dragOverSquare, setDragOverSquare] = useState(null);
-  const board = app.game.board();
-  const isFlipped = app.playerColor === 'b';
-  const renderedBoard = isFlipped ? board.slice().reverse().map(r => r.slice().reverse()) : board;
+  const [boardWidth, setBoardWidth] = useState(520);
   const isPlayerTurn = app.game.turn() === app.playerColor;
 
   const legalTargets = useMemo(() => {
@@ -21,75 +30,98 @@ export function ChessBoard({ app }) {
       : new Set();
   }, [app.selected, app.game]);
 
-  return (
-    <div className="board-wrapper" id="board">
-      {renderedBoard.map((row, r) =>
-        row.map((square, c) => {
-          const actualRow = isFlipped ? 7 - r : r;
-          const actualCol = isFlipped ? 7 - c : c;
-          const sqName = 'abcdefgh'[actualCol] + (8 - actualRow);
-          const isLight = (actualRow + actualCol) % 2 === 0;
-          const isSelected = app.selected === sqName;
-          const isLastMove = app.lastMove.from === sqName || app.lastMove.to === sqName;
-          const isMoveTarget = legalTargets.has(sqName);
-          const isDragOver = dragOverSquare === sqName;
+  useEffect(() => {
+    const updateBoardWidth = () => {
+      const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 520;
+      setBoardWidth(Math.min(560, Math.max(300, viewportWidth - 28)));
+    };
 
-          return (
-            <div
-              key={sqName}
-              className={[
-                'square',
-                isLight ? 'light' : 'dark',
-                isSelected ? 'selected' : '',
-                isLastMove ? 'last-move' : '',
-                isMoveTarget ? 'move-target' : '',
-                !isPlayerTurn ? 'disabled' : '',
-                isDragOver ? 'drag-over' : '',
-              ].filter(Boolean).join(' ')}
-              onClick={() => app.handleClick(actualRow, actualCol)}
-              onMouseDown={(e) => e.preventDefault()}
-              onDragOver={(e) => {
-                if (isPlayerTurn && app.dragSource) e.preventDefault();
-              }}
-              onDragEnter={(e) => {
-                if (isPlayerTurn && app.dragSource) {
-                  e.preventDefault();
-                  setDragOverSquare(sqName);
-                }
-              }}
-              onDragLeave={() => setDragOverSquare(null)}
-              onDrop={(e) => {
-                if (!isPlayerTurn || !app.dragSource) return;
-                e.preventDefault();
-                setDragOverSquare(null);
-                const source = app.dragSource;
-                app.handleDragMove(source, sqName);
-              }}
-            >
-              {square && (
-                <img
-                  src={app.pieceImages[square.color + square.type]}
-                  className="piece"
-                  alt={`${square.color}${square.type}`}
-                  draggable={isPlayerTurn && square.color === app.playerColor}
-                  onDragStart={(e) => {
-                    if (!isPlayerTurn || square.color !== app.playerColor) {
-                      e.preventDefault();
-                      return;
-                    }
-                    app.dragSource = sqName;
-                    e.dataTransfer.setData('text/plain', sqName);
-                    e.dataTransfer.effectAllowed = 'move';
-                  }}
-                  onDragEnd={() => {
-                    app.dragSource = null;
-                  }}
-                />
-              )}
-            </div>
-          );
-        })
-      )}
+    updateBoardWidth();
+    window.addEventListener('resize', updateBoardWidth);
+    return () => window.removeEventListener('resize', updateBoardWidth);
+  }, []);
+
+  const customSquareStyles = useMemo(() => {
+    const styles = {};
+
+    if (app.selected) {
+      styles[app.selected] = {
+        boxShadow: 'inset 0 0 0 4px rgba(255, 215, 0, 0.95), inset 0 0 0 9999px rgba(255, 215, 0, 0.16)',
+      };
+    }
+
+    if (app.lastMove?.from) {
+      styles[app.lastMove.from] = {
+        ...styles[app.lastMove.from],
+        background: 'linear-gradient(135deg, rgba(32, 78, 170, 0.42), rgba(32, 78, 170, 0.18))',
+      };
+    }
+
+    if (app.lastMove?.to) {
+      styles[app.lastMove.to] = {
+        ...styles[app.lastMove.to],
+        background: 'linear-gradient(135deg, rgba(32, 78, 170, 0.48), rgba(32, 78, 170, 0.22))',
+      };
+    }
+
+    legalTargets.forEach((target) => {
+      styles[target] = {
+        ...styles[target],
+        backgroundImage: 'radial-gradient(circle, rgba(255, 255, 255, 0.95) 15%, rgba(255, 255, 255, 0) 16%)',
+        backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      };
+    });
+
+    return styles;
+  }, [app.lastMove, app.selected, legalTargets]);
+
+  const customPieces = useMemo(() => {
+    return Object.entries(app.pieceImages || {}).reduce((acc, [pieceKey, src]) => {
+      acc[toReactChessboardPieceKey(pieceKey)] = ({ squareWidth }) => (
+        <img
+          src={src}
+          alt=""
+          draggable={false}
+          style={{ width: squareWidth, height: squareWidth }}
+        />
+      );
+      return acc;
+    }, {});
+  }, [app.pieceImages]);
+
+  const handleSquareClick = (square) => {
+    const { row, col } = algebraicToCoords(square);
+    app.handleClick(row, col);
+  };
+
+  const handlePieceDrop = (sourceSquare, targetSquare) => {
+    const isLegal = app.game.moves({ from: sourceSquare, to: targetSquare, verbose: true }).length > 0;
+    if (!isLegal || !isPlayerTurn) return false;
+
+    app.handleDragMove(sourceSquare, targetSquare);
+    return true;
+  };
+
+  return (
+    <div className="board-shell" id="board">
+      <Chessboard
+        position={app.game.fen()}
+        onSquareClick={handleSquareClick}
+        onPieceDrop={handlePieceDrop}
+        boardOrientation={app.playerColor === 'b' ? 'black' : 'white'}
+        boardWidth={boardWidth}
+        customSquareStyles={customSquareStyles}
+        animationDuration={180}
+        arePiecesDraggable={isPlayerTurn}
+        areArrowsAllowed={false}
+        customPieces={customPieces}
+        customBoardStyle={{
+          borderRadius: '16px',
+          boxShadow: '0 24px 70px rgba(0, 0, 0, 0.72)',
+          overflow: 'hidden',
+          background: '#1b120d',
+        }}
+      />
     </div>
   );
 }

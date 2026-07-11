@@ -1,57 +1,36 @@
 .legion-path {
   position: relative;
   width: 100%;
-  min-height: 130px;
-  margin: var(--space-6) 0 var(--space-5);
+  margin: var(--space-3) 0;
   box-sizing: border-box;
 }
 
-.legion-path::before {
-  content: '';
+.legion-path__arrow {
   position: absolute;
-  top: 28px; /* matches legacy spacing: 8px padding + 20px half-node */
+  top: 50%;
   left: 12px;
   right: 12px;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(212,175,55,0.3) 0%, rgba(212,175,55,0.6) 50%, rgba(212,175,55,0.3) 100%);
+  transform: translateY(-50%);
+  height: 14px;
   pointer-events: none;
   z-index: 1;
 }
-
-.legion-path__road {
-  fill: none;
-  stroke: var(--hairline);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 1 5;
-}
-
-.legion-path__road-won {
-  fill: none;
-  stroke: var(--bronze);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 0 4px var(--bronze-glow));
-}
+.legion-path__arrow svg { width: 100%; height: 100%; display: block; }
 
 .legion-path__steps {
   position: relative;
   z-index: 2;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 2px;
-  padding: 8px 4px 4px 4px;
+  align-items: center;
+  padding: 0 4px;
 }
 
 .legion-path__step {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  flex: 1 1 auto;
+  justify-content: center;
+  flex: 1 1 0;
   min-width: 0;
   position: relative;
   opacity: 0.5;
@@ -73,126 +52,11 @@
   transform: scale(1.1);
 }
 
-.legion-path__label {
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--marble-dim);
-  white-space: nowrap;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.legion-path__step--won .legion-path__label,
-.legion-path__step--current .legion-path__label {
-  color: var(--marble);
-}
-
-.legion-path__label-tag {
-  font-family: var(--font-body);
-  text-transform: none;
-  letter-spacing: 0;
-  font-size: 0.6rem;
-  font-style: italic;
-  color: var(--gold);
-}
-
-.legion-path__label-goal {
-  font-family: var(--font-mono);
-  text-transform: none;
-  letter-spacing: 0;
-  font-size: 0.54rem;
-  color: var(--marble-dim);
-  opacity: 0.65;
-}
-
-.legion-path__label-need {
-  font-family: var(--font-mono);
-  text-transform: none;
-  letter-spacing: 0;
-  font-size: 0.56rem;
-  color: var(--marble-dim);
-  opacity: 0.8;
-}
-
-.legion-path__marker {
-  position: absolute;
-  top: 0;
-  transform: translate(-50%, -120%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  transition: left 0.5s ease;
-}
-
-.legion-path__marker-flag {
-  font-size: 1.1rem;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-  position: relative;
-  z-index: 2;
-}
-
-.legion-path__marker-pulse {
-  position: absolute;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--bronze);
-  opacity: 0.35;
-  animation: legion-path-pulse 1.8s ease-out infinite;
-}
-
-@keyframes legion-path-pulse {
-  0% { transform: scale(0.5); opacity: 0.5; }
-  100% { transform: scale(2.2); opacity: 0; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .legion-path__marker-pulse { animation: none; }
-}
-
-/* Safety-net ticks: small diamonds straddling the road at the 50% point of
-   each rank's outgoing segment. Unpassed = dim outline (a marker for
-   ground not yet reached); passed = filled verdigris (you've already
-   secured that rank's safety net). */
-.legion-path__safety-tick {
-  fill: var(--ink);
-  stroke: var(--marble-dim);
-  stroke-width: 0.6;
-  vector-effect: non-scaling-stroke;
-}
-
-.legion-path__safety-tick--passed {
-  fill: var(--verdigris);
-  stroke: var(--verdigris);
-}
-
-.legion-path__legend {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: var(--space-2);
-  font-size: 0.62rem;
-  color: var(--marble-dim);
-  line-height: 1.4;
-}
-
-.legion-path__legend-tick {
-  flex-shrink: 0;
-  width: 8px;
-  height: 8px;
-  background: var(--verdigris);
-  border: 1px solid var(--verdigris);
-  transform: rotate(45deg);
+  .legion-path__step { transition: none; }
 }
 
 @media (max-width: 480px) {
-  .legion-path { min-height: 150px; }
-  .legion-path__label { font-size: 0.54rem; }
-  .legion-path__node { width: 26px; height: 26px; font-size: 0.75rem; }
+  .legion-path::before { top: 13px; }
+  .legion-path__node .rank-badge--md { width: 26px; height: 26px; font-size: 0.7rem; }
 }

@@ -5,6 +5,7 @@
 // (`LichessAuth.disconnect(); location.reload();`).
 import { useState } from 'react';
 import { isConnected, startLogin, disconnect } from '../services/lichessAuth';
+import { Button } from './Button';
 import './LichessConnectButton.css';
 
 export function LichessConnectButton() {
@@ -14,19 +15,16 @@ export function LichessConnectButton() {
 
   if (connected) {
     return (
-      <button
-        className="lichess-btn lichess-btn--connected"
-        onClick={() => { disconnect(); window.location.reload(); }}
-      >
+      <Button variant="danger" size="sm" onClick={() => { disconnect(); window.location.reload(); }}>
         ♟ Lichess ✓
-      </button>
+      </Button>
     );
   }
 
   return (
-    <button className="lichess-btn" onClick={() => startLogin()}>
+    <Button variant="danger" size="sm" onClick={() => startLogin()}>
       ♟ Connect Lichess
-    </button>
+    </Button>
   );
 }
 

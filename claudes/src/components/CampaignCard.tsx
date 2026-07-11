@@ -1,7 +1,7 @@
 import styles from './CampaignCard.module.css';
 import type { CampaignCardProps } from '../types';
 
-export function CampaignCard({ title, subtitle, image, frameType, onClick }: CampaignCardProps) {
+export function CampaignCard({ title, image, frameType, onClick }: CampaignCardProps) {
   const frameClass = frameType === 'silver' ? styles.silver : frameType === 'bronze' ? styles.bronze : styles.gold;
 
   return (
@@ -11,8 +11,6 @@ export function CampaignCard({ title, subtitle, image, frameType, onClick }: Cam
         <img src={image} alt={`${title} campaign artwork`} className={styles.image} />
         <div className={styles.imageOverlay} aria-hidden="true" />
       </div>
-
-      <p className={styles.subtitle}>{subtitle}</p>
     </button>
   );
 }

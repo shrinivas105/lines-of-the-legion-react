@@ -202,8 +202,13 @@ export class ChessTheoryApp {
     const demotionCheck = Scoring.checkDemotion(oldLegion.title, recentRanks, battleRankTitle, oldMerit);
     if (demotionCheck && demotionCheck.demote) {
       newMerit = demotionCheck.newMerit;
-      this.rankChangeMessage = demotionCheck.message;
-      this.rankChangeType = demotionCheck.isReset ? 'reset' : 'demotion';
+      if (demotionCheck.isReset) {
+        this.rankChangeMessage = `Reset !! <br>Honor remains. Merit must be earned again. Merit reset to ${newMerit}.`;
+        this.rankChangeType = 'reset';
+      } else {
+        this.rankChangeMessage = `Demotion !! <br>Your honor has diminished. You are now ${Scoring.getLegionRank(newMerit).title}.`;
+        this.rankChangeType = 'demotion';
+      }
       rankChanged = true;
       this.setRecentBattleRanks(this.aiSource, []);
     } else if (Scoring.canPromote(oldLegion.title, newMerit, recentRanks) && tempLegion.level > oldLegion.level) {
@@ -617,75 +622,76 @@ export class ChessTheoryApp {
       }
 
       const totalGames = (data.white || 0) + (data.draws || 0) + (data.black || 0);
+      const apologyText = `🎖️ <strong>Commander speaks:</strong><br><br>"I'm sorry, soldier. I have not seen this position on the battlefield."`;
+      const defeatLines = [
+        `"Soldier... every path from here leads to ruin. This ground is already lost."`,
+        `"There is no glory to be found here. The enemy holds every road we could take."`,
+        `"I will not lie to you, soldier — this battle is already lost. Fight on, but expect no miracles."`
+      ];
       let commanderText = '';
 
-      const threshold = this.aiSource === 'master' ? 50 : 500;
+      const threshold = 50;
 
-      if (totalGames >= threshold && topMoves.length >= 3) {
-        const top3 = topMoves.slice(0, 3);
+      const movesWithStats = topMoves.slice(0, 5).map(move => {
+        const moveTotal = move.white + move.draws + move.black;
+        const winPct = moveTotal > 0
+          ? (this.playerColor === 'w' ? (move.white / moveTotal) * 100 : (move.black / moveTotal) * 100)
+          : 0;
+        return { san: move.san, games: moveTotal, winPct };
+      });
 
-        const movesWithStats = top3.map(move => {
-          const moveTotal = move.white + move.draws + move.black;
-          const winPct = this.playerColor === 'w'
-            ? (move.white / moveTotal) * 100
-            : (move.black / moveTotal) * 100;
-          return {
-            san: move.san,
-            games: moveTotal,
-            winPct: winPct
-          };
-        });
-
-        const mostPopular = movesWithStats.reduce((max, move) =>
-          move.games > max.games ? move : max
-        );
-
-        const highestWin = movesWithStats.reduce((max, move) =>
-          move.winPct > max.winPct ? move : max
-        );
-
-        commanderText = `🎖️ <strong>Commander speaks:</strong><br><br>"Soldier, I have seen this position many times.`;
-
-        if (mostPopular.san === highestWin.san) {
-          commanderText += ` <strong>${mostPopular.san}</strong> is the most popular and strongest path — tried ${mostPopular.games.toLocaleString()} times with ${mostPopular.winPct.toFixed(1)}% victories!`;
-
-          const remaining = movesWithStats.filter(m => m.san !== mostPopular.san);
-          if (remaining.length > 0) {
-            const secondBest = remaining[0];
-            commanderText += ` Also consider <strong>${secondBest.san}</strong> — ${secondBest.games.toLocaleString()} games, ${secondBest.winPct.toFixed(1)}% win rate.`;
-          }
-        } else {
-          commanderText += ` The most popular path is <strong>${mostPopular.san}</strong> — tried ${mostPopular.games.toLocaleString()} times.`;
-          commanderText += ` Going for blood? March with <strong>${highestWin.san}</strong> — ${highestWin.winPct.toFixed(1)}% victories.`;
+      if (totalGames < threshold || movesWithStats.length < 3) {
+        this.theoryMessage = apologyText;
+        this.theoryMessageVisible = true;
+        if (this.mode !== 'practice') {
+          this.hintUsed = true;
         }
-
-        const shownMoves = new Set([mostPopular.san, highestWin.san]);
-        const remaining = topMoves
-          .filter(m => !shownMoves.has(m.san))
-          .map(m => m.san)
-          .slice(0, 3);
-
-        if (remaining.length > 0) {
-          commanderText += ` Other paths: <strong>${remaining.join(', ')}</strong>.`;
-        }
-
-        commanderText += ` The choice is yours. Good luck."`;
-
-      } else {
-        const moveNames = topMoves.map(m => m.san);
-        const first = moveNames[0];
-        const second = moveNames[1];
-        const others = moveNames.slice(2);
-
-        commanderText = `🎖️ <strong>Commander speaks:</strong><br><br>"Soldier, I have seen this position many times.`;
-        commanderText += ` March with <strong>${first}</strong> — the most proven line.`;
-        if (second) commanderText += ` Or <strong>${second}</strong>, trusted by many.`;
-        if (others.length > 0) {
-          commanderText += ` Other paths: <strong>${others.join(', ')}</strong>.`;
-        }
-        commanderText += ` The choice is yours. Good luck."`;
+        return;
       }
 
+      const anyAbove40 = movesWithStats.some(m => m.winPct > 40);
+      if (!anyAbove40) {
+        const line = defeatLines[Math.floor(Math.random() * defeatLines.length)];
+        this.theoryMessage = `🎖️ <strong>Commander speaks:</strong><br><br>${line}`;
+        this.theoryMessageVisible = true;
+        if (this.mode !== 'practice') {
+          this.hintUsed = true;
+        }
+        return;
+      }
+
+      const top3 = movesWithStats.slice(0, 3);
+      const mostPopular = top3.reduce((max, move) => move.games > max.games ? move : max);
+      const highestWin = top3.reduce((max, move) => move.winPct > max.winPct ? move : max);
+
+      commanderText = `🎖️ <strong>Commander speaks:</strong><br><br>"Soldier, I have seen this position many times.`;
+
+      if (mostPopular.san === highestWin.san) {
+        commanderText += ` <strong>${mostPopular.san}</strong> is the most popular and strongest path — tried ${mostPopular.games.toLocaleString()} times with ${mostPopular.winPct.toFixed(1)}% victories!`;
+
+        const remaining = top3.filter(m => m.san !== mostPopular.san);
+        if (remaining.length > 0) {
+          const secondBest = remaining[0];
+          commanderText += ` Also consider <strong>${secondBest.san}</strong> — ${secondBest.games.toLocaleString()} games, ${secondBest.winPct.toFixed(1)}% win rate.`;
+        }
+      } else {
+        commanderText += ` The most popular path is <strong>${mostPopular.san}</strong> — tried ${mostPopular.games.toLocaleString()} times, ${mostPopular.winPct.toFixed(1)}% victories.`;
+        commanderText += ` Going for blood? March with <strong>${highestWin.san}</strong> — ${highestWin.winPct.toFixed(1)}% victories.`;
+      }
+
+      const shownMoves = new Set([mostPopular.san, highestWin.san]);
+      const otherAlternatives = movesWithStats
+        .filter(m => !shownMoves.has(m.san) && m.winPct > 40)
+        .slice(0, 3);
+
+      if (otherAlternatives.length > 0) {
+        const altText = otherAlternatives
+          .map(m => `${m.san}, ${m.winPct.toFixed(1)}% victories`)
+          .join('; ');
+        commanderText += ` Other alternatives: <strong>${altText}</strong>.`;
+      }
+
+      commanderText += ` The choice is yours. Good luck."`;
       this.theoryMessage = commanderText;
       this.theoryMessageVisible = true;
       if (this.mode !== 'practice') {

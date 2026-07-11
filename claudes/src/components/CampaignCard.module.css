@@ -7,18 +7,17 @@
 
 .card {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: block;
   width: 100%;
-  padding: 0.6rem 0.6rem 0.2rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 0;
+  border: 0;
   border-radius: 20px;
-  background: #100d09;
+  background: transparent;
   color: #f4e7bf;
   cursor: pointer;
-  overflow: hidden;
-  box-shadow: var(--card-shadow);
-  transition: transform 350ms ease, box-shadow 350ms ease, border-color 350ms ease;
+  overflow: visible;
+  box-shadow: none;
+  transition: transform 350ms ease, box-shadow 350ms ease;
   transform: translateY(0) scale(1);
   text-align: center;
 }
@@ -27,7 +26,6 @@
 .card:focus-visible {
   transform: translateY(-8px) scale(1.02);
   box-shadow: 0 26px 90px rgba(0, 0, 0, 0.6);
-  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .card:focus-visible {
@@ -40,8 +38,8 @@
   inset: 0;
   pointer-events: none;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  border: 0;
+  box-shadow: none;
 }
 
 .imageShell {
@@ -49,7 +47,7 @@
   width: 100%;
   aspect-ratio: 2 / 3;
   overflow: hidden;
-  border-radius: 14px;
+  border-radius: 18px;
   background: #050403;
 }
 
@@ -73,74 +71,35 @@
   pointer-events: none;
 }
 
-.subtitle {
-  margin: 0.55rem 0 0.5rem;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.06em;
-  color: rgba(244, 231, 191, 0.82);
-}
-
-.gold {
-  border-color: rgba(212, 175, 55, 0.4);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(212, 175, 55, 0.2);
-}
-
 .gold .imageShell {
-  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.5), 0 0 24px rgba(212, 175, 55, 0.18);
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.35), 0 0 20px rgba(212, 175, 55, 0.16);
 }
 
 .gold:hover,
 .gold:focus-visible {
-  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.58), inset 0 0 0 1px rgba(212, 175, 55, 0.34), 0 0 30px rgba(212, 175, 55, 0.25);
-}
-
-.gold .subtitle {
-  color: #f2d98f;
-}
-
-.silver {
-  border-color: rgba(197, 206, 214, 0.4);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(197, 206, 214, 0.2);
+  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.58), 0 0 30px rgba(212, 175, 55, 0.2);
 }
 
 .silver .imageShell {
-  box-shadow: 0 0 0 1px rgba(197, 206, 214, 0.5), 0 0 24px rgba(197, 206, 214, 0.16);
+  box-shadow: 0 0 0 1px rgba(197, 206, 214, 0.35), 0 0 20px rgba(197, 206, 214, 0.14);
 }
 
 .silver:hover,
 .silver:focus-visible {
-  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.58), inset 0 0 0 1px rgba(197, 206, 214, 0.34), 0 0 30px rgba(197, 206, 214, 0.22);
-}
-
-.silver .subtitle {
-  color: #e5ebef;
-}
-
-.bronze {
-  border-color: rgba(164, 109, 61, 0.4);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(164, 109, 61, 0.2);
+  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.58), 0 0 30px rgba(197, 206, 214, 0.18);
 }
 
 .bronze .imageShell {
-  box-shadow: 0 0 0 1px rgba(164, 109, 61, 0.5), 0 0 24px rgba(164, 109, 61, 0.18);
+  box-shadow: 0 0 0 1px rgba(164, 109, 61, 0.35), 0 0 20px rgba(164, 109, 61, 0.16);
 }
 
 .bronze:hover,
 .bronze:focus-visible {
-  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.58), inset 0 0 0 1px rgba(164, 109, 61, 0.34), 0 0 30px rgba(164, 109, 61, 0.22);
-}
-
-.bronze .subtitle {
-  color: #e7b377;
+  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.58), 0 0 30px rgba(164, 109, 61, 0.18);
 }
 
 @media (max-width: 640px) {
   .card {
-    padding: 0.45rem 0.45rem 0.15rem;
-  }
-
-  .subtitle {
-    font-size: 0.75rem;
+    padding: 0.45rem;
   }
 }

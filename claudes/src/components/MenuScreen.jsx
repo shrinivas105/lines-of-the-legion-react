@@ -142,21 +142,18 @@ export function MenuScreen({ app }) {
             <div className="campaign-cards">
               <CampaignCard
                 title="MASTER"
-                subtitle="Master Campaign"
                 image={masterCardArt}
                 frameType="gold"
                 onClick={() => handleSelectSource('master')}
               />
               <CampaignCard
                 title="CLUB"
-                subtitle="Club Campaign"
                 image={clubCardArt}
                 frameType="silver"
                 onClick={() => handleSelectSource('lichess')}
               />
               <CampaignCard
                 title="PRACTICE"
-                subtitle="Practice Mode"
                 image={practiceCardArt}
                 frameType="bronze"
                 onClick={() => handleSelectSource('practice')}
