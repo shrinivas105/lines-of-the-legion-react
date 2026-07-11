@@ -59,9 +59,14 @@
 .game-description em { color: #f7e0b0; }
 
 /* ── Inline "Read Rules" link at the end of the description ── */
+.tagline-line {
+  margin-bottom: 10px;
+}
+
 .rules-link-line {
-  margin-top: 8px !important;
-  text-align: center;
+  display: inline-block;
+  margin-left: 6px;
+  text-align: left;
 }
 
 .rules-link {

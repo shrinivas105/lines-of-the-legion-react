@@ -66,10 +66,10 @@ export function MenuScreen({ app }) {
           </p>
           <p className="tagline-line">
             Choose your campaign and step onto the field of glory. <em>Veni, vidi, vici!</em>
-          </p>
-          <p className="rules-link-line">
-            <span className="rules-link" onClick={() => setRulesOpen(v => !v)}>
-              Read Rules <span>{rulesOpen ? '▲' : '▼'}</span>
+            <span className="rules-link-line">
+              <span className="rules-link" onClick={() => setRulesOpen(v => !v)}>
+                Read Rules <span>{rulesOpen ? '▲' : '▼'}</span>
+              </span>
             </span>
           </p>
 
