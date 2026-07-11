@@ -18,6 +18,22 @@ export function LegionPath({ legion }) {
 
   return (
     <div className="legion-path">
+      <div className="legion-path__arrow" aria-hidden="true">
+        <svg viewBox="0 0 100 10" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="legionPathGrad" x1="0%" x2="100%">
+              <stop offset="0%" stopColor="rgba(212,175,55,0.28)" />
+              <stop offset="50%" stopColor="rgba(212,175,55,0.6)" />
+              <stop offset="100%" stopColor="rgba(212,175,55,0.28)" />
+            </linearGradient>
+            <marker id="legion-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse">
+              <path d="M0,0 L8,4 L0,8 Z" fill="url(#legionPathGrad)" />
+            </marker>
+          </defs>
+          <line x1="0" y1="5" x2="100" y2="5" stroke="url(#legionPathGrad)" strokeWidth="4" strokeLinecap="round" markerEnd="url(#legion-arrow)" />
+        </svg>
+      </div>
+
       <div className="legion-path__steps">
         {rankOrder.map((title, i) => {
           const conquered = i <= level;

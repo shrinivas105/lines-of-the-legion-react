@@ -3,12 +3,12 @@
 .menu {
   max-width: 960px;
   margin: 0 auto;
-  padding: 60px 8px 20px;
+  padding: 0 8px 16px;
 }
 
 .menu-screen__wrap {
   position: relative;
-  padding: 28px 24px 22px;
+  padding: 12px 18px 18px;
   border: 2px solid rgba(212, 175, 55, 0.35);
   border-radius: 12px;
   background: rgba(20, 10, 5, 0.74);
@@ -21,20 +21,20 @@
 }
 
 .menu-title {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   text-align: center;
   font-family: 'Cinzel', serif;
-  font-size: clamp(1.8rem, 3.7vw, 2.6rem);
+  font-size: clamp(1.26rem, 2.59vw, 1.82rem);
   letter-spacing: 3px;
   color: #f7e7a8;
   text-shadow: 0 0 16px rgba(255, 215, 0, 0.35), 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .menu-subtitle {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   text-align: center;
   font-family: 'Cinzel', serif;
-  font-size: 0.7rem;
+  font-size: 0.5rem;
   font-style: italic;
   letter-spacing: 0.06em;
   color: #e9d9b4;

@@ -219,15 +219,11 @@ export function AnalysisScreen({ app }) {
       </Panel>
 
       <div className="analysis-screen__nav">
-        <Button variant="secondary" size="sm" disabled={ab.currentMoveIndex < 0} onClick={() => ab.goToMove(0)}>First</Button>
-        <Button variant="secondary" size="sm" disabled={ab.currentMoveIndex < 0} onClick={() => ab.previousMove()}>Prev</Button>
-        <Button variant="secondary" size="sm" disabled={ab.currentMoveIndex >= ab.moveHistory.length - 1} onClick={() => ab.nextMove()}>Next</Button>
-        <Button variant="secondary" size="sm" disabled={ab.currentMoveIndex >= ab.moveHistory.length - 1} onClick={() => ab.goToMove(ab.moveHistory.length)}>Last</Button>
+        <Button variant="danger" size="sm" disabled={ab.currentMoveIndex < 0} onClick={() => ab.goToMove(0)}>First</Button>
+        <Button variant="danger" size="sm" disabled={ab.currentMoveIndex < 0} onClick={() => ab.previousMove()}>Prev</Button>
+        <Button variant="danger" size="sm" disabled={ab.currentMoveIndex >= ab.moveHistory.length - 1} onClick={() => ab.nextMove()}>Next</Button>
+        <Button variant="danger" size="sm" disabled={ab.currentMoveIndex >= ab.moveHistory.length - 1} onClick={() => ab.goToMove(ab.moveHistory.length)}>Last</Button>
       </div>
-
-      <Panel className="analysis-screen__movelist-panel">
-        <MoveList app={app} />
-      </Panel>
 
       <Panel className="analysis-screen__legend">
         <div className="analysis-screen__legend-row">
@@ -246,8 +242,8 @@ export function AnalysisScreen({ app }) {
       </Panel>
 
       <div className="analysis-screen__actions">
-        <Button variant="secondary" size="sm" onClick={() => app.analysisBoard.exitAnalysis()}>Exit</Button>
-        <Button variant="secondary" size="sm" onClick={() => app.downloadPGN()}>Download PGN</Button>
+        <Button variant="danger" size="sm" onClick={() => app.analysisBoard.exitAnalysis()}>Exit</Button>
+        <Button variant="danger" size="sm" onClick={() => app.downloadPGN()}>Download PGN</Button>
       </div>
     </div>
   );

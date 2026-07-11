@@ -5,6 +5,7 @@
 // rank, the Road to Legatus ladder, promotion progress, safety net and
 // battle count), the Start Battle button, and a separate rank-info card.
 import { Panel } from './Panel';
+import { Button } from './Button';
 import { LegionPath } from './LegionPath';
 import { LichessConnectButton } from './LichessConnectButton';
 import { Scoring } from '../logic/scoring';
@@ -82,9 +83,9 @@ export function ColorChoiceScreen({ app }) {
 
           <div className="color-choice__panel-actions">
             <div className="color-choice__start">
-              <button className="menu-btn gold-btn color-choice__start-btn" type="button" onClick={() => app.startBattle()}>
+              <Button variant="danger" size="sm" className="color-choice__start-btn" onClick={() => app.startBattle()}>
                 ⚔️ Start Battle
-              </button>
+              </Button>
             </div>
 
             <div className="color-choice__rank-info">

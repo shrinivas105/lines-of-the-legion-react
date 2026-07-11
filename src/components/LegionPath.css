@@ -5,17 +5,17 @@
   box-sizing: border-box;
 }
 
-.legion-path::before {
-  content: '';
+.legion-path__arrow {
   position: absolute;
-  top: 17px; /* matches the md badge's vertical center (34px / 2) */
+  top: 50%;
   left: 12px;
   right: 12px;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(212,175,55,0.3) 0%, rgba(212,175,55,0.6) 50%, rgba(212,175,55,0.3) 100%);
+  transform: translateY(-50%);
+  height: 14px;
   pointer-events: none;
   z-index: 1;
 }
+.legion-path__arrow svg { width: 100%; height: 100%; display: block; }
 
 .legion-path__steps {
   position: relative;

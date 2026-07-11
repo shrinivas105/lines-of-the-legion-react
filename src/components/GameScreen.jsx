@@ -51,19 +51,21 @@ export function GameScreen({ app }) {
           <EndGameSummary app={app} />
         )}
 
-        <div className="game-screen__actions">
-          <Button variant="secondary" size="sm" onClick={() => window.location.reload()}>
-            🔄 New Battle
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            disabled={!hintEnabled}
-            onClick={() => app.getHints()}
-          >
-            {app.hintUsed ? '✓ Consulted' : '🎖️ Consult Commander'}
-          </Button>
-        </div>
+        {!app.gameEnded && (
+          <div className="game-screen__actions">
+            <Button variant="danger" size="sm" onClick={() => window.location.reload()}>
+              🔄 New Battle
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              disabled={!hintEnabled}
+              onClick={() => app.getHints()}
+            >
+              {app.hintUsed ? '✓ Consulted' : '🎖️ Consult Commander'}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

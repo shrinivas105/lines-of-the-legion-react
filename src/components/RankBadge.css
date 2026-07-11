@@ -3,6 +3,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  z-index: 3;
   border-radius: 50%;
   /* metallic face: a tight highlight near the top-left, falling off to
      the badge color, with a darker rim — reads as struck metal rather
