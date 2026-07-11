@@ -25,7 +25,6 @@ const RANK_FACTS = {
 export function ColorChoiceScreen({ app }) {
   const isMaster = app.aiSource === 'master';
   const merit = isMaster ? (app.legionMerits.master_merit || 0) : (app.legionMerits.lichess_merit || 0);
-  const battlesFought = isMaster ? (app.gamesPlayedMaster || 0) : (app.gamesPlayedLichess || 0);
   const legion = Scoring.getLegionRank(merit);
   const needsLichessAuth = !isConnected();
 
@@ -75,10 +74,6 @@ export function ColorChoiceScreen({ app }) {
                 ? `${merit} / ${nextThreshold} merit (${progressPctRounded}%)`
                 : `${merit} merit (100%)`}
             </div>
-          </div>
-
-          <div className="color-choice__meta-row">
-            <span className="color-choice__battles">Battles Fought: {battlesFought}</span>
           </div>
 
           <div className="color-choice__panel-actions">

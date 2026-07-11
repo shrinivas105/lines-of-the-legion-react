@@ -4,7 +4,7 @@
     linear-gradient(180deg, rgba(230,221,196,0.04), transparent 45%),
     radial-gradient(ellipse at 50% 0%, rgba(138,106,59,0.06), transparent 70%),
     var(--umber);
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--oxblood);
   border-radius: var(--radius-lg);
   box-shadow: var(--elev-md);
   padding: var(--space-5);
@@ -41,7 +41,7 @@
   position: absolute;
   width: 14px;
   height: 14px;
-  border: 1.5px solid var(--bronze-dim);
+  border: 1.5px solid var(--oxblood);
   pointer-events: none;
   transition: border-color var(--duration-base) var(--ease-standard);
 }
@@ -51,5 +51,5 @@
 .panel__corner--br { bottom: -1px; right: -1px; border-left: none; border-top: none; border-bottom-right-radius: var(--radius-lg); }
 
 .panel--interactive:hover .panel__corner {
-  border-color: var(--gold);
+  border-color: var(--oxblood);
 }

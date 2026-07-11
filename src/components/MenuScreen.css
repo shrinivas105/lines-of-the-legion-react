@@ -9,7 +9,7 @@
 .menu-screen__wrap {
   position: relative;
   padding: 12px 18px 18px;
-  border: 2px solid rgba(212, 175, 55, 0.35);
+  border: 2px solid var(--oxblood);
   border-radius: 12px;
   background: rgba(20, 10, 5, 0.74);
   box-shadow:
@@ -44,7 +44,7 @@
 .game-description {
   margin-bottom: 20px;
   padding: 15px;
-  border: 2px solid rgba(212, 175, 55, 0.5);
+  border: 2px solid var(--oxblood);
   border-radius: 10px;
   background: rgba(20, 10, 5, 0.65);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
@@ -249,7 +249,7 @@
   width: 100%;
   padding: 8px 6px;
   background: rgba(15, 10, 5, 0.6);
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  border: 1px solid var(--oxblood);
   border-radius: 8px;
   cursor: pointer;
   text-align: center;
@@ -283,7 +283,7 @@
   padding: 10px 14px;
   text-align: center;
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(212, 175, 55, 0.18);
+  border: 1px solid var(--oxblood);
   border-radius: 8px;
 }
 
@@ -340,7 +340,7 @@
   width: 100%;
   max-width: 300px;
   padding: 10px 14px;
-  border: 1px solid rgba(212, 175, 55, 0.18);
+  border: 1px solid var(--oxblood);
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.45);
 }
