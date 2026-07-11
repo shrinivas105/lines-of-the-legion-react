@@ -10,7 +10,6 @@ export interface CampaignItem {
 
 export interface CampaignCardProps {
   title: string;
-  subtitle: string;
   image: string;
   frameType: CampaignFrameType;
   onClick: () => void;

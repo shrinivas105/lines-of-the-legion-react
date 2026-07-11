@@ -1,131 +1,183 @@
 .color-choice {
-  max-width: 860px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: var(--space-7) var(--space-4);
+  padding: var(--space-5) var(--space-4) var(--space-7);
 }
 
 .color-choice__wrap {
-  position: relative;
-  padding: var(--space-6) var(--space-6) var(--space-5);
-  border: 2px solid rgba(216, 182, 107, 0.35);
-  border-radius: 14px;
-  background: rgba(15, 10, 5, 0.72);
-  box-shadow:
-    0 20px 50px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(212, 175, 55, 0.3),
-    0 0 30px rgba(212, 175, 55, 0.2);
-}
-
-.color-choice__status {
-  padding: 16px 18px;
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.25);
-  margin-bottom: 14px;
-}
-
-.color-choice__status--master {
-  box-shadow: inset 0 0 0 1px rgba(216, 182, 107, 0.1), 0 0 14px rgba(216, 182, 107, 0.12);
-}
-
-.color-choice__status--club {
-  box-shadow: inset 0 0 0 1px rgba(199, 204, 209, 0.1), 0 0 14px rgba(199, 204, 209, 0.08);
-}
-
-.color-choice__status-tag {
-  margin-bottom: 10px;
-  text-align: center;
-  color: var(--gold);
-  font-family: 'Cinzel', serif;
-  font-size: 0.8rem;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-}
-
-.color-choice__status-head {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.color-choice__status-titles {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-5);
 }
 
-.color-choice__status-source {
-  font-size: 0.75rem;
-  color: #ddd;
+/* ── Main panel ─────────────────────────────────────────────────────── */
+.color-choice__panel {
+  padding: var(--space-5) var(--space-5) var(--space-6);
+}
+
+.color-choice__panel-title {
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--hairline);
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  letter-spacing: 0.9px;
 }
 
-.color-choice__status-rank {
-  font-size: 1rem;
+.color-choice__panel-title--master {
+  color: var(--gold);
+  text-shadow: 0 0 18px rgba(216, 182, 107, 0.3);
+}
+
+.color-choice__panel-title--club {
+  color: var(--silver);
+  text-shadow: 0 0 18px rgba(199, 204, 209, 0.25);
+}
+
+/* ── Current rank line ──────────────────────────────────────────────── */
+.color-choice__rank-line {
+  margin-bottom: var(--space-6);
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  line-height: 1.5;
   color: var(--marble);
-  font-family: 'Cinzel', serif;
+  letter-spacing: 0.02em;
+}
+
+.color-choice__rank-line-merit {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--marble-dim);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ── Road to Legatus ────────────────────────────────────────────────── */
+.color-choice__road {
+  margin-bottom: var(--space-6);
+}
+
+.color-choice__road-title {
+  margin-bottom: var(--space-2);
+  text-align: center;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ── Promotion progress ─────────────────────────────────────────────── */
+.color-choice__progress-section {
+  margin-bottom: var(--space-5);
+}
+
+.color-choice__progress-heading {
+  margin-bottom: var(--space-2);
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--marble);
 }
 
 .color-choice__progress-track {
   height: 10px;
-  margin-top: 12px;
-  border: 1px solid rgba(212, 175, 55, 0.45);
+  border: 1px solid rgba(212, 175, 55, 0.4);
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.35);
   overflow: hidden;
 }
 
 .color-choice__progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--gold), #d4af37);
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, var(--bronze), var(--gold));
+  box-shadow: 0 0 8px var(--bronze-glow);
+  transition: width 0.4s ease;
 }
 
-.color-choice__progress-label {
-  margin-top: 6px;
+.color-choice__progress-caption {
+  margin-top: var(--space-2);
   text-align: center;
-  color: #aaa;
-  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--marble-dim);
 }
 
-.color-choice__path-panel {
-  padding: 10px 0 6px;
+/* ── Safety net + battle count ──────────────────────────────────────── */
+.color-choice__meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3) var(--space-4);
 }
 
-.color-choice__path-title {
-  margin-bottom: 8px;
-  text-align: center;
-  color: var(--gold);
-  font-family: 'Cinzel', serif;
-  font-size: 0.8rem;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
+.color-choice__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--verdigris-dim);
+  background: rgba(74, 114, 104, 0.12);
+  color: var(--verdigris-text);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  white-space: nowrap;
 }
 
-.color-choice__banner {
+.color-choice__battles {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--marble-dim);
+  white-space: nowrap;
+}
+
+/* ── Start battle button ────────────────────────────────────────────── */
+.color-choice__start {
+  display: flex;
+  justify-content: center;
+}
+
+.color-choice__start-btn {
+  width: auto;
+  min-width: 240px;
+  padding: 14px 32px;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+}
+
+/* ── Rank-info card ──────────────────────────────────────────────────── */
+.color-choice__rank-info {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 14px 0 4px;
-  padding: 10px 12px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.25);
-  box-sizing: border-box;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  background: var(--umber);
+  box-shadow: var(--elev-sm);
 }
 
-.color-choice__banner-image-wrap {
+.color-choice__rank-info-portrait-wrap {
   flex: 0 0 auto;
-  width: 125px;
-  height: 125px;
+  width: 108px;
+  height: 108px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid rgba(212, 175, 55, 0.45);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
 }
 
-.color-choice__banner-image {
+.color-choice__rank-info-portrait {
   display: block;
   width: 100%;
   height: 100%;
@@ -133,107 +185,61 @@
   object-position: center;
 }
 
-.color-choice__banner-info {
+.color-choice__rank-info-body {
   flex: 1 1 auto;
   min-width: 0;
   text-align: left;
 }
 
-.color-choice__banner-title {
-  margin-bottom: 4px;
+.color-choice__rank-info-title {
+  margin-bottom: var(--space-2);
   color: var(--gold);
-  font-family: 'Cinzel', serif;
-  font-size: 0.63rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
 }
 
-.color-choice__banner-text {
-  color: #ddd;
-  font-size: 0.53rem;
-  line-height: 1.35;
+.color-choice__rank-info-text {
+  margin: 0 0 var(--space-3);
+  color: var(--marble-dim);
+  font-size: 0.82rem;
+  line-height: 1.6;
 }
 
-.rank-banner {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
-}
-
-.rank-banner-image-wrap {
-  flex: 0 0 auto;
-  width: 125px;
-  height: 125px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid rgba(212, 175, 55, 0.45);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
-}
-
-.rank-banner-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-
-.rank-banner-info {
-  flex: 1 1 auto;
-  min-width: 0;
-  text-align: left;
-}
-
-.rank-banner-title {
-  margin-bottom: 4px;
-  color: var(--gold);
-  font-family: 'Cinzel', serif;
-  font-size: 0.63rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.rank-banner-text {
-  color: #ddd;
-  font-size: 0.53rem;
-  line-height: 1.35;
-}
-
+/* Shared "Did you know?" fact box — also used by other rank displays. */
 .rank-fact {
-  margin-top: 10px;
-  padding: 10px;
+  padding: var(--space-3);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 215, 0, 0.18);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 
 .rank-fact-title {
-  font-size: 0.6rem;
+  margin-bottom: var(--space-1);
+  font-size: 0.7rem;
   font-weight: 700;
   color: var(--gold);
-  margin-bottom: 4px;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
 }
 
 .rank-fact-text {
-  font-size: 0.52rem;
-  color: #eee;
-  line-height: 1.45;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--marble-dim);
 }
 
+/* ── Lichess-auth notice ─────────────────────────────────────────────── */
 .color-choice__notice {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   align-items: flex-start;
-  margin-top: 14px;
-  padding: 14px 16px;
+  padding: var(--space-4);
   border: 1px solid rgba(212, 175, 55, 0.25);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   background: rgba(0, 0, 0, 0.2);
 }
 
@@ -244,28 +250,56 @@
   color: var(--marble-dim);
 }
 
-.color-choice__start {
-  display: flex;
-  justify-content: center;
-  margin-top: 16px;
-}
-
-.color-choice__start-btn {
-  width: auto;
-  padding: 10px 20px;
-  font-size: 0.85rem;
-}
-
+/* ── Narrow viewports ────────────────────────────────────────────────── */
 @media (max-width: 640px) {
-  .color-choice__status-head,
-  .color-choice__banner {
-    flex-direction: column;
-    align-items: flex-start;
+  .color-choice {
+    padding: var(--space-4) var(--space-3) var(--space-6);
   }
 
-  .color-choice__banner-image-wrap,
-  .rank-banner-image-wrap {
-    width: 96px;
-    height: 96px;
+  .color-choice__panel {
+    padding: var(--space-4) var(--space-3) var(--space-5);
+  }
+
+  .color-choice__panel-title {
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+  }
+
+  .color-choice__rank-line {
+    margin-bottom: var(--space-5);
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+
+  .color-choice__meta-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+
+  .color-choice__pill,
+  .color-choice__battles {
+    text-align: center;
+    white-space: normal;
+  }
+
+  .color-choice__rank-info {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-3);
+  }
+
+  .color-choice__rank-info-body {
+    text-align: center;
+  }
+
+  .color-choice__rank-info-portrait-wrap {
+    width: 88px;
+    height: 88px;
+  }
+
+  .color-choice__start-btn {
+    width: 100%;
+    min-width: 0;
   }
 }

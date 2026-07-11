@@ -72,7 +72,7 @@ export function LegionPath({ legion }) {
               ].filter(Boolean).join(' ')}
             >
               <div className="legion-path__node">
-                <RankBadge title={title} size="md" active={isCurrent} />
+                <RankBadge title={title} size="md" />
               </div>
               <div className="legion-path__label">
                 {title}
