@@ -4,9 +4,9 @@
   position: relative;
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 2rem 1.2rem 3rem;
+  padding: 0.35rem 1.2rem 1.5rem;
   overflow: hidden;
   background: #090806;
   color: #f4e7bf;
@@ -34,7 +34,8 @@
   position: relative;
   z-index: 1;
   width: min(1220px, 100%);
-  padding: clamp(1.5rem, 2.5vw, 2.5rem);
+  margin-top: 0.25rem;
+  padding: 1rem clamp(1rem, 2vw, 1.6rem) 1.2rem;
   border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 28px;
   background: rgba(10, 8, 6, 0.7);
@@ -56,7 +57,7 @@
   margin: 0;
   text-align: center;
   font-family: 'Cinzel', Georgia, serif;
-  font-size: clamp(2.3rem, 4.4vw, 4rem);
+  font-size: clamp(1.6rem, 3.1vw, 2.8rem);
   line-height: 1.1;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -92,8 +93,8 @@
   max-width: 780px;
   text-align: center;
   font-family: 'Inter', 'Segoe UI', sans-serif;
-  font-size: 1rem;
-  line-height: 1.75;
+  font-size: 0.7rem;
+  line-height: 1.55;
   color: rgba(244, 231, 191, 0.82);
 }
 
