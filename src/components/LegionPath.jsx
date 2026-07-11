@@ -1,10 +1,9 @@
-// components/LegionPath.jsx — replaces the flat row-of-pills rank ladder
-// with an ascending staircase: each rank sits higher than the last, a single
-// continuous road threads through all six, conquered ground is lit in
-// bronze, the road ahead fades into shadow, and a standard-bearer marker
-// sits at the player's exact position (including progress toward the next
-// step, not just "which box"). Reads as one climb toward Legatus rather
-// than six equal, disconnected boxes.
+// components/LegionPath.jsx — the "Road to Legatus" rank ladder: all six
+// ranks sit in a single flat row (matching the legacy layout exactly), a
+// continuous horizontal line threads through all of them, conquered ground
+// is lit in bronze, the road ahead fades into shadow, and a standard-bearer
+// marker sits at the player's exact position (including progress toward
+// the next step, not just "which box").
 //
 // Pure presentation — consumes the same Scoring.getLegionRank() shape
 // (title, icon, merit, thresholds, level, rankOrder) already used by
@@ -63,8 +62,6 @@ export function LegionPath({ legion }) {
           const conquered = i <= level;
           const isCurrent = i === level;
           const isNext = i === level + 1 && !isMax;
-          // Vertical lift: higher ranks sit slightly higher (negative translateY)
-          const lift = Math.round((i / (n - 1)) * 30); // up to 30px
           return (
             <div
               key={title}
@@ -73,7 +70,6 @@ export function LegionPath({ legion }) {
                 conquered ? 'legion-path__step--reached' : '',
                 isCurrent ? 'legion-path__step--current' : '',
               ].filter(Boolean).join(' ')}
-              style={{ transform: `translateY(-${lift}px)` }}
             >
               <div className="legion-path__node">
                 <RankBadge title={title} size="md" />

@@ -58,62 +58,35 @@
 .game-description strong { color: var(--gold); }
 .game-description em { color: #f7e0b0; }
 
-.menu-home {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+/* ── Inline "Read Rules" link at the end of the description ── */
+.rules-link-line {
+  margin-top: 8px !important;
+  text-align: center;
 }
 
-.menu-campaigns {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-}
-
-.menu-campaigns__title {
-  margin-bottom: 2px;
-  font-size: 0.9rem;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
+.rules-link {
   color: var(--gold);
-}
-
-.menu-rules {
-  padding: 15px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  border-radius: 8px;
-  background: rgba(15, 10, 5, 0.6);
-}
-
-.rules-toggle {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 6px;
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--gold);
-  font-family: 'Cinzel', serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
   cursor: pointer;
+  text-decoration: underline;
+  font-weight: 700;
+  font-size: 0.72rem;
 }
 
-.rules-toggle:hover { color: #ffd700; }
+.rules-link:hover {
+  color: #ffd700;
+}
 
-.rules-content {
-  max-height: 400px;
-  padding-right: 5px;
-  overflow-y: auto;
+.game-description .rules-content {
+  margin-top: 12px;
+  padding-top: 10px;
+  padding-right: 0;
+  max-height: none;
+  overflow-y: visible;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
   color: #bbb;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   line-height: 1.5;
+  text-align: left;
 }
 
 .rules-content p,
@@ -135,7 +108,7 @@
   width: 100%;
   border-collapse: collapse;
   background: rgba(0, 0, 0, 0.3);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
 }
 
 .rules-content th,
@@ -148,6 +121,11 @@
 .rules-content th {
   background: rgba(212, 175, 55, 0.2);
   color: var(--gold);
+}
+
+.menu-home {
+  display: flex;
+  justify-content: center;
 }
 
 .menu-btn {
@@ -216,52 +194,123 @@
   border-color: #f0c090;
 }
 
-.campaign-btn {
+.menu-campaigns {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 60%;
-  min-width: 180px;
-  max-width: 240px;
+  gap: 10px;
+  width: 100%;
 }
 
-.campaign-btn-icon { font-size: 0.9rem; line-height: 1; }
-.campaign-btn-label { font-size: 0.6rem; letter-spacing: 1px; }
+.menu-campaigns__title {
+  margin-bottom: 2px;
+  font-size: 0.9rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
 
+.campaign-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+/* ── Divider after campaign cards ── */
+.menu-divider {
+  width: 100%;
+  border: none;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  margin: 18px 0 14px;
+}
+
+/* ── Quick actions row: Reset / About / Tip ── */
+.quick-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.quick-action-col {
+  flex: 1 1 0;
+  max-width: 130px;
+}
+
+.quick-action-toggle {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+  padding: 8px 6px;
+  background: rgba(15, 10, 5, 0.6);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.quick-action-toggle:hover,
+.quick-action-toggle.active {
+  border-color: rgba(212, 175, 55, 0.6);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.quick-action-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.quick-action-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* ── About content panel (shown/hidden by the About quick action) ── */
+.about-content {
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto 10px;
+  padding: 10px 14px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 8px;
+}
+
+.about-content .footer-note {
+  margin: 0;
+  font-size: 0.62rem;
+  color: #ccc;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.about-content .footer-note a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.about-content .footer-note a:hover {
+  text-decoration: underline;
+}
+
+/* ── Footer (supporters list only) ── */
 .menu-screen__footer {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(212, 175, 55, 0.15);
-}
-
-.menu-screen__donate,
-.menu-screen__donate:link,
-.menu-screen__donate:visited,
-.menu-screen__donate:hover,
-.menu-screen__donate:active {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 20px;
-  background: transparent;
-  color: #ffffff !important;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-decoration: none !important;
-  cursor: pointer;
-}
-
-.menu-screen__donate:hover {
-  border-color: rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+  margin-top: 10px;
 }
 
 .menu-screen__toggle {
@@ -303,41 +352,12 @@
   color: #ccc;
 }
 
-.menu-screen__footnote {
-  max-width: 480px;
-  margin: 0;
-  color: #fff;
-  font-size: 0.52rem;
-  font-weight: 400;
-  line-height: 1.7;
-  letter-spacing: 0;
-  text-align: center;
-}
-
-.menu-screen__footnote a {
-  color: #ccc;
-  text-decoration: none;
-}
-
-.menu-screen__footnote a:hover {
-  color: #fff;
-  text-decoration: underline;
-}
-
-@media (max-width: 768px) {
-  .menu-home {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 480px) {
   .menu-screen__wrap {
     padding: var(--space-5) var(--space-3) var(--space-4);
   }
 
-  .campaign-btn {
-    width: 100%;
-    min-width: unset;
-    max-width: unset;
+  .quick-action-label {
+    font-size: 0.52rem;
   }
 }

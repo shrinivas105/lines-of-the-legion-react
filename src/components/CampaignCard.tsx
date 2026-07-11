@@ -7,16 +7,12 @@ export function CampaignCard({ title, subtitle, image, frameType, onClick }: Cam
   return (
     <button type="button" className={`${styles.card} ${frameClass}`} onClick={onClick} aria-label={`${title} campaign`}>
       <span className={styles.frameGlow} aria-hidden="true" />
-      <span className={styles.edge} aria-hidden="true" />
       <div className={styles.imageShell}>
-        <img src={image} alt="" className={styles.image} />
+        <img src={image} alt={`${title} campaign artwork`} className={styles.image} />
         <div className={styles.imageOverlay} aria-hidden="true" />
       </div>
 
-      <div className={styles.content}>
-        <p className={styles.title}>{title}</p>
-        <p className={styles.subtitle}>{subtitle}</p>
-      </div>
+      <p className={styles.subtitle}>{subtitle}</p>
     </button>
   );
 }
