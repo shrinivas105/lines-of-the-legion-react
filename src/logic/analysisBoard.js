@@ -401,43 +401,29 @@ export class AnalysisBoard {
 
   // Pure function: returns array of arrow descriptors instead of drawing to SVG directly.
   // Each descriptor: { from, to, color, width, outlineColor, dashed }
+  //
+  // Simplified per design: always show the top-3 book moves, and — only when
+  // it's the player's own move — a single arrow for it (in its rank color if
+  // it happens to be a top-3 move, otherwise a distinct blue "your move"
+  // arrow). AI/opponent move arrows and the old merged double-stroke
+  // "combined" rendering are no longer drawn, keeping the board crisp and
+  // uncluttered.
   computeMoveArrows(currentMove, topMoves, currentMoveIndexInTop, isPlayerMove) {
     const arrows = [];
     const currentMoveUci = currentMove.from + currentMove.to + (currentMove.promotion || '');
     const isTop3Move = currentMoveIndexInTop >= 0 && currentMoveIndexInTop <= 2;
     const colors = ['#2ecc71', '#f1c40f', '#e67e22'];
 
-    if (isTop3Move) {
-      let innerColor;
-      if (currentMoveIndexInTop === 0) innerColor = '#2ecc71';
-      else if (currentMoveIndexInTop === 1) innerColor = '#f1c40f';
-      else innerColor = '#e67e22';
+    topMoves.forEach((move, idx) => {
+      if (move.uci === currentMoveUci) return;
+      const from = move.uci.substring(0, 2);
+      const to = move.uci.substring(2, 4);
+      arrows.push({ from, to, color: colors[idx], width: 6, outlineColor: null, dashed: false });
+    });
 
-      if (isPlayerMove) {
-        arrows.push({ from: currentMove.from, to: currentMove.to, color: '#3498db', width: 12, outlineColor: innerColor, dashed: false });
-      } else {
-        arrows.push({ from: currentMove.from, to: currentMove.to, color: innerColor, width: 10, outlineColor: null, dashed: true });
-      }
-
-      topMoves.forEach((move, idx) => {
-        if (move.uci === currentMoveUci) return;
-        const from = move.uci.substring(0, 2);
-        const to = move.uci.substring(2, 4);
-        arrows.push({ from, to, color: colors[idx], width: 6, outlineColor: null, dashed: false });
-      });
-    } else {
-      if (isPlayerMove) {
-        arrows.push({ from: currentMove.from, to: currentMove.to, color: '#3498db', width: 8, outlineColor: null, dashed: false });
-      } else {
-        arrows.push({ from: currentMove.from, to: currentMove.to, color: '#3498db', width: 8, outlineColor: null, dashed: true });
-      }
-
-      topMoves.forEach((move, idx) => {
-        if (move.uci === currentMoveUci) return;
-        const from = move.uci.substring(0, 2);
-        const to = move.uci.substring(2, 4);
-        arrows.push({ from, to, color: colors[idx], width: 6, outlineColor: null, dashed: false });
-      });
+    if (isPlayerMove) {
+      const color = isTop3Move ? colors[currentMoveIndexInTop] : '#3498db';
+      arrows.push({ from: currentMove.from, to: currentMove.to, color, width: 8, outlineColor: null, dashed: false });
     }
 
     return arrows;

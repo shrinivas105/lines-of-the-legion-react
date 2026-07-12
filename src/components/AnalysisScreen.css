@@ -1,7 +1,7 @@
 .analysis-screen {
-  max-width: 540px;
+  max-width: 560px;
   margin: 0 auto;
-  padding: var(--space-7) var(--space-3);
+  padding: 8px 10px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,7 +42,7 @@
 
 .analysis-board-wrap {
   position: relative;
-  width: min(86vw, 460px);
+  width: min(94vw, 520px);
 }
 
 .analysis-board-grid {
@@ -51,16 +51,16 @@
   grid-template-rows: repeat(8, 1fr);
   width: 100%;
   aspect-ratio: 1;
-  border-radius: var(--radius-md);
+  border-radius: 16px;
   overflow: hidden;
-  border: 3px solid var(--bronze);
-  box-shadow: var(--shadow-deep);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.72);
+  background: #1b120d;
 }
 
 .analysis-square { display: flex; align-items: center; justify-content: center; }
-.analysis-square.light { background: #cdbfa3; }
-.analysis-square.dark { background: #6b5436; }
-.analysis-piece { width: 88%; height: 88%; object-fit: contain; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.45)); }
+.analysis-square.light { background: #F0D9B5; }
+.analysis-square.dark { background: #B58863; }
+.analysis-piece { width: 100%; height: 100%; object-fit: contain; display: block; }
 
 .analysis-arrows {
   position: absolute;
@@ -80,7 +80,15 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
+.analysis-screen__compare-panel {
+  min-height: 216px;
+}
+
 .analysis-compare__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 190px;
   text-align: center;
   color: var(--marble-dim);
   font-size: 0.75rem;

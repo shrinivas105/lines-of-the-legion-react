@@ -43,34 +43,24 @@ function arrowGeometry(from, to) {
 function ArrowSvg({ arrows, isFlipped, boardSize }) {
   const squareSize = boardSize / 8;
   return (
-    <svg className="analysis-arrows" viewBox={`0 0 ${boardSize} ${boardSize}`}>
+    <svg className="analysis-arrows" viewBox={`0 0 ${boardSize} ${boardSize}`} shapeRendering="geometricPrecision">
       {arrows.map((arrow, i) => {
         const from = squareToCoords(arrow.from, isFlipped, squareSize);
         const to = squareToCoords(arrow.to, isFlipped, squareSize);
         const g = arrowGeometry(from, to);
-        let mainColor = arrow.color;
-        const elements = [];
 
-        if (arrow.outlineColor) {
-          const outlineWidth = arrow.width + 4;
-          elements.push(
-            <line key={`${i}-ol`} x1={g.startX} y1={g.startY} x2={g.endX} y2={g.endY}
-              stroke={arrow.color} strokeWidth={outlineWidth} strokeLinecap="round" opacity={0.8} />,
-            <polygon key={`${i}-oh`} points={`${g.endX},${g.endY} ${g.head1X},${g.head1Y} ${g.head2X},${g.head2Y}`}
-              fill={arrow.color} opacity={0.8} />
-          );
-          mainColor = arrow.outlineColor;
-        }
-
-        elements.push(
-          <line key={`${i}-l`} x1={g.startX} y1={g.startY} x2={g.endX} y2={g.endY}
-            stroke={mainColor} strokeWidth={arrow.width} strokeLinecap="round" opacity={0.9}
-            strokeDasharray={arrow.dashed ? '8,4' : undefined} />,
-          <polygon key={`${i}-h`} points={`${g.endX},${g.endY} ${g.head1X},${g.head1Y} ${g.head2X},${g.head2Y}`}
-            fill={mainColor} opacity={0.9} />
+        return (
+          <g key={i}>
+            {/* dark halo underneath for crisp contrast on any square color */}
+            <line x1={g.startX} y1={g.startY} x2={g.endX} y2={g.endY}
+              stroke="#000" strokeWidth={arrow.width + 3} strokeLinecap="round" opacity={0.35} />
+            <line x1={g.startX} y1={g.startY} x2={g.endX} y2={g.endY}
+              stroke={arrow.color} strokeWidth={arrow.width} strokeLinecap="round"
+              strokeDasharray={arrow.dashed ? '8,4' : undefined} />
+            <polygon points={`${g.endX},${g.endY} ${g.head1X},${g.head1Y} ${g.head2X},${g.head2Y}`}
+              fill={arrow.color} stroke="#000" strokeWidth={2.5} strokeOpacity={0.35} strokeLinejoin="round" />
+          </g>
         );
-
-        return <g key={i}>{elements}</g>;
       })}
     </svg>
   );
@@ -229,16 +219,10 @@ export function AnalysisScreen({ app }) {
       <Panel className="analysis-screen__legend">
         <div className="analysis-screen__legend-row">
           <span className="analysis-screen__legend-label">Arrows:</span>
-          <LegendSwatch color="#3498db" label="You (not top 3)" />
-          <LegendSwatch color="#3498db" opacity={0.6} label="AI (not top 3)" />
           <LegendSwatch color="#2ecc71" label="Top" />
           <LegendSwatch color="#f1c40f" label="2nd" />
           <LegendSwatch color="#e67e22" label="3rd" />
-        </div>
-        <div className="analysis-screen__legend-row">
-          <LegendGradient to="#2ecc71" label="You = Top!" />
-          <LegendGradient to="#f1c40f" label="You = 2nd" />
-          <LegendGradient to="#e67e22" label="You = 3rd" />
+          <LegendSwatch color="#3498db" label="Your move (not top 3)" />
         </div>
       </Panel>
 
@@ -254,18 +238,6 @@ function LegendSwatch({ color, opacity = 1, label }) {
   return (
     <div className="analysis-screen__swatch">
       <div className="analysis-screen__swatch-line" style={{ background: color, opacity }} />
-      <span>{label}</span>
-    </div>
-  );
-}
-
-function LegendGradient({ to, label }) {
-  return (
-    <div className="analysis-screen__swatch">
-      <div
-        className="analysis-screen__swatch-grad"
-        style={{ background: `linear-gradient(to bottom, #3498db 0%, #3498db 40%, ${to} 60%, ${to} 100%)` }}
-      />
       <span>{label}</span>
     </div>
   );
