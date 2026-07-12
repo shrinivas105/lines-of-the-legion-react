@@ -126,94 +126,99 @@
   text-shadow: 0 0 18px rgba(199, 204, 209, 0.25);
 }
 
-/* ── Current Rank hero ───────────────────────────────────────────────
-   Second-largest element: title, merit, and the promotion target stack
-   with generous vertical rhythm so the eye lands here right after the
-   campaign title. ─────────────────────────────────────────────────── */
+/* ── Current Rank / Next Rank stat grid ────────────────────────────────
+   Two columns, each stacking a label, the rank (with icon), and a merit
+   sub-value — replaces what used to be three separate, repetitive blocks
+   (rank title, merit value, "Road to X" line) with one compact readout. */
 .color-choice__hero {
+  margin-bottom: var(--space-5);
+}
+
+.color-choice__rank-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--legion-secondary-dim);
+  border-radius: var(--radius-lg);
+  background: rgba(8, 5, 3, 0.26);
+  box-shadow: var(--elev-sm);
+}
+
+.color-choice__rank-grid-cell {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: var(--space-6);
-}
-
-.color-choice__hero-top {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.color-choice__rank-line {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: var(--space-3);
+  gap: 4px;
   text-align: center;
 }
 
-.color-choice__rank-icon {
-  font-size: 1.6rem;
-  filter: drop-shadow(0 0 7px var(--legion-glow));
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
+.color-choice__rank-grid-divider {
+  align-self: stretch;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--hairline) 20%, var(--hairline) 80%, transparent);
 }
 
-.color-choice__rank-icon svg {
-  width: 1em;
-  height: 1em;
-}
-
-.color-choice__rank-title {
-  font-family: var(--font-title);
-  font-size: 1.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--legion-accent);
-  text-shadow: 0 0 22px var(--legion-glow), 0 1px 0 rgba(0, 0, 0, 0.4);
-  animation: color-choice-rank-pulse 3.4s ease-in-out infinite;
-}
-
-@keyframes color-choice-rank-pulse {
-  0%, 100% { text-shadow: 0 0 16px var(--legion-glow), 0 1px 0 rgba(0,0,0,0.4); }
-  50%      { text-shadow: 0 0 26px var(--legion-glow), 0 1px 0 rgba(0,0,0,0.4); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .color-choice__rank-title { animation: none; }
-}
-
-.color-choice__rank-merit {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 7px;
-  margin-bottom: var(--space-3);
-  text-align: center;
-}
-
-.color-choice__rank-merit-value {
+.color-choice__rank-grid-label {
   font-family: var(--font-stat);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--marble);
-  letter-spacing: 0.02em;
-}
-
-.color-choice__rank-merit-label {
-  font-family: var(--font-stat);
-  font-size: 0.78rem;
+  font-size: 0.68rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--marble-dim);
 }
 
-.color-choice__rank-road {
+.color-choice__rank-grid-value {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--legion-accent);
+  text-shadow: 0 0 18px var(--legion-glow), 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.color-choice__rank-grid-value--next {
+  color: var(--marble);
+  opacity: 0.85;
+  text-shadow: none;
+}
+
+.color-choice__rank-grid-icon {
+  font-size: 1.1em;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  filter: drop-shadow(0 0 6px var(--legion-glow));
+}
+
+.color-choice__rank-grid-icon svg {
+  width: 1em;
+  height: 1em;
+}
+
+.color-choice__rank-grid-sub {
+  font-family: var(--font-stat);
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  color: var(--marble-dim);
+}
+
+.color-choice__rank-grid-sub-value {
+  font-weight: 700;
+  color: var(--marble);
+}
+
+/* ── Career Progression heading, sits above the rank ladder ─────────── */
+.color-choice__section-heading {
+  margin: 0 0 var(--space-3);
+  text-align: center;
   font-family: var(--font-title);
   font-size: 0.95rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--legion-accent);
   opacity: 0.9;
@@ -303,17 +308,6 @@
   color: var(--marble);
   text-transform: uppercase;
   letter-spacing: 0.03em;
-}
-
-.color-choice__progress-subcaption {
-  margin-top: 3px;
-  text-align: center;
-  font-family: var(--font-stat);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--legion-accent);
-  opacity: 0.9;
 }
 
 /* ── Action section inside the main panel ─────────────────────────── */
@@ -571,38 +565,31 @@
     margin-bottom: var(--space-2);
   }
 
-  .color-choice__hero-top {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: baseline;
-    column-gap: 12px;
-    row-gap: 2px;
-    margin-bottom: var(--space-1);
+  .color-choice__rank-grid {
+    padding: var(--space-3) var(--space-2);
+    gap: var(--space-2);
   }
 
-  .color-choice__rank-line {
-    margin-bottom: 0;
+  .color-choice__rank-grid-value {
+    font-size: 1rem;
+    gap: 4px;
   }
 
-  .color-choice__rank-icon {
-    font-size: 1.25rem;
+  .color-choice__rank-grid-icon {
+    font-size: 1em;
   }
 
-  .color-choice__rank-title {
-    font-size: 1.3rem;
+  .color-choice__rank-grid-label {
+    font-size: 0.6rem;
   }
 
-  .color-choice__rank-merit {
-    margin-bottom: 0;
+  .color-choice__rank-grid-sub {
+    font-size: 0.68rem;
   }
 
-  .color-choice__rank-merit-value {
-    font-size: 1.2rem;
-  }
-
-  .color-choice__rank-road {
-    font-size: 0.78rem;
+  .color-choice__section-heading {
+    font-size: 0.8rem;
+    margin-bottom: var(--space-2);
   }
 
   .color-choice__road {

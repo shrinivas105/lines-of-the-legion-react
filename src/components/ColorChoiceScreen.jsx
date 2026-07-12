@@ -10,7 +10,7 @@ import { LegionPath } from './LegionPath';
 import { LichessConnectButton } from './LichessConnectButton';
 import { Scoring } from '../logic/scoring';
 import { isConnected } from '../services/lichessAuth';
-import { LEGION_RANK_PORTRAITS } from './rankColors';
+import { LEGION_RANK_PORTRAITS, LEGION_RANK_ICONS } from './rankColors';
 import { IconCrossedGladius } from './RomanIcons';
 import './ColorChoiceScreen.css';
 
@@ -36,6 +36,7 @@ export function ColorChoiceScreen({ app }) {
     ? Math.min(100, Math.max(0, ((merit - prevThreshold) / span) * 100))
     : 100;
   const currentRankImage = LEGION_RANK_PORTRAITS[legion.title] || '/ranks/recruit.png';
+  const NextRankIcon = legion.nextRank ? LEGION_RANK_ICONS[legion.nextRank] : null;
   const currentRankInfo = {
     label: legion.title,
     text: isMaster
@@ -54,23 +55,35 @@ export function ColorChoiceScreen({ app }) {
           </div>
 
           <div className="color-choice__hero">
-            <div className="color-choice__hero-top">
-              <div className="color-choice__rank-line">
-                <span className="color-choice__rank-icon" aria-hidden="true"><legion.icon /></span>
-                <span className="color-choice__rank-title">{legion.title}</span>
+            <div className="color-choice__rank-grid">
+              <div className="color-choice__rank-grid-cell">
+                <div className="color-choice__rank-grid-label">Current Rank</div>
+                <div className="color-choice__rank-grid-value">
+                  <span className="color-choice__rank-grid-icon" aria-hidden="true"><legion.icon /></span>
+                  {legion.title}
+                </div>
+                <div className="color-choice__rank-grid-sub">
+                  <span className="color-choice__rank-grid-sub-value">{merit}</span> Merit
+                </div>
               </div>
-              <div className="color-choice__rank-merit">
-                <span className="color-choice__rank-merit-value">{merit}</span>
-                <span className="color-choice__rank-merit-label">Merit</span>
+              <div className="color-choice__rank-grid-divider" aria-hidden="true" />
+              <div className="color-choice__rank-grid-cell color-choice__rank-grid-cell--next">
+                <div className="color-choice__rank-grid-label">Next Rank</div>
+                <div className="color-choice__rank-grid-value color-choice__rank-grid-value--next">
+                  {legion.nextRank ? (
+                    <>
+                      <span className="color-choice__rank-grid-icon" aria-hidden="true">{NextRankIcon && <NextRankIcon />}</span>
+                      {legion.nextRank}
+                    </>
+                  ) : 'Highest Rank'}
+                </div>
+                <div className="color-choice__rank-grid-sub">
+                  {legion.nextRank ? (
+                    <><span className="color-choice__rank-grid-sub-value">{nextThreshold}</span> Merit Goal</>
+                  ) : 'Attained'}
+                </div>
               </div>
             </div>
-            <div className="color-choice__rank-road">
-              {legion.nextRank ? `Road to ${legion.nextRank}` : 'Highest Rank Attained'}
-            </div>
-          </div>
-
-          <div className="color-choice__road">
-            <LegionPath legion={legion} />
           </div>
 
           <div className="color-choice__progress-section">
@@ -81,14 +94,14 @@ export function ColorChoiceScreen({ app }) {
             </div>
             <div className="color-choice__progress-caption">
               {legion.nextRank
-                ? `${merit} / ${nextThreshold} Merit`
+                ? `${legion.pointsNeeded} Merit Needed for Promotion`
                 : `${merit} Merit \u2014 Highest Rank Attained`}
             </div>
-            {legion.nextRank && (
-              <div className="color-choice__progress-subcaption">
-                {legion.pointsNeeded} Merit Remaining
-              </div>
-            )}
+          </div>
+
+          <div className="color-choice__section-heading">Career Progression (Road to Legatus)</div>
+          <div className="color-choice__road">
+            <LegionPath legion={legion} />
           </div>
 
           <div className="color-choice__panel-actions">
