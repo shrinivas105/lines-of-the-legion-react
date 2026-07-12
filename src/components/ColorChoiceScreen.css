@@ -1,3 +1,31 @@
+/* ── Campaign theming ───────────────────────────────────────────────────
+   Two accent palettes, expressed purely as CSS custom properties, cascade
+   from the screen root down into every child (including LegionPath.css
+   and the shared RankBadge active/current styles). No duplicated rules —
+   the same selectors below just resolve different var() values depending
+   on which modifier class is present on .color-choice.
+   Master:  warm imperial gold + bronze + a deep-crimson highlight thread.
+   Club:    cool silver steel + muted gold + an iron-blue highlight thread.
+   All glow tokens reuse the existing --gold-glow/--silver-glow from
+   tokens.css rather than inventing new alpha values. ────────────────── */
+.color-choice--master {
+  --legion-accent: var(--gold);
+  --legion-accent-strong: #f3dfa0;
+  --legion-glow: var(--gold-glow);
+  --legion-secondary: var(--bronze);
+  --legion-secondary-dim: var(--bronze-dim);
+  --legion-highlight: var(--oxblood-text);
+}
+
+.color-choice--club {
+  --legion-accent: var(--silver);
+  --legion-accent-strong: #eef1f3;
+  --legion-glow: var(--silver-glow);
+  --legion-secondary: var(--iron);
+  --legion-secondary-dim: var(--iron-dim);
+  --legion-highlight: #8fb4c2;
+}
+
 .color-choice {
   max-width: 720px;
   margin: 0 auto;
@@ -7,21 +35,82 @@
 .color-choice__wrap {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-5);
 }
 
 /* ── Main panel ─────────────────────────────────────────────────────── */
 .color-choice__panel {
-  padding: var(--space-4) var(--space-5) var(--space-5);
+  padding: var(--space-6) var(--space-5) var(--space-6);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--elev-md);
+  animation: color-choice-panel-fade 320ms var(--ease-standard) both;
 }
 
+@keyframes color-choice-panel-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* faint drifting smoke + embers — decorative only, sits behind all panel
+   content, never competes with the UI (very low opacity, slow motion) */
+.color-choice__panel::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(ellipse 55% 35% at 15% 20%, rgba(138,106,59,0.05), transparent 65%),
+    radial-gradient(ellipse 45% 30% at 85% 75%, rgba(216,182,107,0.04), transparent 65%);
+  animation: color-choice-smoke-drift 100s ease-in-out infinite alternate;
+}
+
+.color-choice__panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    radial-gradient(1.5px 1.5px at 18% 82%, rgba(216,182,107,0.35), transparent),
+    radial-gradient(1px 1px at 42% 65%, rgba(216,182,107,0.28), transparent),
+    radial-gradient(1.5px 1.5px at 68% 88%, rgba(216,182,107,0.3), transparent),
+    radial-gradient(1px 1px at 82% 60%, rgba(216,182,107,0.25), transparent),
+    radial-gradient(1px 1px at 30% 40%, rgba(216,182,107,0.2), transparent);
+  animation: color-choice-embers-rise 14s linear infinite;
+}
+
+@keyframes color-choice-smoke-drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-1.5%, 1%) scale(1.03); }
+}
+
+@keyframes color-choice-embers-rise {
+  from { transform: translateY(0); opacity: 0.5; }
+  to   { transform: translateY(-14%); opacity: 0.2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .color-choice__panel::before,
+  .color-choice__panel::after,
+  .color-choice__panel { animation: none; }
+}
+
+.color-choice__panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Campaign title — the largest element on the screen, per hierarchy */
 .color-choice__panel-title {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
   padding-bottom: var(--space-3);
   border-bottom: 1px solid var(--hairline);
   text-align: center;
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -37,74 +126,189 @@
   text-shadow: 0 0 18px rgba(199, 204, 209, 0.25);
 }
 
-/* ── Current rank line ──────────────────────────────────────────────── */
+/* ── Current Rank hero ───────────────────────────────────────────────
+   Second-largest element: title, merit, and the promotion target stack
+   with generous vertical rhythm so the eye lands here right after the
+   campaign title. ─────────────────────────────────────────────────── */
+.color-choice__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: var(--space-6);
+}
+
 .color-choice__rank-line {
-  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: var(--space-3);
   text-align: center;
+}
+
+.color-choice__rank-icon {
+  font-size: 1.6rem;
+  filter: drop-shadow(0 0 7px var(--legion-glow));
+  line-height: 1;
+}
+
+.color-choice__rank-title {
   font-family: var(--font-display);
-  font-size: 1.1rem;
-  line-height: 1.5;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--legion-accent);
+  text-shadow: 0 0 22px var(--legion-glow), 0 1px 0 rgba(0, 0, 0, 0.4);
+  animation: color-choice-rank-pulse 3.4s ease-in-out infinite;
+}
+
+@keyframes color-choice-rank-pulse {
+  0%, 100% { text-shadow: 0 0 16px var(--legion-glow), 0 1px 0 rgba(0,0,0,0.4); }
+  50%      { text-shadow: 0 0 26px var(--legion-glow), 0 1px 0 rgba(0,0,0,0.4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .color-choice__rank-title { animation: none; }
+}
+
+.color-choice__rank-merit {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 7px;
+  margin-bottom: var(--space-3);
+  text-align: center;
+}
+
+.color-choice__rank-merit-value {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--marble);
   letter-spacing: 0.02em;
 }
 
-.color-choice__rank-line-merit {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
+.color-choice__rank-merit-label {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--marble-dim);
-  letter-spacing: 0;
-  text-transform: none;
+}
+
+.color-choice__rank-road {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--legion-accent);
+  opacity: 0.9;
 }
 
 /* ── Road to Legatus ────────────────────────────────────────────────── */
 .color-choice__road {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-6);
 }
 
 /* ── Promotion progress ─────────────────────────────────────────────── */
 .color-choice__progress-section {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-6);
 }
 
-.color-choice__progress-heading {
-  margin-bottom: var(--space-2);
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
-  color: var(--marble);
-}
-
+/* Roman-themed merit bar: bronze/stone outer frame, engraved channel,
+   gold fill with a soft metallic shine sweep and gentle glow pulse. */
 .color-choice__progress-track {
-  height: 10px;
-  border: 1px solid var(--oxblood);
+  position: relative;
+  height: 16px;
+  padding: 2px;
+  border: 1px solid var(--legion-secondary);
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.35);
-  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.2)),
+    var(--umber);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.65),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(216, 182, 107, 0.08);
 }
 
 .color-choice__progress-fill {
+  position: relative;
   height: 100%;
-  background: linear-gradient(90deg, var(--bronze), var(--gold));
-  box-shadow: 0 0 8px var(--bronze-glow);
-  transition: width 0.4s ease;
+  border-radius: 999px;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--legion-accent-strong) 0%, var(--legion-accent) 45%, var(--legion-secondary) 100%);
+  box-shadow:
+    0 0 10px var(--legion-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.35);
+  transition: width 0.5s var(--ease-standard);
+  animation: color-choice-progress-glow 3.2s ease-in-out infinite;
+}
+
+@keyframes color-choice-progress-glow {
+  0%, 100% { box-shadow: 0 0 8px var(--legion-glow), inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -2px 3px rgba(0,0,0,0.35); }
+  50%      { box-shadow: 0 0 14px var(--legion-glow), inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -2px 3px rgba(0,0,0,0.35); }
+}
+
+/* metallic shine sweeping across the fill */
+.color-choice__progress-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.35) 40%,
+    rgba(255, 255, 255, 0.55) 48%,
+    rgba(255, 255, 255, 0.35) 56%,
+    transparent 75%
+  );
+  background-size: 220% 100%;
+  animation: color-choice-shine-sweep 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes color-choice-shine-sweep {
+  0%   { background-position: 130% 0; }
+  55%  { background-position: -30% 0; }
+  100% { background-position: -30% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .color-choice__progress-fill { animation: none; }
+  .color-choice__progress-shine { animation: none; }
 }
 
 .color-choice__progress-caption {
-  margin-top: var(--space-2);
+  margin-top: var(--space-3);
   text-align: center;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   line-height: 1.4;
-  color: var(--marble-dim);
+  color: var(--marble);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.color-choice__progress-subcaption {
+  margin-top: 3px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--legion-accent);
+  opacity: 0.9;
 }
 
 /* ── Action section inside the main panel ─────────────────────────── */
 .color-choice__panel-actions {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
+  gap: var(--space-6);
+  margin-top: var(--space-3);
 }
 
 .color-choice__start {
@@ -112,43 +316,110 @@
   justify-content: center;
 }
 
-.color-choice__start-btn {
-  width: auto;
-  min-width: 120px;
-  padding: 6px 14px;
-  font-size: 0.75rem;
-  letter-spacing: 0.03em;
+/* Start Battle — the strongest call to action on the screen: wide,
+   tall, premium gradient in the campaign's accent, matching border,
+   soft ambient glow, and a confident hover lift / active depress. */
+.color-choice__start-btn.color-choice__start-btn {
+  width: 100%;
+  max-width: 360px;
+  min-width: 0;
+  padding: 18px 30px;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  gap: 12px;
+  border-radius: 12px;
+  border: 2px solid var(--legion-accent);
+  background: linear-gradient(180deg, var(--legion-accent-strong) 0%, var(--legion-accent) 45%, var(--legion-secondary) 100%);
+  color: #1a0f04;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 6px 18px rgba(0, 0, 0, 0.5),
+    0 0 28px var(--legion-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  transition: transform var(--duration-base) var(--ease-standard),
+              box-shadow var(--duration-base) var(--ease-standard),
+              filter var(--duration-base) var(--ease-standard);
+}
+
+.color-choice--club .color-choice__start-btn.color-choice__start-btn {
+  color: #0d1113;
+}
+
+.color-choice__start-btn.color-choice__start-btn:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.025);
+  filter: brightness(1.05);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 10px 26px rgba(0, 0, 0, 0.55),
+    0 0 40px var(--legion-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.color-choice__start-btn.color-choice__start-btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+  filter: brightness(0.97);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 3px 10px rgba(0, 0, 0, 0.5),
+    0 0 18px var(--legion-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.color-choice__start-icon {
+  font-size: 1.35rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+}
+
+.color-choice__start-label {
+  font-weight: 700;
 }
 
 /* ── Rank-info content within the same panel ──────────────────────── */
 .color-choice__rank-info {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-4);
-  padding: var(--space-3);
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-5);
   border: 1px solid var(--oxblood);
-  border-radius: 10px;
+  border-radius: 12px;
   background: rgba(8, 5, 3, 0.26);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow: var(--elev-lg);
 }
 
 .color-choice__rank-info-body {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-3);
   flex: 1 1 auto;
   min-width: 0;
   text-align: left;
 }
 
+/* portrait enlarged ~20% (140px -> 168px) with a soft contact shadow and
+   the campaign's accent glow, per "portraits get a soft contact shadow" */
 .color-choice__rank-info-portrait-wrap {
   flex: 0 0 auto;
-  width: 140px;
-  height: 140px;
+  width: 168px;
+  height: 168px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid rgba(212, 175, 55, 0.45);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+  border: 3px solid var(--legion-accent);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.6),
+    0 0 26px var(--legion-glow),
+    0 0 0 4px rgba(15, 13, 10, 0.55);
+  transition: transform var(--duration-base) var(--ease-standard),
+              box-shadow var(--duration-base) var(--ease-standard);
+}
+
+.color-choice__rank-info-portrait-wrap:hover {
+  transform: scale(1.03);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.6),
+    0 0 34px var(--legion-glow),
+    0 0 0 4px rgba(15, 13, 10, 0.55);
 }
 
 .color-choice__rank-info-portrait {
@@ -161,42 +432,79 @@
 
 .color-choice__rank-info-title {
   margin-bottom: 0;
-  color: var(--gold);
+  color: var(--legion-accent);
   font-family: var(--font-display);
-  font-size: 0.92rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
   line-height: 1.3;
+  text-shadow: 0 0 14px var(--legion-glow);
 }
 
 .color-choice__rank-info-text {
   margin: 0;
   color: var(--marble-dim);
-  font-size: 0.74rem;
-  line-height: 1.45;
+  font-size: 0.78rem;
+  line-height: 1.5;
 }
 
+/* small Roman ornament dividing the description from the plaque below */
+.color-choice__rank-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 220px;
+  margin: 2px 0;
+}
+
+.color-choice__rank-divider-line {
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--legion-highlight), transparent);
+  opacity: 0.6;
+}
+
+.color-choice__rank-divider-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--legion-highlight);
+  opacity: 0.8;
+  flex: 0 0 auto;
+}
+
+/* "Did You Know" — an ancient stone plaque: dark texture, thin bronze
+   border, soft gold heading, slight inner shadow. */
 .rank-fact {
   width: 100%;
-  padding: var(--space-2) var(--space-3);
-  background: rgba(212, 175, 55, 0.08);
-  border: 1px solid var(--oxblood);
+  padding: var(--space-3) var(--space-4);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), transparent 40%),
+    radial-gradient(ellipse at 30% 20%, rgba(138,106,59,0.08), transparent 65%),
+    rgba(5, 4, 3, 0.55);
+  border: 1px solid var(--legion-secondary-dim);
   border-radius: 8px;
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .rank-fact-title {
   display: block;
-  margin-bottom: 2px;
-  font-size: 0.68rem;
+  margin-bottom: 4px;
+  font-size: 0.65rem;
   font-weight: 700;
-  color: var(--gold);
+  font-family: var(--font-display);
+  color: var(--legion-accent);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 10px var(--legion-glow);
 }
 
 .rank-fact-text {
-  font-size: 0.72rem;
-  line-height: 1.45;
+  font-size: 0.74rem;
+  line-height: 1.5;
   color: var(--marble-dim);
 }
 
@@ -226,27 +534,45 @@
   }
 
   .color-choice__panel {
-    padding: var(--space-3) var(--space-3) var(--space-4);
+    padding: var(--space-4) var(--space-3) var(--space-4);
   }
 
   .color-choice__panel-title {
-    margin-bottom: var(--space-3);
-    font-size: 1.05rem;
+    margin-bottom: var(--space-4);
+    font-size: 1.2rem;
     letter-spacing: 0.08em;
   }
 
-  .color-choice__rank-line {
-    margin-bottom: var(--space-3);
-    font-size: 0.92rem;
-    line-height: 1.45;
+  .color-choice__hero {
+    margin-bottom: var(--space-4);
+  }
+
+  .color-choice__rank-icon {
+    font-size: 1.25rem;
+  }
+
+  .color-choice__rank-title {
+    font-size: 1.3rem;
+  }
+
+  .color-choice__rank-merit {
+    margin-bottom: var(--space-2);
+  }
+
+  .color-choice__rank-merit-value {
+    font-size: 1.2rem;
+  }
+
+  .color-choice__rank-road {
+    font-size: 0.78rem;
   }
 
   .color-choice__road {
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-4);
   }
 
   .color-choice__progress-section {
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-4);
   }
 
   .color-choice__rank-info {
@@ -254,22 +580,24 @@
     align-items: center;
     text-align: left;
     gap: var(--space-3);
-    padding: var(--space-2);
+    padding: var(--space-3);
   }
 
   .color-choice__rank-info-body {
     text-align: left;
+    align-items: flex-start;
     gap: var(--space-2);
   }
 
   .color-choice__rank-info-portrait-wrap {
-    width: 92px;
-    height: 92px;
-    flex: 0 0 92px;
+    width: 110px;
+    height: 110px;
+    flex: 0 0 110px;
+    border-width: 2px;
   }
 
   .color-choice__rank-info-title {
-    font-size: 0.84rem;
+    font-size: 0.9rem;
   }
 
   .color-choice__rank-info-text {
@@ -277,12 +605,16 @@
     line-height: 1.4;
   }
 
+  .color-choice__rank-divider {
+    max-width: 160px;
+  }
+
   .rank-fact {
     padding: var(--space-2);
   }
 
   .rank-fact-title {
-    font-size: 0.64rem;
+    font-size: 0.62rem;
   }
 
   .rank-fact-text {
@@ -291,12 +623,14 @@
   }
 
   .color-choice__panel-actions {
-    gap: var(--space-3);
+    gap: var(--space-4);
     margin-top: var(--space-3);
   }
 
-  .color-choice__start-btn {
+  .color-choice__start-btn.color-choice__start-btn {
     width: 100%;
-    min-width: 0;
+    max-width: none;
+    padding: 14px 20px;
+    font-size: 0.9rem;
   }
 }
