@@ -137,6 +137,12 @@
   margin-bottom: var(--space-6);
 }
 
+.color-choice__hero-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .color-choice__rank-line {
   display: flex;
   align-items: center;
@@ -547,8 +553,18 @@
     margin-bottom: var(--space-3);
   }
 
+  .color-choice__hero-top {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: baseline;
+    column-gap: 12px;
+    row-gap: 2px;
+    margin-bottom: var(--space-1);
+  }
+
   .color-choice__rank-line {
-    margin-bottom: var(--space-2);
+    margin-bottom: 0;
   }
 
   .color-choice__rank-icon {
@@ -560,7 +576,7 @@
   }
 
   .color-choice__rank-merit {
-    margin-bottom: var(--space-1);
+    margin-bottom: 0;
   }
 
   .color-choice__rank-merit-value {
@@ -627,14 +643,14 @@
   }
 
   .color-choice__panel-actions {
-    gap: var(--space-4);
-    margin-top: var(--space-3);
+    gap: var(--space-3);
+    margin-top: var(--space-2);
   }
 
   .color-choice__start-btn.color-choice__start-btn {
     width: 100%;
     max-width: none;
-    padding: 14px 20px;
+    padding: 12px 20px;
     font-size: 0.9rem;
   }
 }

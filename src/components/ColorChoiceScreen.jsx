@@ -53,13 +53,15 @@ export function ColorChoiceScreen({ app }) {
           </div>
 
           <div className="color-choice__hero">
-            <div className="color-choice__rank-line">
-              <span className="color-choice__rank-icon" aria-hidden="true">{legion.icon}</span>
-              <span className="color-choice__rank-title">{legion.title}</span>
-            </div>
-            <div className="color-choice__rank-merit">
-              <span className="color-choice__rank-merit-value">{merit}</span>
-              <span className="color-choice__rank-merit-label">Merit</span>
+            <div className="color-choice__hero-top">
+              <div className="color-choice__rank-line">
+                <span className="color-choice__rank-icon" aria-hidden="true">{legion.icon}</span>
+                <span className="color-choice__rank-title">{legion.title}</span>
+              </div>
+              <div className="color-choice__rank-merit">
+                <span className="color-choice__rank-merit-value">{merit}</span>
+                <span className="color-choice__rank-merit-label">Merit</span>
+              </div>
             </div>
             <div className="color-choice__rank-road">
               {legion.nextRank ? `Road to ${legion.nextRank}` : 'Highest Rank Attained'}
