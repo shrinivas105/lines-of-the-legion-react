@@ -21,7 +21,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-size: 0.62rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -69,7 +69,7 @@
 }
 
 .legion-card__rank {
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-size: 1.15rem;
   color: var(--marble);
   letter-spacing: 0.02em;
@@ -109,7 +109,7 @@
 
 .legion-card__progress-label {
   margin-top: var(--space-2);
-  font-family: var(--font-mono);
+  font-family: var(--font-stat);
   font-size: 0.68rem;
   color: var(--marble-dim);
 }

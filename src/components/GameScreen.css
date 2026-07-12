@@ -17,7 +17,7 @@
 .game-screen__info-line,
 .info-line {
   margin: 1px 0;
-  font-family: 'Cinzel', serif;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
   font-size: 0.45rem;
   font-weight: 600;
   color: #ffffff;

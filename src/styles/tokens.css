@@ -44,10 +44,16 @@
   --oxblood-text:   #d16a6a;
   --verdigris-text: #6fae9f;
 
-  /* ── Type ── */
-  --font-display: "Cinzel", "Trajan Pro", Georgia, serif; /* inscriptional */
-  --font-body:    "Spectral", Georgia, serif;              /* humanist, readable */
-  --font-mono:    "JetBrains Mono", "Courier New", monospace; /* field-dispatch stats */
+  /* ── Type: five-role system, each font doing one job rather than one
+     pairing carrying everything. Cinzel remains the identity face — it's
+     reserved for the logo, campaign names, and major headings so it stays
+     special instead of thinning out across every label in the UI. ── */
+  --font-display: "Cinzel", "Trajan Pro", Georgia, serif;   /* logo, campaign names, major headings */
+  --font-title:   "Marcellus", "Cinzel", Georgia, serif;    /* card titles, section headers */
+  --font-body:    "Spectral", Georgia, serif;                /* humanist, readable body text */
+  --font-accent:  "Forum", "Cinzel", Georgia, serif;         /* commander quotes, Latin phrases, inscriptions */
+  --font-stat:    "Inter", "Segoe UI", sans-serif;           /* stats, percentages, merit values, UI numbers */
+  --font-mono:    "JetBrains Mono", "Courier New", monospace; /* reserved for literal monospace/code contexts */
 
   /* ── Scale ── */
   --space-1: 4px;

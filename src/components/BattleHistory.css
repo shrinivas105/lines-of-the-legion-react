@@ -5,7 +5,7 @@
 }
 
 .battle-history__title {
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-size: 0.6rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -32,7 +32,7 @@
 }
 
 .battle-history__badge-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-stat);
   font-size: 0.5rem;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -75,7 +75,7 @@
 }
 
 .battle-history__tooltip-title {
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-size: 0.66rem;
@@ -116,7 +116,7 @@
 }
 .demotion-table th {
   color: var(--marble);
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-weight: 600;
 }
 

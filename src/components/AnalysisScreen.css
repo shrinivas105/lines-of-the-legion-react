@@ -241,5 +241,5 @@
 .analysis-loading__pct {
   color: var(--marble-dim);
   font-size: 0.72rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-stat);
 }

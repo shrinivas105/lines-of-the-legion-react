@@ -166,7 +166,7 @@
 }
 
 .color-choice__rank-title {
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -195,7 +195,7 @@
 }
 
 .color-choice__rank-merit-value {
-  font-family: var(--font-mono);
+  font-family: var(--font-stat);
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--marble);
@@ -203,7 +203,7 @@
 }
 
 .color-choice__rank-merit-label {
-  font-family: var(--font-display);
+  font-family: var(--font-stat);
   font-size: 0.78rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -211,7 +211,7 @@
 }
 
 .color-choice__rank-road {
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-size: 0.95rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -297,7 +297,7 @@
 .color-choice__progress-caption {
   margin-top: var(--space-3);
   text-align: center;
-  font-family: var(--font-mono);
+  font-family: var(--font-stat);
   font-size: 0.85rem;
   line-height: 1.4;
   color: var(--marble);
@@ -308,7 +308,7 @@
 .color-choice__progress-subcaption {
   margin-top: 3px;
   text-align: center;
-  font-family: var(--font-display);
+  font-family: var(--font-stat);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -448,7 +448,7 @@
 .color-choice__rank-info-title {
   margin-bottom: 0;
   color: var(--legion-accent);
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -516,7 +516,7 @@
   margin-bottom: 4px;
   font-size: 0.65rem;
   font-weight: 700;
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   color: var(--legion-accent);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -524,7 +524,9 @@
 }
 
 .rank-fact-text {
-  font-size: 0.74rem;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 0.78rem;
   line-height: 1.5;
   color: var(--marble-dim);
 }

@@ -35,7 +35,7 @@
 .menu-subtitle {
   margin-bottom: var(--space-3);
   text-align: center;
-  font-family: 'Cinzel', serif;
+  font-family: 'Marcellus', 'Cinzel', serif;
   font-size: clamp(0.72rem, 0.96vw, 0.84rem);
   font-style: italic;
   letter-spacing: 0.09em;
@@ -415,21 +415,12 @@
   margin: 0 auto var(--space-4);
   background:
     linear-gradient(180deg, rgba(230, 221, 196, 0.03), transparent 55%),
-    rgba(10, 8, 5, 0.95);
+    rgba(10, 8, 5, 0.85);
   border: 1.5px solid rgba(216, 182, 107, 0.5);
   border-radius: 10px;
   box-shadow: var(--elev-sm);
   overflow: hidden;
   transition: border-color 200ms ease-out;
-  /* This is the exact row (Reset / About / Tip) that used to disappear
-     below the fold on a fresh URL load, since the browser's address bar
-     was still eating into the visible height at that point. Docking it to
-     the bottom of the viewport means it's guaranteed visible immediately,
-     on every load — matching how it already looked when reached via the
-     in-app Home button. */
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
 }
 
 .quick-actions:has(.quick-action-toggle:hover) {
