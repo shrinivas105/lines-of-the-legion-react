@@ -213,7 +213,7 @@ export class ChessTheoryApp {
       this.setRecentBattleRanks(this.aiSource, []);
     } else if (Scoring.canPromote(oldLegion.title, newMerit, recentRanks) && tempLegion.level > oldLegion.level) {
       newMerit = tempLegion.thresholds[tempLegion.level];
-      this.rankChangeMessage = `⚔️ Commander: You have been promoted to ${tempLegion.title}! A cup of Falernian wine for the glory you've won. 🏺`;
+      this.rankChangeMessage = `<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 10.4 2.6 19h18.8l-1.4-8.6-4.3 3.6L12 9l-3.7 5-4.3-3.6z"/><rect x="3.4" y="19" width="17.2" height="2" rx="0.5"/><circle cx="4" cy="8.6" r="1.35"/><circle cx="12" cy="6.6" r="1.6"/><circle cx="20" cy="8.6" r="1.35"/></svg> Commander: You have been promoted to ${tempLegion.title}! A cup of Falernian wine for the glory you've won. <svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align:-2px;margin-left:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.5 3h5v1.8h-5z"/><path d="M9 4.6h6v0.7h-6z"/><path d="M9.3 5.4c-.1 1.2-.4 1.9-.8 2.5 2.5.6 3.4.6 6 0-.4-.6-.7-1.3-.8-2.5z"/><path d="M6.6 8.4c.75-.55 1.4-.8 2.1-.85 1.15.75 3.35.75 4.5 0 .7.05 1.35.3 2.1.85 1.4 2.5 1.25 5.9-.85 7.9-.85.8-1.9 1.25-3.15 1.25s-2.3-.45-3.15-1.25c-2.1-2-2.25-5.4-.85-7.9z"/></svg>`;
       this.rankChangeType = 'promotion';
       rankChanged = true;
       this.setRecentBattleRanks(this.aiSource, []);
@@ -624,7 +624,7 @@ export class ChessTheoryApp {
       }
 
       const totalGames = (data.white || 0) + (data.draws || 0) + (data.black || 0);
-      const apologyText = `🎖️ <strong>Commander speaks:</strong><br><br>"I'm sorry, soldier. I have not seen this position on the battlefield."`;
+      const apologyText = `<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.8 2.2 11.3 9.2 8.9 10.4 5.4 3.4z"/><path d="M16.2 2.2 12.7 9.2 15.1 10.4 18.6 3.4z"/><circle cx="12" cy="15.4" r="6.4"/><path d="M12 12.4 13 14.6 15.4 14.9 13.7 16.5 14.1 18.9 12 17.7 9.9 18.9 10.3 16.5 8.6 14.9 11 14.6Z" fill="#241f19"/></svg> <strong>Commander speaks:</strong><br><br>"I'm sorry, soldier. I have not seen this position on the battlefield."`;
       const defeatLines = [
         `"Soldier... every path from here leads to ruin. This ground is already lost."`,
         `"There is no glory to be found here. The enemy holds every road we could take."`,
@@ -654,7 +654,7 @@ export class ChessTheoryApp {
       const anyAbove40 = movesWithStats.some(m => m.winPct > 40);
       if (!anyAbove40) {
         const line = defeatLines[Math.floor(Math.random() * defeatLines.length)];
-        this.theoryMessage = `🎖️ <strong>Commander speaks:</strong><br><br>${line}`;
+        this.theoryMessage = `<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.8 2.2 11.3 9.2 8.9 10.4 5.4 3.4z"/><path d="M16.2 2.2 12.7 9.2 15.1 10.4 18.6 3.4z"/><circle cx="12" cy="15.4" r="6.4"/><path d="M12 12.4 13 14.6 15.4 14.9 13.7 16.5 14.1 18.9 12 17.7 9.9 18.9 10.3 16.5 8.6 14.9 11 14.6Z" fill="#241f19"/></svg> <strong>Commander speaks:</strong><br><br>${line}`;
         this.theoryMessageVisible = true;
         if (this.mode !== 'practice') {
           this.hintUsed = true;
@@ -666,7 +666,7 @@ export class ChessTheoryApp {
       const mostPopular = top3.reduce((max, move) => move.games > max.games ? move : max);
       const highestWin = top3.reduce((max, move) => move.winPct > max.winPct ? move : max);
 
-      commanderText = `🎖️ <strong>Commander speaks:</strong><br><br>"Soldier, I have seen this position many times.`;
+      commanderText = `<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.8 2.2 11.3 9.2 8.9 10.4 5.4 3.4z"/><path d="M16.2 2.2 12.7 9.2 15.1 10.4 18.6 3.4z"/><circle cx="12" cy="15.4" r="6.4"/><path d="M12 12.4 13 14.6 15.4 14.9 13.7 16.5 14.1 18.9 12 17.7 9.9 18.9 10.3 16.5 8.6 14.9 11 14.6Z" fill="#241f19"/></svg> <strong>Commander speaks:</strong><br><br>"Soldier, I have seen this position many times.`;
 
       if (mostPopular.san === highestWin.san) {
         commanderText += ` <strong>${mostPopular.san}</strong> is the most popular and strongest path — tried ${mostPopular.games.toLocaleString()} times with ${mostPopular.winPct.toFixed(1)}% victories!`;

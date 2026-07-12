@@ -8,6 +8,7 @@
 import { Scoring } from '../logic/scoring';
 import { RankBadge } from './RankBadge';
 import { BattleHistory } from './BattleHistory';
+import { IconLaurelWreath, IconSPQRBanner } from './RomanIcons';
 import './LegionCard.css';
 
 export function LegionCard({ app, source, label, metal }) {
@@ -27,7 +28,9 @@ export function LegionCard({ app, source, label, metal }) {
   return (
     <div className={`legion-card legion-card--${resolvedMetal}`}>
       <div className={`legion-card__metal-tag legion-card__metal-tag--${resolvedMetal}`}>
-        {resolvedMetal === 'gold' ? '★ Master Legion' : '◆ Club Legion'}
+        {resolvedMetal === 'gold'
+          ? <><IconLaurelWreath className="legion-card__metal-icon" aria-hidden="true" /> Master Legion</>
+          : <><IconSPQRBanner className="legion-card__metal-icon" aria-hidden="true" /> Club Legion</>}
       </div>
 
       <div className="legion-card__head">

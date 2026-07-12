@@ -31,6 +31,12 @@
   margin-bottom: var(--space-4);
 }
 
+.legion-card__metal-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex-shrink: 0;
+}
+
 .legion-card__metal-tag--gold {
   color: #2a1f0d;
   background: linear-gradient(180deg, #ecd5a0, var(--gold));

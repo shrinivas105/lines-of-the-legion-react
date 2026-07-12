@@ -68,6 +68,13 @@
   filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
 }
 
+.rank-badge__icon-svg {
+  position: relative;
+  width: 1.3em;
+  height: 1.3em;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
+}
+
 /* Portrait badges: the source artwork already is an engraved bronze coin,
    so the synthetic metallic gradient/highlight backdrop is suppressed here
    (it would double up and look muddy against real photographic shading).

@@ -15,6 +15,29 @@
   font-family: var(--font-display);
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.analysis-screen__title-icon {
+  width: 1em;
+  height: 1em;
+}
+
+.analysis-movelist__icon {
+  width: 0.85em;
+  height: 0.85em;
+  vertical-align: -0.1em;
+  margin-left: 2px;
+}
+
+.analysis-compare__icon {
+  width: 0.85em;
+  height: 0.85em;
+  vertical-align: -0.1em;
+  margin-left: 2px;
 }
 
 .analysis-board-wrap {
@@ -165,7 +188,9 @@
   text-align: center;
 }
 .analysis-loading__icon {
-  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto;
   animation: analysis-pulse 2s ease-in-out infinite;
 }
 @keyframes analysis-pulse {

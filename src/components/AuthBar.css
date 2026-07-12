@@ -21,6 +21,9 @@
 
 .auth-bar__email {
   color: var(--marble-dim);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .auth-bar__signout {
@@ -44,9 +47,17 @@
   color: var(--gold);
   cursor: pointer;
   transition: filter 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 .auth-bar__signin:hover {
   filter: brightness(1.2);
+}
+.auth-bar__icon {
+  width: 0.9em;
+  height: 0.9em;
+  flex-shrink: 0;
 }
 
 @media (max-width: 480px) {

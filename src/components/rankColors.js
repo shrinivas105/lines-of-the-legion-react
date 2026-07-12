@@ -32,15 +32,41 @@ export const LEGION_RANK_COLORS = {
   Legatus:   '#f0d896',
 };
 
+import {
+  IconCenturionHelmet,
+  IconRomanShield,
+  IconCrossedGladius,
+  IconRomanEagle,
+  IconImperialCrown,
+  IconTrainingSword,
+  IconRomanMedal,
+  IconVictoryBanner,
+} from './RomanIcons';
+
 // Default icon glyphs for battle ranks, used when no explicit icon is
 // passed — gives small badges (e.g. battle history) a real symbol instead
-// of a bare initial letter.
+// of a bare initial letter. Was raw emoji; now SVG components (see
+// RomanIcons.jsx) rendered via <RankBadge>'s glyph slot.
 export const BATTLE_RANK_ICONS = {
-  Levy:       '🪖',
-  Hastatus:   '🛡️',
-  Principes:  '⚔️',
-  Triarius:   '🦅',
-  Imperator:  '👑',
+  Levy:       IconCenturionHelmet,
+  Hastatus:   IconRomanShield,
+  Principes:  IconCrossedGladius,
+  Triarius:   IconRomanEagle,
+  Imperator:  IconImperialCrown,
+};
+
+// Icon glyphs for Legion ranks (Recruit -> Legatus), mirrored 1:1 from the
+// emoji set they replace (which itself reused battle-rank symbols across
+// tracks — Legionary/Hastatus both shield, Optio/Principes both gladius,
+// Centurion/Triarius both eagle). Kept for ranks whose portrait art hasn't
+// landed yet / fails to load.
+export const LEGION_RANK_ICONS = {
+  Recruit:   IconTrainingSword,
+  Legionary: IconRomanShield,
+  Optio:     IconCrossedGladius,
+  Centurion: IconRomanEagle,
+  Tribunus:  IconRomanMedal,
+  Legatus:   IconVictoryBanner,
 };
 
 // AI-generated engraved-medallion portraits for all six Legion ranks

@@ -9,7 +9,8 @@ import { CampaignCard } from './CampaignCard';
 import masterCardArt from '../assets/campaign-cards/master-card.webp';
 import clubCardArt from '../assets/campaign-cards/club-card.webp';
 import practiceCardArt from '../assets/campaign-cards/practice-card.webp';
-import { IconReset, IconScroll, IconAmphora } from './RomanIcons';
+import { IconReset, IconScroll, IconAmphora, IconOilLamp } from './RomanIcons';
+import { BATTLE_RANK_ICONS, LEGION_RANK_ICONS } from './rankColors';
 import './MenuScreen.css';
 
 const DONATION_PAYPAL = 'https://paypal.me/yourhandle';
@@ -114,15 +115,22 @@ export function MenuScreen({ app }) {
 
                   <h4>3. BATTLE RANKS</h4>
                   <p>
-                    <span className="battle-rank battle-rank--levy">🪖 Levy</span> (0–39) ·
-                    <span className="battle-rank battle-rank--hastatus"> 🛡️ Hastatus</span> (40–54) ·
-                    <span className="battle-rank battle-rank--principes"> ⚔️ Principes</span> (55–69)<br />
-                    <span className="battle-rank battle-rank--triarius">🦅 Triarius</span> (70–84) ·
-                    <span className="battle-rank battle-rank--imperator"> 👑 Imperator</span> (85–100)
+                    <span className="battle-rank battle-rank--levy"><BATTLE_RANK_ICONS.Levy className="rank-legend-icon" aria-hidden="true" /> Levy</span> (0–39) ·
+                    <span className="battle-rank battle-rank--hastatus"> <BATTLE_RANK_ICONS.Hastatus className="rank-legend-icon" aria-hidden="true" /> Hastatus</span> (40–54) ·
+                    <span className="battle-rank battle-rank--principes"> <BATTLE_RANK_ICONS.Principes className="rank-legend-icon" aria-hidden="true" /> Principes</span> (55–69)<br />
+                    <span className="battle-rank battle-rank--triarius"><BATTLE_RANK_ICONS.Triarius className="rank-legend-icon" aria-hidden="true" /> Triarius</span> (70–84) ·
+                    <span className="battle-rank battle-rank--imperator"> <BATTLE_RANK_ICONS.Imperator className="rank-legend-icon" aria-hidden="true" /> Imperator</span> (85–100)
                   </p>
 
                   <h4>4. LEGION RANKS</h4>
-                  <p>🌱 Recruit (0) → 🛡️ Legionary (200) → ⚔️ Optio (500)<br />🦅 Centurion (900) → 🏅 Tribunus (1300) → 🏆 Legatus (1750)</p>
+                  <p className="menu-screen__rank-ladder">
+                    <span><LEGION_RANK_ICONS.Recruit className="rank-legend-icon" aria-hidden="true" /> Recruit (0)</span> →
+                    <span><LEGION_RANK_ICONS.Legionary className="rank-legend-icon" aria-hidden="true" /> Legionary (200)</span> →
+                    <span><LEGION_RANK_ICONS.Optio className="rank-legend-icon" aria-hidden="true" /> Optio (500)</span><br />
+                    <span><LEGION_RANK_ICONS.Centurion className="rank-legend-icon" aria-hidden="true" /> Centurion (900)</span> →
+                    <span><LEGION_RANK_ICONS.Tribunus className="rank-legend-icon" aria-hidden="true" /> Tribunus (1300)</span> →
+                    <span><LEGION_RANK_ICONS.Legatus className="rank-legend-icon" aria-hidden="true" /> Legatus (1750)</span>
+                  </p>
 
                   <h4>5. DEMOTION &amp; DISCIPLINE</h4>
                   <table>
@@ -269,7 +277,7 @@ function Footer() {
   return (
     <div className="menu-screen__footer">
       <button className="menu-screen__toggle" onClick={() => setSupportersOpen(v => !v)}>
-        <span>🙏 Supporters</span><span>{supportersOpen ? '▲' : '▼'}</span>
+        <span><IconOilLamp className="menu-screen__toggle-icon" aria-hidden="true" /> Supporters</span><span>{supportersOpen ? '▲' : '▼'}</span>
       </button>
       {supportersOpen && (
         <div className="menu-screen__supporters">

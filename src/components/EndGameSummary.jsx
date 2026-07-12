@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { Panel } from './Panel';
 import { Button } from './Button';
 import { BATTLE_RANK_COLORS } from './rankColors';
+import { IconReset, IconStoneTablet, IconCrossedGladius, IconFortress } from './RomanIcons';
 import './EndGameSummary.css';
 
 const RANK_COLORS = BATTLE_RANK_COLORS;
@@ -42,13 +43,14 @@ export function EndGameSummary({ app }) {
   return (
     <Panel className="end-summary">
       {rankChangeMessage && (
-        <div className={isPromotion ? 'end-summary__rank-change end-summary__rank-change--promo' : 'end-summary__rank-change end-summary__rank-change--demo'}>
-          {rankChangeMessage}
-        </div>
+        <div
+          className={isPromotion ? 'end-summary__rank-change end-summary__rank-change--promo' : 'end-summary__rank-change end-summary__rank-change--demo'}
+          dangerouslySetInnerHTML={{ __html: rankChangeMessage }}
+        />
       )}
 
       <h3 className="end-summary__heading" style={{ color: rankColor, textShadow: `0 0 20px ${rankColor}` }}>
-        {battleRank.icon} {battleRank.title} • Score: {battleRank.score}/100
+        <battleRank.icon className="end-summary__rank-icon" aria-hidden="true" /> {battleRank.title} • Score: {battleRank.score}/100
       </h3>
 
       <div className="end-summary__stats">
@@ -90,13 +92,13 @@ export function EndGameSummary({ app }) {
       </div>
 
       <div className="end-summary__buttons">
-        <Button variant="danger" size="sm" onClick={() => app.showAnalysis()}>📊 Analyze</Button>
+        <Button variant="danger" size="sm" onClick={() => app.showAnalysis()}><IconStoneTablet className="end-summary__btn-icon" aria-hidden="true" /> Analyze</Button>
         {isPractice ? (
-          <Button variant="danger" size="sm" onClick={handleTryAgain}>🔄 Try Again</Button>
+          <Button variant="danger" size="sm" onClick={handleTryAgain}><IconReset className="end-summary__btn-icon" aria-hidden="true" /> Try Again</Button>
         ) : (
-          <Button variant="danger" size="sm" onClick={() => app.startBattle()}>⚔️ Continue Campaign</Button>
+          <Button variant="danger" size="sm" onClick={() => app.startBattle()}><IconCrossedGladius className="end-summary__btn-icon" aria-hidden="true" /> Continue Campaign</Button>
         )}
-        <Button variant="danger" size="sm" onClick={() => app.goHome()}>🚪 Exit</Button>
+        <Button variant="danger" size="sm" onClick={() => app.goHome()}><IconFortress className="end-summary__btn-icon" aria-hidden="true" /> Exit</Button>
       </div>
 
       {isPractice && (

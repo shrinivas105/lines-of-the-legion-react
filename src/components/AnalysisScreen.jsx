@@ -9,6 +9,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Panel } from './Panel';
 import { Button } from './Button';
+import { IconCornu, IconCircularLaurel, IconCrossedGladius } from './RomanIcons';
 import './AnalysisScreen.css';
 
 function squareToCoords(square, isFlipped, squareSize) {
@@ -130,14 +131,14 @@ function MoveList({ app }) {
           className={`analysis-movelist__item ${ab.currentMoveIndex === i ? 'active' : ''} ${!isWhitePlayer ? 'dim' : ''}`}
           onClick={() => ab.goToMove(i + 1)}
         >
-          {moveNum}. {whiteMove.san}{isWhitePlayer ? '' : ' 🤖'}
+          {moveNum}. {whiteMove.san}{isWhitePlayer ? '' : <IconCornu className="analysis-movelist__icon" aria-hidden="true" />}
         </button>
         {blackMove ? (
           <button
             className={`analysis-movelist__item ${ab.currentMoveIndex === i + 1 ? 'active' : ''} ${isWhitePlayer ? 'dim' : ''}`}
             onClick={() => ab.goToMove(i + 2)}
           >
-            {blackMove.san}{!isWhitePlayer ? '' : ' 🤖'}
+            {blackMove.san}{!isWhitePlayer ? '' : <IconCornu className="analysis-movelist__icon" aria-hidden="true" />}
           </button>
         ) : <div />}
       </div>
@@ -176,7 +177,7 @@ function ComparisonTable({ app }) {
               className={row.isCurrentMove ? 'current' : ''}
               style={{ borderLeft: `3px solid ${row.color}` }}
             >
-              <td><span style={{ color: row.color, fontWeight: 'bold' }}>{row.label}:</span> {row.move}{row.isCurrentMove ? (row.moveType === 'Your' ? ' ✓' : ' 🤖') : ''}</td>
+              <td><span style={{ color: row.color, fontWeight: 'bold' }}>{row.label}:</span> {row.move}{row.isCurrentMove ? (row.moveType === 'Your' ? <IconCircularLaurel className="analysis-compare__icon" aria-hidden="true" /> : <IconCornu className="analysis-compare__icon" aria-hidden="true" />) : ''}</td>
               <td>{row.whiteWin}%</td>
               <td>{row.blackWin}%</td>
               <td className="draw">{row.draws}%</td>
@@ -197,7 +198,7 @@ export function AnalysisScreen({ app }) {
   if (app.analysisLoading) {
     return (
       <div className="analysis-loading">
-        <div className="analysis-loading__icon">⚔️</div>
+        <IconCrossedGladius className="analysis-loading__icon" aria-hidden="true" />
         <div className="analysis-loading__title">Analyzing Battle...</div>
         <div className="analysis-loading__message">{ab.preloadMessage || 'Evaluating all positions...'}</div>
         <div className="analysis-loading__bar-track">
@@ -210,7 +211,7 @@ export function AnalysisScreen({ app }) {
 
   return (
     <div className="analysis-screen page-transition">
-      <h2 className="analysis-screen__title">⚔️ Battle Analysis ⚔️</h2>
+      <h2 className="analysis-screen__title"><IconCrossedGladius className="analysis-screen__title-icon" aria-hidden="true" /> Battle Analysis <IconCrossedGladius className="analysis-screen__title-icon" aria-hidden="true" /></h2>
 
       <AnalysisBoardGrid app={app} boardSize={boardSize} setBoardSize={setBoardSize} />
 

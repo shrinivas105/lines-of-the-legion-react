@@ -11,6 +11,7 @@ import { LichessConnectButton } from './LichessConnectButton';
 import { Scoring } from '../logic/scoring';
 import { isConnected } from '../services/lichessAuth';
 import { LEGION_RANK_PORTRAITS } from './rankColors';
+import { IconCrossedGladius } from './RomanIcons';
 import './ColorChoiceScreen.css';
 
 const RANK_FACTS = {
@@ -55,7 +56,7 @@ export function ColorChoiceScreen({ app }) {
           <div className="color-choice__hero">
             <div className="color-choice__hero-top">
               <div className="color-choice__rank-line">
-                <span className="color-choice__rank-icon" aria-hidden="true">{legion.icon}</span>
+                <span className="color-choice__rank-icon" aria-hidden="true"><legion.icon /></span>
                 <span className="color-choice__rank-title">{legion.title}</span>
               </div>
               <div className="color-choice__rank-merit">
@@ -93,7 +94,7 @@ export function ColorChoiceScreen({ app }) {
           <div className="color-choice__panel-actions">
             <div className="color-choice__start">
               <Button variant="danger" size="lg" className="color-choice__start-btn" onClick={() => app.startBattle()}>
-                <span className="color-choice__start-icon" aria-hidden="true">⚔️</span>
+                <IconCrossedGladius className="color-choice__start-icon" aria-hidden="true" />
                 <span className="color-choice__start-label">Start Battle</span>
               </Button>
             </div>
@@ -108,7 +109,7 @@ export function ColorChoiceScreen({ app }) {
                 />
               </div>
               <div className="color-choice__rank-info-body">
-                <div className="color-choice__rank-info-title">{legion.icon} {currentRankInfo.label}</div>
+                <div className="color-choice__rank-info-title"><legion.icon className="color-choice__rank-info-icon" aria-hidden="true" /> {currentRankInfo.label}</div>
                 <p className="color-choice__rank-info-text">{currentRankInfo.text}</p>
                 <div className="color-choice__rank-divider" role="separator" aria-hidden="true">
                   <span className="color-choice__rank-divider-line" />

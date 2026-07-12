@@ -51,6 +51,18 @@
   letter-spacing: 0.03em;
 }
 
+.end-summary__rank-icon {
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: -0.15em;
+}
+
+.end-summary__btn-icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
 .end-summary__stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

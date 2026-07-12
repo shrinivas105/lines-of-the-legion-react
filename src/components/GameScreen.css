@@ -88,8 +88,10 @@
   max-width: 420px;
 }
 
-.game-screen__error h3 { color: var(--oxblood-text); margin-bottom: var(--space-3); }
+.game-screen__error h3 { color: var(--oxblood-text); margin-bottom: var(--space-3); display: flex; align-items: center; justify-content: center; gap: 6px; }
 .game-screen__error p { color: var(--marble-dim); margin-bottom: var(--space-4); }
+.game-screen__heading-icon { width: 1em; height: 1em; flex-shrink: 0; }
+.game-screen__btn-icon { width: 1em; height: 1em; flex-shrink: 0; }
 
 @media (max-width: 600px) {
   .game-screen { padding: 4px 2px 8px; }
