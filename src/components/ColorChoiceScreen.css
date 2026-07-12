@@ -586,6 +586,10 @@
     font-size: 0.68rem;
   }
 
+  .color-choice__progress-caption {
+    font-size: 0.68rem;
+  }
+
   .color-choice__section-heading {
     font-size: 0.8rem;
     margin-bottom: var(--space-2);
