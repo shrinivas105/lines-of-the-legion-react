@@ -8,7 +8,7 @@
   position: relative;
   z-index: 2;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
   padding: 4px 4px;
@@ -16,8 +16,10 @@
 
 .legion-path__step {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   flex: 1 1 0;
   min-width: 0;
   position: relative;
@@ -49,6 +51,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 14px;
   font-size: 1.1rem;
   font-weight: 700;
   line-height: 1;
@@ -67,6 +70,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Ladder badges get a small bump over the base --md size (40px -> 46px)
+   — RankBadge's size="md" is only used here, so this is scoped locally
+   rather than changing the shared default. */
+.legion-path__node .rank-badge--md {
+  width: 46px;
+  height: 46px;
+  font-size: 1.05rem;
+}
+
+.legion-path__label {
+  font-family: var(--font-stat);
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--marble-dim);
+  text-align: center;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.legion-path__step--reached .legion-path__label {
+  color: var(--marble);
+}
+
+.legion-path__step--current .legion-path__label {
+  color: var(--legion-accent, var(--gold));
+  font-weight: 700;
 }
 
 /* completed ranks: a soft, steady ring in the campaign accent instead of
@@ -131,11 +164,17 @@
   .legion-path__connector {
     flex-basis: 18px;
     font-size: 0.9rem;
+    margin-top: 10px;
   }
 
   .legion-path__node .rank-badge--md {
-    width: 30px;
-    height: 30px;
-    font-size: 0.75rem;
+    width: 34px;
+    height: 34px;
+    font-size: 0.82rem;
+  }
+
+  .legion-path__label {
+    font-size: 0.48rem;
+    letter-spacing: 0.01em;
   }
 }

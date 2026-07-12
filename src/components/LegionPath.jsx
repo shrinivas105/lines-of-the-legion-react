@@ -1,8 +1,9 @@
 // components/LegionPath.jsx — the Road to Legatus rank ladder: all six
 // ranks sit in a single flat row, a continuous horizontal line threads
 // through all of them, and the current rank's node gets a glow ring via
-// RankBadge's `active` prop. Deliberately minimal — just the badges and
-// the line, no per-node labels/flag/legend — so it reads at a glance.
+// RankBadge's `active` prop. Each node carries a small rank-name label
+// underneath so the ladder is legible without hovering, alongside the
+// badges and connecting line.
 //
 // Pure presentation — consumes the same Scoring.getLegionRank() shape
 // (title, level, rankOrder) already used by LegionCard/ColorChoiceScreen.
@@ -38,6 +39,7 @@ export function LegionPath({ legion }) {
                 <div className="legion-path__node">
                   <RankBadge title={title} size="md" active={isCurrent} />
                 </div>
+                <div className="legion-path__label">{title}</div>
               </div>
               {!isLast && (
                 <div
