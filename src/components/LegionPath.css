@@ -1,7 +1,6 @@
 .legion-path {
   position: relative;
   width: 100%;
-  margin: var(--space-4) 0;
   box-sizing: border-box;
 }
 
