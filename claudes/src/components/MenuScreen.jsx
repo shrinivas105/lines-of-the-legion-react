@@ -66,10 +66,10 @@ export function MenuScreen({ app }) {
           </p>
           <p className="tagline-line">
             Choose your campaign and step onto the field of glory. <em>Veni, vidi, vici!</em>
-          </p>
-          <p className="rules-link-line">
-            <span className="rules-link" onClick={() => setRulesOpen(v => !v)}>
-              Read Rules <span>{rulesOpen ? '▲' : '▼'}</span>
+            <span className="rules-link-line">
+              <span className="rules-link" onClick={() => setRulesOpen(v => !v)}>
+                Read Rules <span>{rulesOpen ? '▲' : '▼'}</span>
+              </span>
             </span>
           </p>
 
@@ -94,7 +94,13 @@ export function MenuScreen({ app }) {
               </ul>
 
               <h4>3. BATTLE RANKS</h4>
-              <p>🪖 Levy (0–39) · 🛡️ Hastatus (40–54) · ⚔️ Principes (55–69)<br />🦅 Triarius (70–84) · 👑 Imperator (85–100)</p>
+              <p>
+                <span className="battle-rank battle-rank--levy">🪖 Levy</span> (0–39) ·
+                <span className="battle-rank battle-rank--hastatus"> 🛡️ Hastatus</span> (40–54) ·
+                <span className="battle-rank battle-rank--principes"> ⚔️ Principes</span> (55–69)<br />
+                <span className="battle-rank battle-rank--triarius">🦅 Triarius</span> (70–84) ·
+                <span className="battle-rank battle-rank--imperator"> 👑 Imperator</span> (85–100)
+              </p>
 
               <h4>4. LEGION RANKS</h4>
               <p>🌱 Recruit (0) → 🛡️ Legionary (200) → ⚔️ Optio (500)<br />🦅 Centurion (900) → 🏅 Tribunus (1300) → 🏆 Legatus (1750)</p>

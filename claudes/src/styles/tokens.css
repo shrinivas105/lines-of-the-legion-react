@@ -20,6 +20,7 @@
   --marble-dim: #a89a82;   /* secondary text, weathered stone */
   --bronze:     #8a6a3b;   /* structural bronze — frames, borders, base metal */
   --gold:       #d8b66b;   /* bright accent — hover states, active glow, medal highlights */
+  --text-on-light: #2b1808; /* darker text for gold/silver/bronze surfaces */
   --silver:     #c7ccd1;   /* Club Legion identity — cool metallic counterpart to gold */
   --oxblood:    #7a1f1f;   /* crimson — danger / demotion / losses */
   --verdigris:  #4a7268;   /* success / promotion / wins — oxidized bronze-green */

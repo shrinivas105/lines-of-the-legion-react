@@ -17,15 +17,15 @@
   cursor: pointer;
   overflow: visible;
   box-shadow: none;
-  transition: transform 350ms ease, box-shadow 350ms ease;
+  transition: transform 250ms ease-out, box-shadow 250ms ease-out;
   transform: translateY(0) scale(1);
   text-align: center;
 }
 
 .card:hover,
 .card:focus-visible {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.6);
+  transform: translateY(-12px) scale(1.04);
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.65);
 }
 
 .card:focus-visible {
@@ -56,12 +56,12 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 350ms ease;
+  transition: transform 250ms ease-out;
 }
 
 .card:hover .image,
 .card:focus-visible .image {
-  transform: scale(1.04);
+  transform: scale(1.06);
 }
 
 .imageOverlay {
@@ -77,7 +77,7 @@
 
 .gold:hover,
 .gold:focus-visible {
-  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.58), 0 0 30px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.62), 0 0 38px rgba(212, 175, 55, 0.28);
 }
 
 .silver .imageShell {
@@ -86,7 +86,7 @@
 
 .silver:hover,
 .silver:focus-visible {
-  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.58), 0 0 30px rgba(197, 206, 214, 0.18);
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.62), 0 0 38px rgba(197, 206, 214, 0.26);
 }
 
 .bronze .imageShell {
@@ -95,7 +95,7 @@
 
 .bronze:hover,
 .bronze:focus-visible {
-  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.58), 0 0 30px rgba(164, 109, 61, 0.18);
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.62), 0 0 38px rgba(164, 109, 61, 0.26);
 }
 
 @media (max-width: 640px) {

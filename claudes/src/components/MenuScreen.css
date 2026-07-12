@@ -9,7 +9,7 @@
 .menu-screen__wrap {
   position: relative;
   padding: 12px 18px 18px;
-  border: 2px solid rgba(212, 175, 55, 0.35);
+  border: 2px solid var(--oxblood);
   border-radius: 12px;
   background: rgba(20, 10, 5, 0.74);
   box-shadow:
@@ -34,7 +34,7 @@
   margin-bottom: 8px;
   text-align: center;
   font-family: 'Cinzel', serif;
-  font-size: 0.5rem;
+  font-size: 0.35rem;
   font-style: italic;
   letter-spacing: 0.06em;
   color: #e9d9b4;
@@ -44,12 +44,12 @@
 .game-description {
   margin-bottom: 20px;
   padding: 15px;
-  border: 2px solid rgba(212, 175, 55, 0.5);
+  border: 2px solid var(--oxblood);
   border-radius: 10px;
   background: rgba(20, 10, 5, 0.65);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
   color: var(--marble);
-  font-size: 0.95rem;
+  font-size: 0.665rem;
   line-height: 1.6;
 }
 
@@ -59,9 +59,14 @@
 .game-description em { color: #f7e0b0; }
 
 /* ── Inline "Read Rules" link at the end of the description ── */
+.tagline-line {
+  margin-bottom: 10px;
+}
+
 .rules-link-line {
-  margin-top: 8px !important;
-  text-align: center;
+  display: inline-block;
+  margin-left: 6px;
+  text-align: left;
 }
 
 .rules-link {
@@ -69,7 +74,7 @@
   cursor: pointer;
   text-decoration: underline;
   font-weight: 700;
-  font-size: 0.72rem;
+  font-size: 0.5rem;
 }
 
 .rules-link:hover {
@@ -84,7 +89,7 @@
   overflow-y: visible;
   border-top: 1px solid rgba(212, 175, 55, 0.3);
   color: #bbb;
-  font-size: 0.72rem;
+  font-size: 0.5rem;
   line-height: 1.5;
   text-align: left;
 }
@@ -101,6 +106,16 @@
   text-transform: uppercase;
   letter-spacing: 0.8px;
 }
+
+.battle-rank {
+  font-weight: 700;
+}
+
+.battle-rank--levy { color: #5ccf7a; }
+.battle-rank--hastatus { color: #f3f0e8; }
+.battle-rank--principes { color: #ff6f6f; }
+.battle-rank--triarius { color: #7eb7ff; }
+.battle-rank--imperator { color: #ffd166; }
 
 .rules-content ul { padding-left: 16px; }
 
@@ -159,7 +174,7 @@
 
 .gold-btn {
   background: linear-gradient(135deg, #f4d976, var(--gold) 45%, #8a6d1f);
-  color: #2a1a00;
+  color: var(--text-on-light);
   border-color: #f4d976;
   box-shadow: 0 3px 0 #7a5c14, 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 10px rgba(196, 30, 58, 0.35);
 }
@@ -171,7 +186,7 @@
 
 .silver-btn {
   background: linear-gradient(135deg, #f4f4f4, var(--silver) 45%, #6b6b6b);
-  color: #1a1a1a;
+  color: var(--text-on-light);
   border-color: #f4f4f4;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   box-shadow: 0 3px 0 #5c5c5c, 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 10px rgba(196, 30, 58, 0.35);
@@ -184,7 +199,7 @@
 
 .bronze-btn {
   background: linear-gradient(135deg, #e0a868, #b87333 45%, #5c3a17);
-  color: #fff3dd;
+  color: var(--text-on-light);
   border-color: #e0a868;
   box-shadow: 0 3px 0 #4a2f10, 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 10px rgba(196, 30, 58, 0.35);
 }
@@ -249,7 +264,7 @@
   width: 100%;
   padding: 8px 6px;
   background: rgba(15, 10, 5, 0.6);
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  border: 1px solid var(--oxblood);
   border-radius: 8px;
   cursor: pointer;
   text-align: center;
@@ -283,7 +298,7 @@
   padding: 10px 14px;
   text-align: center;
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(212, 175, 55, 0.18);
+  border: 1px solid var(--oxblood);
   border-radius: 8px;
 }
 
@@ -340,7 +355,7 @@
   width: 100%;
   max-width: 300px;
   padding: 10px 14px;
-  border: 1px solid rgba(212, 175, 55, 0.18);
+  border: 1px solid var(--oxblood);
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.45);
 }
@@ -354,10 +369,21 @@
 
 @media (max-width: 480px) {
   .menu-screen__wrap {
-    padding: var(--space-5) var(--space-3) var(--space-4);
+    padding: var(--space-5) 8px var(--space-4);
   }
 
   .quick-action-label {
     font-size: 0.52rem;
+  }
+
+  .menu {
+    padding: 0 4px 12px;
+  }
+
+  /* Cards were reading as small with visible gaps between them; tightening
+     the gap (and the outer padding above) hands that reclaimed width back
+     to each card instead. */
+  .campaign-cards {
+    gap: 6px;
   }
 }
