@@ -456,8 +456,11 @@
 }
 
 .quick-action-icon {
-  font-size: 1.56rem;
-  line-height: 1;
+  width: 26px;
+  height: 26px;
+  color: var(--gold);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+  flex-shrink: 0;
 }
 
 .quick-action-label {

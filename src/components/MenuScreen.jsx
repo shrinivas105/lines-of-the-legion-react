@@ -9,6 +9,7 @@ import { CampaignCard } from './CampaignCard';
 import masterCardArt from '../assets/campaign-cards/master-card.webp';
 import clubCardArt from '../assets/campaign-cards/club-card.webp';
 import practiceCardArt from '../assets/campaign-cards/practice-card.webp';
+import { IconReset, IconScroll, IconAmphora } from './RomanIcons';
 import './MenuScreen.css';
 
 const DONATION_PAYPAL = 'https://paypal.me/yourhandle';
@@ -211,7 +212,7 @@ export function MenuScreen({ app }) {
         <div className="quick-actions">
           <div className="quick-action-col">
             <button className="quick-action-toggle" type="button" onClick={handleReset}>
-              <span className="quick-action-icon">↺</span>
+              <IconReset className="quick-action-icon" />
               <span className="quick-action-label">Reset</span>
             </button>
           </div>
@@ -222,7 +223,7 @@ export function MenuScreen({ app }) {
               type="button"
               onClick={() => setAboutOpen(v => !v)}
             >
-              <span className="quick-action-icon">ℹ️</span>
+              <IconScroll className="quick-action-icon" />
               <span className="quick-action-label">About</span>
             </button>
           </div>
@@ -234,7 +235,7 @@ export function MenuScreen({ app }) {
               rel="noopener noreferrer"
               className="quick-action-toggle"
             >
-              <span className="quick-action-icon">☕</span>
+              <IconAmphora className="quick-action-icon" />
               <span className="quick-action-label">Tip</span>
             </a>
           </div>
