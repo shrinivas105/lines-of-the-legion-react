@@ -53,3 +53,10 @@
 .panel--interactive:hover .panel__corner {
   border-color: var(--oxblood);
 }
+
+@media (max-width: 640px) {
+  .panel__corner {
+    width: 10px;
+    height: 10px;
+  }
+}
