@@ -33,10 +33,10 @@
 }
 
 .menu-subtitle {
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-3);
   text-align: center;
   font-family: 'Cinzel', serif;
-  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+  font-size: clamp(0.72rem, 0.96vw, 0.84rem);
   font-style: italic;
   letter-spacing: 0.09em;
   color: #e9d9b4;
