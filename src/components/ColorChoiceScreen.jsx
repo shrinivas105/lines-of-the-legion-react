@@ -99,9 +99,11 @@ export function ColorChoiceScreen({ app }) {
             </div>
           </div>
 
-          <div className="color-choice__section-heading">Career Progression (Road to Legatus)</div>
-          <div className="color-choice__road">
-            <LegionPath legion={legion} />
+          <div className="color-choice__progression">
+            <div className="color-choice__section-heading">Career Progression (Road to Legatus)</div>
+            <div className="color-choice__road">
+              <LegionPath legion={legion} />
+            </div>
           </div>
 
           <div className="color-choice__panel-actions">

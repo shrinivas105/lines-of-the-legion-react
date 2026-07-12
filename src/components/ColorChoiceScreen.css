@@ -212,7 +212,19 @@
   color: var(--marble);
 }
 
-/* ── Career Progression heading, sits above the rank ladder ─────────── */
+/* ── Career Progression: its own bordered section, separated from the
+   merit bar above so the two "rank" ideas (progress-to-next-rank vs.
+   full ladder) don't visually run together. ──────────────────────── */
+.color-choice__progression {
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  border: 1px solid var(--legion-secondary-dim);
+  border-radius: var(--radius-lg);
+  background: rgba(8, 5, 3, 0.26);
+  box-shadow: var(--elev-sm);
+}
+
 .color-choice__section-heading {
   margin: 0 0 var(--space-3);
   text-align: center;
@@ -226,12 +238,12 @@
 
 /* ── Road to Legatus ────────────────────────────────────────────────── */
 .color-choice__road {
-  margin-bottom: var(--space-6);
+  margin-bottom: 0;
 }
 
 /* ── Promotion progress ─────────────────────────────────────────────── */
 .color-choice__progress-section {
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-3);
 }
 
 /* Roman-themed merit bar: bronze/stone outer frame, engraved channel,
@@ -327,13 +339,13 @@
    soft ambient glow, and a confident hover lift / active depress. */
 .color-choice__start-btn.color-choice__start-btn {
   width: 100%;
-  max-width: 360px;
+  max-width: 252px;
   min-width: 0;
-  padding: 18px 30px;
-  font-size: 1.05rem;
+  padding: 13px 21px;
+  font-size: 0.74rem;
   letter-spacing: 0.08em;
-  gap: 12px;
-  border-radius: 12px;
+  gap: 8px;
+  border-radius: 8px;
   border: 2px solid var(--legion-accent);
   background: linear-gradient(180deg, var(--legion-accent-strong) 0%, var(--legion-accent) 45%, var(--legion-secondary) 100%);
   color: #1a0f04;
@@ -372,8 +384,8 @@
 }
 
 .color-choice__start-icon {
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 0.95rem;
+  height: 0.95rem;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
   flex-shrink: 0;
 }
@@ -590,12 +602,14 @@
     font-size: 0.68rem;
   }
 
-  .color-choice__section-heading {
-    font-size: 0.8rem;
+  .color-choice__progression {
+    margin-top: var(--space-2);
     margin-bottom: var(--space-2);
+    padding: var(--space-2);
   }
 
-  .color-choice__road {
+  .color-choice__section-heading {
+    font-size: 0.8rem;
     margin-bottom: var(--space-2);
   }
 
@@ -658,7 +672,7 @@
   .color-choice__start-btn.color-choice__start-btn {
     width: 100%;
     max-width: none;
-    padding: 12px 20px;
-    font-size: 0.9rem;
+    padding: 8px 14px;
+    font-size: 0.63rem;
   }
 }
