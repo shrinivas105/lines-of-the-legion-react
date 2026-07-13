@@ -6,10 +6,6 @@ import './Panel.css';
 export function Panel({ children, className = '', as: Tag = 'div', ...rest }) {
   return (
     <Tag className={`panel ${className}`} {...rest}>
-      <div className="panel__corner panel__corner--tl" aria-hidden="true" />
-      <div className="panel__corner panel__corner--tr" aria-hidden="true" />
-      <div className="panel__corner panel__corner--bl" aria-hidden="true" />
-      <div className="panel__corner panel__corner--br" aria-hidden="true" />
       {children}
     </Tag>
   );
