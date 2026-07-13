@@ -11,14 +11,21 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--marble-dim);
-  margin-bottom: 5px;
+  flex-shrink: 0;
 }
 
 .battle-history__row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
+  gap: 10px;
+}
+
+.battle-history__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
 .battle-history__badges {
@@ -88,6 +95,8 @@
   z-index: 50;
   width: min(90vw, 420px);
   max-width: 100%;
+  max-height: min(70vh, 480px);
+  overflow-y: auto;
   background: var(--ink);
   border: 1px solid var(--bronze-dim);
   border-radius: var(--radius-md);

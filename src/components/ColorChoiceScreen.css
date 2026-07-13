@@ -42,7 +42,12 @@
 .color-choice__panel {
   padding: var(--space-3) var(--space-5) var(--space-6);
   position: relative;
-  overflow: hidden;
+  /* NOT overflow:hidden — that was only meant to contain the decorative
+     smoke/ember background below, but it also clipped the bottom of the
+     demotion-rules tooltip once it correctly started stacking above the
+     Start Battle / rank-info section. The decorative pseudo-elements are
+     clipped individually instead (see ::before/::after below), so real
+     content is never cropped. */
   box-shadow: var(--elev-md);
   animation: color-choice-panel-fade 320ms var(--ease-standard) both;
 }
@@ -53,13 +58,18 @@
 }
 
 /* faint drifting smoke + embers — decorative only, sits behind all panel
-   content, never competes with the UI (very low opacity, slow motion) */
+   content, never competes with the UI (very low opacity, slow motion).
+   Clipped to the panel's own rounded corners via clip-path (scoped to
+   just these two layers) rather than overflow:hidden on the whole panel,
+   so real content — like an open tooltip — is never cut off. */
 .color-choice__panel::before {
   content: '';
   position: absolute;
-  inset: -20%;
+  inset: 0;
   z-index: 0;
   pointer-events: none;
+  border-radius: inherit;
+  overflow: hidden;
   background-image:
     radial-gradient(ellipse 55% 35% at 15% 20%, rgba(138,106,59,0.05), transparent 65%),
     radial-gradient(ellipse 45% 30% at 85% 75%, rgba(216,182,107,0.04), transparent 65%);
@@ -73,6 +83,7 @@
   z-index: 0;
   pointer-events: none;
   opacity: 0.5;
+  border-radius: var(--radius-lg);
   background-image:
     radial-gradient(1.5px 1.5px at 18% 82%, rgba(216,182,107,0.35), transparent),
     radial-gradient(1px 1px at 42% 65%, rgba(216,182,107,0.28), transparent),
@@ -135,8 +146,8 @@
    progress bar + caption in a single bordered card, visually distinct
    from the Career Progression card below it. */
 .color-choice__rank-section {
-  margin-bottom: var(--space-2);
-  padding: var(--space-4) var(--space-5) var(--space-2);
+  margin-bottom: 0;
+  padding: var(--space-4) var(--space-5) var(--space-1);
   border: 1px solid var(--oxblood);
   border-radius: var(--radius-lg);
   background: rgba(8, 5, 3, 0.26);
@@ -212,7 +223,7 @@
    merit bar above so the two "rank" ideas (progress-to-next-rank vs.
    full ladder) don't visually run together. ──────────────────────── */
 .color-choice__progression {
-  margin-top: 0;
+  margin-top: var(--space-3);
   margin-bottom: var(--space-6);
   padding: var(--space-4) var(--space-4) var(--space-3);
   border: 1px solid var(--oxblood);
@@ -309,7 +320,7 @@
 }
 
 .color-choice__progress-caption {
-  margin-top: var(--space-2);
+  margin-top: var(--space-1);
   text-align: center;
   font-family: var(--font-stat);
   font-size: 0.78rem;
