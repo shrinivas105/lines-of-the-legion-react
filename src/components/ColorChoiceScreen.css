@@ -135,8 +135,8 @@
    progress bar + caption in a single bordered card, visually distinct
    from the Career Progression card below it. */
 .color-choice__rank-section {
-  margin-bottom: var(--space-5);
-  padding: var(--space-4) var(--space-5) var(--space-3);
+  margin-bottom: var(--space-2);
+  padding: var(--space-4) var(--space-5) var(--space-2);
   border: 1px solid var(--oxblood);
   border-radius: var(--radius-lg);
   background: rgba(8, 5, 3, 0.26);
@@ -212,7 +212,7 @@
    merit bar above so the two "rank" ideas (progress-to-next-rank vs.
    full ladder) don't visually run together. ──────────────────────── */
 .color-choice__progression {
-  margin-top: var(--space-5);
+  margin-top: 0;
   margin-bottom: var(--space-6);
   padding: var(--space-4) var(--space-4) var(--space-3);
   border: 1px solid var(--legion-secondary-dim);
@@ -222,7 +222,7 @@
 }
 
 .color-choice__section-heading {
-  margin: 0 0 var(--space-3);
+  margin: 0 0 var(--space-4);
   text-align: center;
   font-family: var(--font-title);
   font-size: 0.95rem;
@@ -234,6 +234,7 @@
 
 /* ── Road to Legatus ────────────────────────────────────────────────── */
 .color-choice__road {
+  margin-top: var(--space-2);
   margin-bottom: 0;
 }
 
@@ -308,7 +309,7 @@
 }
 
 .color-choice__progress-caption {
-  margin-top: var(--space-3);
+  margin-top: var(--space-2);
   text-align: center;
   font-family: var(--font-stat);
   font-size: 0.78rem;

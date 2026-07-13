@@ -51,7 +51,10 @@
 }
 
 .battle-history__tooltip-wrap {
-  position: relative;
+  /* intentionally NOT position:relative — the tooltip content below is
+     positioned against .battle-history (the whole card), not this small
+     icon wrapper, so it opens centered on the card instead of centering
+     on the icon and overlapping the badge labels beside it. */
   flex-shrink: 0;
 }
 
