@@ -224,7 +224,7 @@
    full ladder) don't visually run together. ──────────────────────── */
 .color-choice__progression {
   margin-top: var(--space-3);
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-3);
   padding: var(--space-4) var(--space-4) var(--space-3);
   border: 1px solid var(--oxblood);
   border-radius: var(--radius-lg);
@@ -640,7 +640,7 @@
   }
 
   .color-choice__progression {
-    margin-top: 0;
+    margin-top: var(--space-2);
     margin-bottom: var(--space-2);
     padding: var(--space-2);
   }

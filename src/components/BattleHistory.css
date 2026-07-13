@@ -172,12 +172,16 @@
 
   .battle-history__row {
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
+  }
+
+  .battle-history__right {
+    justify-content: flex-start;
   }
 
   .battle-history__badges {
     gap: 6px;
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .battle-history__badge-item {
