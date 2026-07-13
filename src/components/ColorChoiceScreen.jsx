@@ -7,6 +7,7 @@
 import { Panel } from './Panel';
 import { Button } from './Button';
 import { LegionPath } from './LegionPath';
+import { BattleHistory } from './BattleHistory';
 import { LichessConnectButton } from './LichessConnectButton';
 import { Scoring } from '../logic/scoring';
 import { isConnected } from '../services/lichessAuth';
@@ -25,6 +26,7 @@ const RANK_FACTS = {
 
 export function ColorChoiceScreen({ app }) {
   const isMaster = app.aiSource === 'master';
+  const source = isMaster ? 'master' : 'lichess';
   const merit = isMaster ? (app.legionMerits.master_merit || 0) : (app.legionMerits.lichess_merit || 0);
   const legion = Scoring.getLegionRank(merit);
   const needsLichessAuth = !isConnected();
@@ -104,6 +106,10 @@ export function ColorChoiceScreen({ app }) {
             <div className="color-choice__road">
               <LegionPath legion={legion} />
             </div>
+          </div>
+
+          <div className="color-choice__battle-history">
+            <BattleHistory app={app} source={source} />
           </div>
 
           <div className="color-choice__panel-actions">

@@ -321,6 +321,24 @@
   letter-spacing: 0.03em;
 }
 
+/* ── Battle History (last N battles + demotion tooltip/warning) ─────
+   Wraps the shared BattleHistory component in the same bordered-card
+   language as the rank grid and progression sections above it. ───── */
+.color-choice__battle-history {
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  border: 1px solid var(--legion-secondary-dim);
+  border-radius: var(--radius-lg);
+  background: rgba(8, 5, 3, 0.26);
+  box-shadow: var(--elev-sm);
+}
+
+.color-choice__battle-history .battle-history {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
 /* ── Action section inside the main panel ─────────────────────────── */
 .color-choice__panel-actions {
   display: flex;
@@ -604,6 +622,11 @@
 
   .color-choice__progression {
     margin-top: var(--space-2);
+    margin-bottom: var(--space-2);
+    padding: var(--space-2);
+  }
+
+  .color-choice__battle-history {
     margin-bottom: var(--space-2);
     padding: var(--space-2);
   }
