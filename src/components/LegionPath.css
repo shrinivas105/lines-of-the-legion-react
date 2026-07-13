@@ -161,20 +161,42 @@
 }
 
 @media (max-width: 480px) {
+  .legion-path__steps {
+    gap: 4px;
+    padding: 2px 2px;
+  }
+
   .legion-path__connector {
-    flex-basis: 18px;
-    font-size: 0.9rem;
-    margin-top: 10px;
+    flex-basis: 12px;
+    font-size: 0.75rem;
+    margin-top: 8px;
   }
 
   .legion-path__node .rank-badge--md {
-    width: 34px;
-    height: 34px;
-    font-size: 0.82rem;
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
   }
 
   .legion-path__label {
-    font-size: 0.48rem;
-    letter-spacing: 0.01em;
+    font-size: 0.4rem;
+    letter-spacing: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .legion-path__connector {
+    flex-basis: 8px;
+    font-size: 0.65rem;
+  }
+
+  .legion-path__node .rank-badge--md {
+    width: 24px;
+    height: 24px;
+    font-size: 0.6rem;
+  }
+
+  .legion-path__label {
+    font-size: 0.36rem;
   }
 }
