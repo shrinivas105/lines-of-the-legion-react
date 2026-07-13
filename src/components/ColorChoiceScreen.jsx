@@ -56,48 +56,42 @@ export function ColorChoiceScreen({ app }) {
             {isMaster ? 'Masters Legion' : 'Club Legion'}
           </div>
 
-          <div className="color-choice__hero">
-            <div className="color-choice__rank-grid">
-              <div className="color-choice__rank-grid-cell">
-                <div className="color-choice__rank-grid-label">Current Rank</div>
-                <div className="color-choice__rank-grid-value">
-                  <span className="color-choice__rank-grid-icon" aria-hidden="true"><legion.icon /></span>
-                  {legion.title}
+          <div className="color-choice__rank-section">
+            <div className="color-choice__hero">
+              <div className="color-choice__rank-grid">
+                <div className="color-choice__rank-grid-cell">
+                  <div className="color-choice__rank-grid-label">Current Rank</div>
+                  <div className="color-choice__rank-grid-value">
+                    <span className="color-choice__rank-grid-icon" aria-hidden="true"><legion.icon /></span>
+                    {legion.title}
+                  </div>
                 </div>
-                <div className="color-choice__rank-grid-sub">
-                  <span className="color-choice__rank-grid-sub-value">{merit}</span> Merit
-                </div>
-              </div>
-              <div className="color-choice__rank-grid-divider" aria-hidden="true" />
-              <div className="color-choice__rank-grid-cell color-choice__rank-grid-cell--next">
-                <div className="color-choice__rank-grid-label">Next Rank</div>
-                <div className="color-choice__rank-grid-value color-choice__rank-grid-value--next">
-                  {legion.nextRank ? (
-                    <>
-                      <span className="color-choice__rank-grid-icon" aria-hidden="true">{NextRankIcon && <NextRankIcon />}</span>
-                      {legion.nextRank}
-                    </>
-                  ) : 'Highest Rank'}
-                </div>
-                <div className="color-choice__rank-grid-sub">
-                  {legion.nextRank ? (
-                    <><span className="color-choice__rank-grid-sub-value">{nextThreshold}</span> Merit Goal</>
-                  ) : 'Attained'}
+                <div className="color-choice__rank-grid-divider" aria-hidden="true" />
+                <div className="color-choice__rank-grid-cell color-choice__rank-grid-cell--next">
+                  <div className="color-choice__rank-grid-label">Next Rank</div>
+                  <div className="color-choice__rank-grid-value color-choice__rank-grid-value--next">
+                    {legion.nextRank ? (
+                      <>
+                        <span className="color-choice__rank-grid-icon" aria-hidden="true">{NextRankIcon && <NextRankIcon />}</span>
+                        {legion.nextRank}
+                      </>
+                    ) : 'Highest Rank'}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="color-choice__progress-section">
-            <div className="color-choice__progress-track">
-              <div className="color-choice__progress-fill" style={{ width: `${progressPct}%` }}>
-                <span className="color-choice__progress-shine" aria-hidden="true" />
+            <div className="color-choice__progress-section">
+              <div className="color-choice__progress-track">
+                <div className="color-choice__progress-fill" style={{ width: `${progressPct}%` }}>
+                  <span className="color-choice__progress-shine" aria-hidden="true" />
+                </div>
               </div>
-            </div>
-            <div className="color-choice__progress-caption">
-              {legion.nextRank
-                ? `${legion.pointsNeeded} Merit Needed for Promotion`
-                : `${merit} Merit \u2014 Highest Rank Attained`}
+              <div className="color-choice__progress-caption">
+                {legion.nextRank
+                  ? `${merit} / ${nextThreshold} Merit Achieved`
+                  : `${merit} Merit \u2014 Highest Rank Attained`}
+              </div>
             </div>
           </div>
 

@@ -1,6 +1,7 @@
 .battle-history {
-  margin-top: 8px;
-  padding-top: 8px;
+  position: relative;
+  margin-top: 6px;
+  padding-top: 6px;
   border-top: 1px solid var(--hairline);
 }
 
@@ -10,36 +11,48 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--marble-dim);
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .battle-history__row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 6px;
 }
 
 .battle-history__badges {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .battle-history__badge-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
+}
+
+/* Recent-battle badges only — shrink the shared "sm" rank badge further
+   here so the card reads as a compact strip rather than a full row of
+   medals; the same "sm" badges used elsewhere (e.g. the legend inside
+   the tooltip) are untouched. */
+.battle-history__badges .rank-badge--sm {
+  width: 17px;
+  height: 17px;
+  font-size: 0.5rem;
 }
 
 .battle-history__badge-label {
   font-family: var(--font-stat);
-  font-size: 0.5rem;
+  font-size: 0.46rem;
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
 .battle-history__tooltip-wrap {
   position: relative;
+  flex-shrink: 0;
 }
 
 .battle-history__tooltip-icon {
@@ -60,12 +73,18 @@
   color: var(--gold);
 }
 
+/* Positioned relative to the whole card (not the "?" icon) and centered,
+   so it always opens fully in view instead of hugging one edge and
+   overlapping the badge labels or running past the card boundary. */
 .battle-history__tooltip-content {
   position: absolute;
-  top: 28px;
-  left: 0;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8px;
   z-index: 50;
-  width: min(80vw, 420px);
+  width: min(90vw, 420px);
+  max-width: 100%;
   background: var(--ink);
   border: 1px solid var(--bronze-dim);
   border-radius: var(--radius-md);
@@ -155,8 +174,6 @@
 
   .battle-history__tooltip-content {
     width: min(92vw, 320px);
-    left: 50%;
-    transform: translateX(-50%);
     padding: 8px 10px;
   }
 
