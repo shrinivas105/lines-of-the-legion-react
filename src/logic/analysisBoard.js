@@ -294,8 +294,10 @@ export class AnalysisBoard {
       const topMoves = this.topMovesData[positionFen] || [];
 
       if (topMoves.length === 0) {
+        const moveNum = Math.floor(this.currentMoveIndex / 2) + 1;
+        const side = this.currentMoveIndex % 2 === 0 ? 'W' : 'B';
         this.tableData = [];
-        this.positionText = 'No database moves available for this position';
+        this.positionText = `Move ${moveNum} (${side}): ${currentMove.san}`;
         return;
       }
 
