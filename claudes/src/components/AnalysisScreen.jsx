@@ -9,6 +9,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Panel } from './Panel';
 import { Button } from './Button';
+import { IconCornu, IconCrossedGladius, IconPlayedMark } from './RomanIcons';
 import './AnalysisScreen.css';
 
 function squareToCoords(square, isFlipped, squareSize) {
@@ -42,34 +43,24 @@ function arrowGeometry(from, to) {
 function ArrowSvg({ arrows, isFlipped, boardSize }) {
   const squareSize = boardSize / 8;
   return (
-    <svg className="analysis-arrows" viewBox={`0 0 ${boardSize} ${boardSize}`}>
+    <svg className="analysis-arrows" viewBox={`0 0 ${boardSize} ${boardSize}`} shapeRendering="geometricPrecision">
       {arrows.map((arrow, i) => {
         const from = squareToCoords(arrow.from, isFlipped, squareSize);
         const to = squareToCoords(arrow.to, isFlipped, squareSize);
         const g = arrowGeometry(from, to);
-        let mainColor = arrow.color;
-        const elements = [];
 
-        if (arrow.outlineColor) {
-          const outlineWidth = arrow.width + 4;
-          elements.push(
-            <line key={`${i}-ol`} x1={g.startX} y1={g.startY} x2={g.endX} y2={g.endY}
-              stroke={arrow.color} strokeWidth={outlineWidth} strokeLinecap="round" opacity={0.8} />,
-            <polygon key={`${i}-oh`} points={`${g.endX},${g.endY} ${g.head1X},${g.head1Y} ${g.head2X},${g.head2Y}`}
-              fill={arrow.color} opacity={0.8} />
-          );
-          mainColor = arrow.outlineColor;
-        }
-
-        elements.push(
-          <line key={`${i}-l`} x1={g.startX} y1={g.startY} x2={g.endX} y2={g.endY}
-            stroke={mainColor} strokeWidth={arrow.width} strokeLinecap="round" opacity={0.9}
-            strokeDasharray={arrow.dashed ? '8,4' : undefined} />,
-          <polygon key={`${i}-h`} points={`${g.endX},${g.endY} ${g.head1X},${g.head1Y} ${g.head2X},${g.head2Y}`}
-            fill={mainColor} opacity={0.9} />
+        return (
+          <g key={i}>
+            {/* dark halo underneath for crisp contrast on any square color */}
+            <line x1={g.startX} y1={g.startY} x2={g.endX} y2={g.endY}
+              stroke="#000" strokeWidth={arrow.width + 3} strokeLinecap="round" opacity={0.35} />
+            <line x1={g.startX} y1={g.startY} x2={g.endX} y2={g.endY}
+              stroke={arrow.color} strokeWidth={arrow.width} strokeLinecap="round"
+              strokeDasharray={arrow.dashed ? '8,4' : undefined} />
+            <polygon points={`${g.endX},${g.endY} ${g.head1X},${g.head1Y} ${g.head2X},${g.head2Y}`}
+              fill={arrow.color} stroke="#000" strokeWidth={2.5} strokeOpacity={0.35} strokeLinejoin="round" />
+          </g>
         );
-
-        return <g key={i}>{elements}</g>;
       })}
     </svg>
   );
@@ -130,14 +121,14 @@ function MoveList({ app }) {
           className={`analysis-movelist__item ${ab.currentMoveIndex === i ? 'active' : ''} ${!isWhitePlayer ? 'dim' : ''}`}
           onClick={() => ab.goToMove(i + 1)}
         >
-          {moveNum}. {whiteMove.san}{isWhitePlayer ? '' : ' 🤖'}
+          {moveNum}. {whiteMove.san}{isWhitePlayer ? '' : <IconCornu className="analysis-movelist__icon" aria-hidden="true" />}
         </button>
         {blackMove ? (
           <button
             className={`analysis-movelist__item ${ab.currentMoveIndex === i + 1 ? 'active' : ''} ${isWhitePlayer ? 'dim' : ''}`}
             onClick={() => ab.goToMove(i + 2)}
           >
-            {blackMove.san}{!isWhitePlayer ? '' : ' 🤖'}
+            {blackMove.san}{!isWhitePlayer ? '' : <IconCornu className="analysis-movelist__icon" aria-hidden="true" />}
           </button>
         ) : <div />}
       </div>
@@ -154,6 +145,14 @@ function ComparisonTable({ app }) {
   if (ab.tableData.length === 0) {
     return <div className="analysis-compare__placeholder">{ab.positionText}</div>;
   }
+  // Always render exactly 4 row slots (3 top-move rows + 1 slot for a played
+  // move outside the top 3). Real rows can number 1-4 depending on the
+  // position; the shortfall is padded with invisible spacer rows so the
+  // panel's height — and therefore everything below it — never shifts as
+  // you step through moves. That's what stops the page from jumping/needing
+  // a re-scroll on every Prev/Next tap.
+  const spacerCount = Math.max(0, 4 - ab.tableData.length);
+
   return (
     <div className="analysis-compare">
       <div className="analysis-compare__head">
@@ -164,6 +163,14 @@ function ComparisonTable({ app }) {
         </div>
       </div>
       <table className="analysis-compare__table">
+        <colgroup>
+          <col className="col-move" />
+          <col className="col-num" />
+          <col className="col-num" />
+          <col className="col-num" />
+          <col className="col-num" />
+          <col className="col-num" />
+        </colgroup>
         <thead>
           <tr>
             <th>Move</th><th>White Win</th><th>Black Win</th><th>Draw</th><th>Games</th><th>Eval</th>
@@ -174,14 +181,39 @@ function ComparisonTable({ app }) {
             <tr
               key={i}
               className={row.isCurrentMove ? 'current' : ''}
-              style={{ borderLeft: `3px solid ${row.color}` }}
+              style={{
+                borderLeft: `5px solid ${row.color}`,
+                background: row.isCurrentMove ? undefined : `${row.color}20`
+              }}
             >
-              <td><span style={{ color: row.color, fontWeight: 'bold' }}>{row.label}:</span> {row.move}{row.isCurrentMove ? (row.moveType === 'Your' ? ' ✓' : ' 🤖') : ''}</td>
+              <td className="analysis-compare__move-cell">
+                <span
+                  className="analysis-compare__chip"
+                  style={{ background: row.color }}
+                  title={row.label}
+                  aria-label={row.label}
+                />
+                <span className="analysis-compare__move-text">{row.move}</span>
+                {row.isCurrentMove ? (
+                  <span
+                    className="analysis-compare__played-mark"
+                    style={{ color: row.moveType === 'Your' ? 'var(--gold)' : 'var(--oxblood-text)' }}
+                    title={row.moveType === 'Your' ? 'Move you played' : "Opponent's move"}
+                  >
+                    <IconPlayedMark className="analysis-compare__icon" />
+                  </span>
+                ) : null}
+              </td>
               <td>{row.whiteWin}%</td>
               <td>{row.blackWin}%</td>
               <td className="draw">{row.draws}%</td>
               <td className="games">{row.totalGames.toLocaleString()}</td>
               <td style={{ color: row.evalColor, fontWeight: 'bold' }}>{row.eval}</td>
+            </tr>
+          ))}
+          {Array.from({ length: spacerCount }).map((_, i) => (
+            <tr key={`spacer-${i}`} className="analysis-compare__spacer-row" aria-hidden="true">
+              <td colSpan={6}>&nbsp;</td>
             </tr>
           ))}
         </tbody>
@@ -197,7 +229,7 @@ export function AnalysisScreen({ app }) {
   if (app.analysisLoading) {
     return (
       <div className="analysis-loading">
-        <div className="analysis-loading__icon">⚔️</div>
+        <IconCrossedGladius className="analysis-loading__icon" aria-hidden="true" />
         <div className="analysis-loading__title">Analyzing Battle...</div>
         <div className="analysis-loading__message">{ab.preloadMessage || 'Evaluating all positions...'}</div>
         <div className="analysis-loading__bar-track">
@@ -210,7 +242,7 @@ export function AnalysisScreen({ app }) {
 
   return (
     <div className="analysis-screen page-transition">
-      <h2 className="analysis-screen__title">⚔️ Battle Analysis ⚔️</h2>
+      <h2 className="analysis-screen__title"><IconCrossedGladius className="analysis-screen__title-icon" aria-hidden="true" /> Battle Analysis <IconCrossedGladius className="analysis-screen__title-icon" aria-hidden="true" /></h2>
 
       <AnalysisBoardGrid app={app} boardSize={boardSize} setBoardSize={setBoardSize} />
 
@@ -228,16 +260,10 @@ export function AnalysisScreen({ app }) {
       <Panel className="analysis-screen__legend">
         <div className="analysis-screen__legend-row">
           <span className="analysis-screen__legend-label">Arrows:</span>
-          <LegendSwatch color="#3498db" label="You (not top 3)" />
-          <LegendSwatch color="#3498db" opacity={0.6} label="AI (not top 3)" />
           <LegendSwatch color="#2ecc71" label="Top" />
           <LegendSwatch color="#f1c40f" label="2nd" />
           <LegendSwatch color="#e67e22" label="3rd" />
-        </div>
-        <div className="analysis-screen__legend-row">
-          <LegendGradient to="#2ecc71" label="You = Top!" />
-          <LegendGradient to="#f1c40f" label="You = 2nd" />
-          <LegendGradient to="#e67e22" label="You = 3rd" />
+          <LegendSwatch color="#3498db" label="Your move (not top 3)" />
         </div>
       </Panel>
 
@@ -253,18 +279,6 @@ function LegendSwatch({ color, opacity = 1, label }) {
   return (
     <div className="analysis-screen__swatch">
       <div className="analysis-screen__swatch-line" style={{ background: color, opacity }} />
-      <span>{label}</span>
-    </div>
-  );
-}
-
-function LegendGradient({ to, label }) {
-  return (
-    <div className="analysis-screen__swatch">
-      <div
-        className="analysis-screen__swatch-grad"
-        style={{ background: `linear-gradient(to bottom, #3498db 0%, #3498db 40%, ${to} 60%, ${to} 100%)` }}
-      />
       <span>{label}</span>
     </div>
   );

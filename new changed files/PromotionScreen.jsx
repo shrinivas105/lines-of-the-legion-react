@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
 import './PromotionScreen.css';
 import { Button } from './Button';
-import { LEGION_RANK_PORTRAITS } from './rankColors';
 
 const DUTIES = {
   Legionary: {
@@ -58,9 +56,9 @@ const DUTIES = {
 };
 
 function rankImagePath(rankName) {
-  // Same artwork RankBadge already uses for the Career Progression circles —
-  // reusing it here instead of inventing a separate naming convention.
-  return LEGION_RANK_PORTRAITS[rankName] || LEGION_RANK_PORTRAITS.Legionary;
+  // public assets under /ranks
+  const key = rankName ? rankName.toLowerCase() : 'legionary';
+  return `/ranks/${key}.png`;
 }
 
 export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', prevRank = 'Recruit', newRank = 'Legionary', onContinue, onExit }) {
@@ -86,25 +84,15 @@ export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', 
       }
     }, 900);
     return () => clearInterval(handle);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Lock background scroll while this full-screen modal is open, restoring
-  // whatever the previous value was on unmount (in case something else in
-  // the app also manages body overflow).
-  useEffect(() => {
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = prevOverflow; };
   }, []);
 
   const duty = DUTIES[newRank] || DUTIES.Legionary;
 
-  return createPortal(
-    <div className="promotion-screen" role="dialog" aria-modal="true" aria-labelledby="promotion-screen-title">
+  return (
+    <div className="promotion-screen" role="dialog" aria-modal="true">
       <div className="promotion-screen__backdrop" />
       <div className="promotion-screen__panel">
-        <h1 id="promotion-screen-title" className="promotion-screen__title">PROMOTION CEREMONY</h1>
+        <h1 className="promotion-screen__title">PROMOTION CEREMONY</h1>
 
         <div className="promotion-screen__commander">
           <img
@@ -131,20 +119,12 @@ export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', 
 
           <div className="promotion-screen__rank-preview">
             <div className={`promotion-screen__rank prev ${showRankSwap ? 'swap-out' : ''}`}>
-              <img
-                src={rankImagePath(prevRank)}
-                alt={prevRank}
-                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/roman.png'; }}
-              />
+              <img src={rankImagePath(prevRank)} alt={prevRank} />
               <div className="promotion-screen__rank-label">{prevRank}</div>
             </div>
 
             <div className={`promotion-screen__rank new ${showRankSwap ? 'swap-in' : ''}`}>
-              <img
-                src={rankImagePath(newRank)}
-                alt={newRank}
-                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/roman.png'; }}
-              />
+              <img src={rankImagePath(newRank)} alt={newRank} />
               <div className="promotion-screen__rank-label">PROMOTED<br />{newRank}</div>
             </div>
           </div>
@@ -168,7 +148,6 @@ export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', 
           <Button variant="ghost" size="md" onClick={onExit}>Exit</Button>
         </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 }

@@ -26,7 +26,7 @@
 .promotion-screen__duties h2{text-align:center;margin:0 0 8px;color:#ffd966}
 .promotion-screen__duty-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}
 .promotion-screen__duty-card{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)}
-.promotion-screen__duty-number{min-width:30px;width:30px;height:30px;flex-shrink:0;border-radius:999px;background:rgba(212,175,55,0.18);color:#ffd966;font-weight:800;display:flex;align-items:center;justify-content:center}
+.promotion-screen__duty-number{min-width:30px;height:30px;border-radius:999px;background:rgba(212,175,55,0.18);color:#ffd966;font-weight:800;display:flex;align-items:center;justify-content:center}
 .promotion-screen__duty-card p{margin:0;color:#efe7d1;line-height:1.4}
 .promotion-screen__quote{margin-top:10px;padding:12px 14px;background:rgba(0,0,0,0.12);border-left:4px solid rgba(212,175,55,0.5);font-style:italic}
 .promotion-screen__actions{display:flex;gap:12px;justify-content:center;margin-top:16px}
@@ -36,10 +36,8 @@
   .promotion-screen__panel{padding:18px}
   .promotion-screen__title{font-size:20px}
   .promotion-screen__commander-portrait{width:72px;height:72px}
-  .promotion-screen__ranks{grid-template-columns:1fr;gap:16px}
-  .promotion-screen__rank-preview{flex-direction:row;justify-content:center}
+  .promotion-screen__ranks{gap:12px}
   .promotion-screen__rank{width:110px;height:110px}
   .promotion-screen__rank img{width:64px;height:64px}
   .promotion-screen__speech-line.visible{max-height:72px}
-  .promotion-screen__duty-list{grid-template-columns:1fr}
 }

@@ -51,6 +51,18 @@
   letter-spacing: 0.03em;
 }
 
+.end-summary__rank-icon {
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: -0.15em;
+}
+
+.end-summary__btn-icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
 .end-summary__stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -71,13 +83,14 @@
 .end-summary__stat strong {
   font-size: 0.49rem;
   color: var(--gold);
-  font-family: var(--font-mono);
+  font-family: var(--font-stat);
 }
 
 .end-summary__quote {
+  font-family: var(--font-accent);
   font-style: italic;
   color: var(--gold);
-  font-size: 0.81rem;
+  font-size: 0.85rem;
   margin-bottom: 4px;
 }
 .end-summary__sub {
@@ -134,7 +147,7 @@
   white-space: nowrap;
 }
 .end-summary__history-result {
-  font-family: var(--font-mono);
+  font-family: var(--font-stat);
 }
 .end-summary__history-item a {
   color: var(--gold);

@@ -10,6 +10,7 @@ import {
   CLUB_EVAL_THRESHOLDS,
   BATTLE_RANK_THRESHOLDS,
 } from '../config';
+import { BATTLE_RANK_ICONS, LEGION_RANK_ICONS } from '../components/rankColors';
 
 class Scoring {
   static getPlayerEval(e, c) { 
@@ -199,11 +200,11 @@ class Scoring {
     }
     
     const rks = {
-      Levy: { icon: "🪖", title: "Levy", msg: r || "Thrown onto the field unblooded — ranks break at first contact.", sub: "Fundamentals missing. Blunders erase all standing." },
-      Hastatus: { icon: "🛡️", title: "Hastatus", msg: r || "You held the front line, shield locked, testing the enemy.", sub: "A sound beginning — discipline and precision needed." },
-      Principes: { icon: "⚔️", title: "Principes", msg: r || "You fought with order and purpose, pressing where it mattered.", sub: "Strong theory, reliable structure, few weaknesses." },
-      Triarius: { icon: "🦅", title: "Triarius", msg: r || "When the battle wavered, you advanced and broke the stalemate.", sub: "Veteran-level command of position and timing." },
-      Imperator: { icon: "👑", title: "Imperator", msg: r || "Victory by design — the battlefield bent to your will.", sub: "Flawless theory, flawless execution." }
+      Levy: { icon: BATTLE_RANK_ICONS.Levy, title: "Levy", msg: r || "Thrown onto the field unblooded — ranks break at first contact.", sub: "Fundamentals missing. Blunders erase all standing." },
+      Hastatus: { icon: BATTLE_RANK_ICONS.Hastatus, title: "Hastatus", msg: r || "You held the front line, shield locked, testing the enemy.", sub: "A sound beginning — discipline and precision needed." },
+      Principes: { icon: BATTLE_RANK_ICONS.Principes, title: "Principes", msg: r || "You fought with order and purpose, pressing where it mattered.", sub: "Strong theory, reliable structure, few weaknesses." },
+      Triarius: { icon: BATTLE_RANK_ICONS.Triarius, title: "Triarius", msg: r || "When the battle wavered, you advanced and broke the stalemate.", sub: "Veteran-level command of position and timing." },
+      Imperator: { icon: BATTLE_RANK_ICONS.Imperator, title: "Imperator", msg: r || "Victory by design — the battlefield bent to your will.", sub: "Flawless theory, flawless execution." }
     };
     return { ...rks[n], score: s, penaltyReason: r };
   }
@@ -217,13 +218,12 @@ class Scoring {
       else break;
     }
     const title = rankOrder[level];
-    const iconMap = { Recruit: "🌱", Legionary: "🛡️", Optio: "⚔️", Centurion: "🦅", Tribunus: "🏅", Legatus: "🏆" };
     let nextRank = null, pointsNeeded = 0;
     if (level < rankOrder.length - 1) {
       nextRank = rankOrder[level + 1];
       pointsNeeded = thresholds[level + 1] - m;
     }
-    return { title, icon: iconMap[title], merit: m, nextRank, pointsNeeded, rankOrder, thresholds, level };
+    return { title, icon: LEGION_RANK_ICONS[title], merit: m, nextRank, pointsNeeded, rankOrder, thresholds, level };
   }
   
   // Get safety net threshold for a rank (50% of range)
@@ -255,23 +255,23 @@ class Scoring {
     // Legionary: Warning after 1 Levy
     if (rankTitle === 'Legionary' && levy === 1) {
       return inSafetyNet 
-        ? '⚔️ Commander: Legionary, one Levy failure stains your record. One more = <span style="color:#e74c3c">lose all your gained Legionary merits!</span>'
-        : '⚔️ Commander: Legionary, one Levy failure stains your record. One more = <span style="color:#e74c3c">stripped to Recruit!</span>';
+        ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Legionary, one Levy failure stains your record. One more = <span style="color:#e74c3c">lose all your gained Legionary merits!</span>'
+        : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Legionary, one Levy failure stains your record. One more = <span style="color:#e74c3c">stripped to Recruit!</span>';
     }
     
     // Optio: Warning after 1 Levy OR 1 Hastatus
     if (rankTitle === 'Optio' && (levy === 1 || hastatus === 1)) {
       return inSafetyNet
-        ? '⚔️ Commander: Optio, one weak battle marks your failure. One more Levy or Hastatus = <span style="color:#e74c3c">lose all your gained Optio merits!</span>'
-        : '⚔️ Commander: Optio, one weak battle marks your failure. One more Levy or Hastatus = <span style="color:#e74c3c">broken to Legionary!</span>';
+        ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Optio, one weak battle marks your failure. One more Levy or Hastatus = <span style="color:#e74c3c">lose all your gained Optio merits!</span>'
+        : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Optio, one weak battle marks your failure. One more Levy or Hastatus = <span style="color:#e74c3c">broken to Legionary!</span>';
     }
     
     // Centurion: Need at least 1 Triarius/Imperator in last 5
     if (rankTitle === 'Centurion') {
       if (battlesPlayed >= 4 && eliteCount === 0) {
         return inSafetyNet
-          ? '⚔️ Commander: Centurion, you have shown no excellence! Score Triarius or Imperator in the last battle or <span style="color:#e74c3c">lose all your gained Centurion merits!</span>'
-          : '⚔️ Commander: Centurion, you have shown no excellence! Score Triarius or Imperator in the last battle or be <span style="color:#e74c3c">demoted to Optio!</span>';
+          ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Centurion, you have shown no excellence! Score Triarius or Imperator in the last battle or <span style="color:#e74c3c">lose all your gained Centurion merits!</span>'
+          : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Centurion, you have shown no excellence! Score Triarius or Imperator in the last battle or be <span style="color:#e74c3c">demoted to Optio!</span>';
       }
     }
     
@@ -284,8 +284,8 @@ class Scoring {
         // After 1 battle with no elite
         if (battlesPlayed === 1 && eliteCount === 0) {
           return inSafetyNet
-            ? '⚔️ Commander: Tribunus, you need <span style="color:#e74c3c">3 Triarius or Imperator</span> in your next 4 battles or lose all your gained Tribunus merits!'
-            : '⚔️ Commander: Tribunus, you need <span style="color:#e74c3c">3 Triarius or Imperator</span> in your next 4 battles or face demotion to Centurion!';
+            ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">3 Triarius or Imperator</span> in your next 4 battles or lose all your gained Tribunus merits!'
+            : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">3 Triarius or Imperator</span> in your next 4 battles or face demotion to Centurion!';
         }
         
         // After 2 battles - check if still achievable
@@ -293,12 +293,12 @@ class Scoring {
           if (neededElite === 3) {
             // Need all 3 remaining (still possible but tight)
             return inSafetyNet
-              ? '⚔️ Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator in ALL remaining battles</span> or lose all your gained Tribunus merits!'
-              : '⚔️ Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator in ALL remaining battles</span> or face demotion to Centurion!';
+              ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator in ALL remaining battles</span> or lose all your gained Tribunus merits!'
+              : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator in ALL remaining battles</span> or face demotion to Centurion!';
           } else if (neededElite === 2) {
             return inSafetyNet
-              ? '⚔️ Commander: Tribunus, you need <span style="color:#e74c3c">2 more Triarius or Imperator</span> in 3 battles or lose all your gained Tribunus merits!'
-              : '⚔️ Commander: Tribunus, you need <span style="color:#e74c3c">2 more Triarius or Imperator</span> in 3 battles or face demotion to Centurion!';
+              ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">2 more Triarius or Imperator</span> in 3 battles or lose all your gained Tribunus merits!'
+              : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">2 more Triarius or Imperator</span> in 3 battles or face demotion to Centurion!';
           }
         }
         
@@ -307,12 +307,12 @@ class Scoring {
           if (neededElite === 2) {
             // Need both remaining (still possible)
             return inSafetyNet
-              ? '⚔️ Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator in BOTH remaining battles</span> or lose all your gained Tribunus merits!'
-              : '⚔️ Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator in BOTH remaining battles</span> or face demotion to Centurion!';
+              ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator in BOTH remaining battles</span> or lose all your gained Tribunus merits!'
+              : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator in BOTH remaining battles</span> or face demotion to Centurion!';
           } else if (neededElite === 1) {
             return inSafetyNet
-              ? '⚔️ Commander: Tribunus, you need <span style="color:#e74c3c">1 more Triarius or Imperator</span> in 2 battles or lose all your gained Tribunus merits!'
-              : '⚔️ Commander: Tribunus, you need <span style="color:#e74c3c">1 more Triarius or Imperator</span> in 2 battles or face demotion to Centurion!';
+              ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">1 more Triarius or Imperator</span> in 2 battles or lose all your gained Tribunus merits!'
+              : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">1 more Triarius or Imperator</span> in 2 battles or face demotion to Centurion!';
           }
         }
         
@@ -321,8 +321,8 @@ class Scoring {
           if (neededElite === 1) {
             // Need exactly 1 more (still possible)
             return inSafetyNet
-              ? '⚔️ Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator</span> in the last battle or lose all your gained Tribunus merits!'
-              : '⚔️ Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator</span> in the last battle or face demotion to Centurion!';
+              ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator</span> in the last battle or lose all your gained Tribunus merits!'
+              : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator</span> in the last battle or face demotion to Centurion!';
           }
           // Don't show warning for neededElite >= 2 (impossible - immediate demotion)
         }
@@ -362,14 +362,14 @@ class Scoring {
           demote: true,
           newRank: 'Legionary',
           newMerit: 200,
-          message: '⚔️ Commander: Two Levy failures! Your merit has been reset to 200! Prove yourself again!'
+          message: '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Two Levy failures! Your merit has been reset to 200! Prove yourself again!'
         };
       } else {
         return {
           demote: true,
           newRank: 'Recruit',
           newMerit: 0,
-          message: '⚔️ Commander: Two Levy failures! You are stripped to Recruit! Prove your worth again!'
+          message: '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Two Levy failures! You are stripped to Recruit! Prove your worth again!'
         };
       }
     }
@@ -382,14 +382,14 @@ class Scoring {
           demote: true,
           newRank: 'Optio',
           newMerit: 500,
-          message: '⚔️ Commander: Repeated weak battles! Your merit has been reset to 500! Rise or perish!'
+          message: '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Repeated weak battles! Your merit has been reset to 500! Rise or perish!'
         };
       } else {
         return {
           demote: true,
           newRank: 'Legionary',
           newMerit: 200,
-          message: '⚔️ Commander: Repeated weak battles! You are broken to Legionary! Rise or perish!'
+          message: '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Repeated weak battles! You are broken to Legionary! Rise or perish!'
         };
       }
     }
@@ -401,14 +401,14 @@ class Scoring {
           demote: true,
           newRank: 'Centurion',
           newMerit: 900,
-          message: '⚔️ Commander: A Centurion showing such weakness! Your merit has been reset to 900! Disgraceful!'
+          message: '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: A Centurion showing such weakness! Your merit has been reset to 900! Disgraceful!'
         };
       } else {
         return {
           demote: true,
           newRank: 'Optio',
           newMerit: 500,
-          message: '⚔️ Commander: A Centurion showing such weakness! You are demoted to Optio! Disgraceful!'
+          message: '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: A Centurion showing such weakness! You are demoted to Optio! Disgraceful!'
         };
       }
     }
@@ -420,14 +420,14 @@ class Scoring {
           demote: true,
           newRank: 'Centurion',
           newMerit: 900,
-          message: '⚔️ Commander: Five battles without excellence! Your merit has been reset to 900! Unacceptable!'
+          message: '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Five battles without excellence! Your merit has been reset to 900! Unacceptable!'
         };
       } else {
         return {
           demote: true,
           newRank: 'Optio',
           newMerit: 500,
-          message: '⚔️ Commander: Five battles without excellence! You are demoted to Optio! Unacceptable!'
+          message: '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Five battles without excellence! You are demoted to Optio! Unacceptable!'
         };
       }
     }
@@ -439,14 +439,14 @@ class Scoring {
           demote: true,
           newRank: 'Tribunus',
           newMerit: 1300,
-          message: '⚔️ Commander: A Tribunus falling to such depths! Your merit has been reset to 1300! Shameful!'
+          message: '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: A Tribunus falling to such depths! Your merit has been reset to 1300! Shameful!'
         };
       } else {
         return {
           demote: true,
           newRank: 'Centurion',
           newMerit: 900,
-          message: '⚔️ Commander: A Tribunus falling to such depths! You are stripped to Centurion! Shameful!'
+          message: '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: A Tribunus falling to such depths! You are stripped to Centurion! Shameful!'
         };
       }
     }
@@ -463,14 +463,14 @@ class Scoring {
             demote: true,
             newRank: 'Tribunus',
             newMerit: 1300,
-            message: '⚔️ Commander: You cannot achieve the required excellence! Your merit has been reset to 1300!'
+            message: '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: You cannot achieve the required excellence! Your merit has been reset to 1300!'
           };
         } else {
           return {
             demote: true,
             newRank: 'Centurion',
             newMerit: 900,
-            message: '⚔️ Commander: You cannot achieve the required excellence! You are demoted to Centurion!'
+            message: '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: You cannot achieve the required excellence! You are demoted to Centurion!'
           };
         }
       }

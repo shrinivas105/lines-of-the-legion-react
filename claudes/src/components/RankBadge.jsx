@@ -20,6 +20,7 @@ export function RankBadge({ title, icon, active = false, size = 'md', tone, prom
 
   const color = tone || BATTLE_RANK_COLORS[title] || LEGION_RANK_COLORS[title] || 'var(--bronze)';
   const glyph = icon || BATTLE_RANK_ICONS[title] || title?.[0];
+  const GlyphIcon = typeof glyph === 'function' ? glyph : null;
   const portraitSrc = !imgFailed ? LEGION_RANK_PORTRAITS[title] : null;
 
   return (
@@ -43,6 +44,8 @@ export function RankBadge({ title, icon, active = false, size = 'md', tone, prom
           alt={title}
           onError={() => setImgFailed(true)}
         />
+      ) : GlyphIcon ? (
+        <GlyphIcon className="rank-badge__icon-svg" />
       ) : (
         <span className="rank-badge__icon">{glyph}</span>
       )}

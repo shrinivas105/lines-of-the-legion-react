@@ -7,6 +7,7 @@ import { ChessBoard } from './ChessBoard';
 import { Panel } from './Panel';
 import { Button } from './Button';
 import { EndGameSummary } from './EndGameSummary';
+import { IconBrokenStandard, IconRomanTemple, IconReset, IconCircularLaurel, IconVexillum } from './RomanIcons';
 import './GameScreen.css';
 
 export function GameScreen({ app }) {
@@ -21,9 +22,9 @@ export function GameScreen({ app }) {
     return (
       <div className="game-screen page-transition">
         <Panel className="game-screen__error">
-          <h3>⚠️ Connection Lost</h3>
+          <h3><IconBrokenStandard className="game-screen__heading-icon" aria-hidden="true" /> Connection Lost</h3>
           <p>The opening database is unreachable right now. Please try again shortly.</p>
-          <Button variant="secondary" onClick={() => app.goHome()}>🏠 Return Home</Button>
+          <Button variant="secondary" onClick={() => app.goHome()}><IconRomanTemple className="game-screen__btn-icon" aria-hidden="true" /> Return Home</Button>
         </Panel>
       </div>
     );
@@ -56,7 +57,7 @@ export function GameScreen({ app }) {
         {!app.gameEnded && (
           <div className="game-screen__actions">
             <Button variant="danger" size="sm" onClick={() => window.location.reload()}>
-              🔄 New Battle
+              <IconReset className="game-screen__btn-icon" aria-hidden="true" /> New Battle
             </Button>
             <Button
               variant="danger"
@@ -64,7 +65,9 @@ export function GameScreen({ app }) {
               disabled={!hintEnabled}
               onClick={() => app.getHints()}
             >
-              {app.hintUsed ? '✓ Consulted' : '🎖️ Consult Commander'}
+              {app.hintUsed
+                ? <><IconCircularLaurel className="game-screen__btn-icon" aria-hidden="true" /> Consulted</>
+                : <><IconVexillum className="game-screen__btn-icon" aria-hidden="true" /> Consult Commander</>}
             </Button>
           </div>
         )}

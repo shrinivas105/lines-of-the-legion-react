@@ -1,7 +1,6 @@
 .legion-path {
   position: relative;
   width: 100%;
-  margin: var(--space-3) 0;
   box-sizing: border-box;
 }
 
@@ -9,36 +8,62 @@
   position: relative;
   z-index: 2;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 4px;
-  padding: 0 4px;
+  gap: 10px;
+  padding: 4px 4px;
 }
 
 .legion-path__step {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   flex: 1 1 0;
   min-width: 0;
   position: relative;
-  opacity: 0.5;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0.55;
+  transition: opacity var(--duration-base) var(--ease-standard),
+              transform var(--duration-base) var(--ease-standard),
+              filter var(--duration-base) var(--ease-standard);
 }
 
+/* future ranks: visible but slightly desaturated, on top of dimmed opacity */
+.legion-path__step:not(.legion-path__step--reached) {
+  filter: saturate(0.55) brightness(0.9);
+}
+
+/* gentle hover lift across the whole ladder, including future ranks */
+.legion-path__step:hover {
+  transform: translateY(-2px);
+}
+
+.legion-path__step:not(.legion-path__step--reached):hover {
+  opacity: 0.75;
+  filter: saturate(0.75) brightness(0.98);
+}
+
+/* thicker, more confident connecting line between ranks, tinted by the
+   active campaign accent once the line has been "conquered" */
 .legion-path__connector {
-  flex: 0 0 22px;
+  flex: 0 0 26px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.95rem;
+  margin-top: 14px;
+  font-size: 1.1rem;
+  font-weight: 700;
   line-height: 1;
   color: rgba(212, 175, 55, 0.36);
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
   pointer-events: none;
+  transition: color var(--duration-base) var(--ease-standard);
 }
 
 .legion-path__connector--active {
-  color: rgba(212, 175, 55, 0.86);
+  color: var(--legion-accent, rgba(216, 182, 107, 0.92));
+  text-shadow: 0 0 10px var(--legion-glow, var(--gold-glow));
 }
 
 .legion-path__node {
@@ -47,28 +72,131 @@
   justify-content: center;
 }
 
+/* Ladder badges get a small bump over the base --md size (40px -> 46px)
+   — RankBadge's size="md" is only used here, so this is scoped locally
+   rather than changing the shared default. */
+.legion-path__node .rank-badge--md {
+  width: 46px;
+  height: 46px;
+  font-size: 1.05rem;
+}
+
+.legion-path__label {
+  font-family: var(--font-stat);
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--marble-dim);
+  text-align: center;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.legion-path__step--reached .legion-path__label {
+  color: var(--marble);
+}
+
+.legion-path__step--current .legion-path__label {
+  color: var(--legion-accent, var(--gold));
+  font-weight: 700;
+}
+
+/* completed ranks: a soft, steady ring in the campaign accent instead of
+   the plain resting badge border, so "conquered" territory reads at a
+   glance */
+.legion-path__step--reached:not(.legion-path__step--current) .rank-badge {
+  box-shadow:
+    0 0 0 3px rgba(15,13,10,0.6),
+    0 0 0 4px color-mix(in srgb, var(--legion-accent, var(--gold)) 30%, transparent),
+    0 0 10px color-mix(in srgb, var(--legion-glow, var(--gold-glow)) 80%, transparent),
+    0 2px 6px rgba(0,0,0,0.45),
+    0 1px 0 rgba(255,255,255,0.12) inset;
+}
+
 .legion-path__step--reached {
   opacity: 1;
 }
 
+/* current rank: the strongest glow on the ladder, with a slow, gentle
+   pulse in the campaign accent — the eye should land here first */
 .legion-path__step--current {
   opacity: 1;
-  transform: scale(1.1);
+  transform: scale(1.12);
+}
+
+.legion-path__step--current:hover {
+  transform: scale(1.12) translateY(-2px);
+}
+
+.legion-path__step--current .rank-badge--active {
+  animation: legion-path-current-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes legion-path-current-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px rgba(15,13,10,0.6),
+      0 0 0 4px color-mix(in srgb, var(--legion-accent, var(--gold)) 22%, transparent),
+      0 0 16px var(--legion-glow, var(--bronze-glow)),
+      0 2px 6px rgba(0,0,0,0.45),
+      0 1px 0 rgba(255,255,255,0.14) inset;
+  }
+  50% {
+    box-shadow:
+      0 0 0 3px rgba(15,13,10,0.6),
+      0 0 0 5px color-mix(in srgb, var(--legion-accent, var(--gold)) 42%, transparent),
+      0 0 26px var(--legion-glow, var(--gold-glow)),
+      0 2px 6px rgba(0,0,0,0.45),
+      0 1px 0 rgba(255,255,255,0.18) inset;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .legion-path__step { transition: none; }
+  .legion-path__step,
+  .legion-path__step--current .rank-badge--active {
+    transition: none;
+    animation: none;
+  }
 }
 
 @media (max-width: 480px) {
+  .legion-path__steps {
+    gap: 4px;
+    padding: 2px 2px;
+  }
+
   .legion-path__connector {
-    flex-basis: 16px;
-    font-size: 0.8rem;
+    flex-basis: 12px;
+    font-size: 0.75rem;
+    margin-top: 8px;
   }
 
   .legion-path__node .rank-badge--md {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     font-size: 0.7rem;
+  }
+
+  .legion-path__label {
+    font-size: 0.4rem;
+    letter-spacing: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .legion-path__connector {
+    flex-basis: 8px;
+    font-size: 0.65rem;
+  }
+
+  .legion-path__node .rank-badge--md {
+    width: 24px;
+    height: 24px;
+    font-size: 0.6rem;
+  }
+
+  .legion-path__label {
+    font-size: 0.36rem;
   }
 }

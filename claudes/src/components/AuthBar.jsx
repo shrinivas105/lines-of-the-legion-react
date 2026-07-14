@@ -4,6 +4,7 @@
 // button alongside it. Logic delegates entirely to app.auth (AuthModule),
 // unchanged from the legacy auth.js.
 import { LichessConnectButton } from './LichessConnectButton';
+import { IconCircularLaurel, IconWaxSeal } from './RomanIcons';
 import './AuthBar.css';
 
 export function AuthBar({ app }) {
@@ -13,14 +14,14 @@ export function AuthBar({ app }) {
     <div className="auth-bar">
       {auth.isLoggedIn ? (
         <div className="auth-bar__user">
-          <span className="auth-bar__email">✓ {auth.user?.email?.split('@')[0]}</span>
+          <span className="auth-bar__email"><IconCircularLaurel className="auth-bar__icon" aria-hidden="true" /> {auth.user?.email?.split('@')[0]}</span>
           <button className="auth-bar__signout" onClick={() => auth.handleSignOut()}>
             Sign Out
           </button>
         </div>
       ) : (
         <button className="auth-bar__signin" onClick={() => auth.handleSignIn()}>
-          🔐 Sync
+          <IconWaxSeal className="auth-bar__icon" aria-hidden="true" /> Sync
         </button>
       )}
       <LichessConnectButton />

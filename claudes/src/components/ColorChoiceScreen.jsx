@@ -7,10 +7,12 @@
 import { Panel } from './Panel';
 import { Button } from './Button';
 import { LegionPath } from './LegionPath';
+import { BattleHistory } from './BattleHistory';
 import { LichessConnectButton } from './LichessConnectButton';
 import { Scoring } from '../logic/scoring';
 import { isConnected } from '../services/lichessAuth';
-import { LEGION_RANK_PORTRAITS } from './rankColors';
+import { LEGION_RANK_PORTRAITS, LEGION_RANK_ICONS } from './rankColors';
+import { IconCrossedGladius } from './RomanIcons';
 import './ColorChoiceScreen.css';
 
 const RANK_FACTS = {
@@ -24,6 +26,7 @@ const RANK_FACTS = {
 
 export function ColorChoiceScreen({ app }) {
   const isMaster = app.aiSource === 'master';
+  const source = isMaster ? 'master' : 'lichess';
   const merit = isMaster ? (app.legionMerits.master_merit || 0) : (app.legionMerits.lichess_merit || 0);
   const legion = Scoring.getLegionRank(merit);
   const needsLichessAuth = !isConnected();
@@ -34,9 +37,8 @@ export function ColorChoiceScreen({ app }) {
   const progressPct = legion.nextRank && span > 0
     ? Math.min(100, Math.max(0, ((merit - prevThreshold) / span) * 100))
     : 100;
-  const progressPctRounded = Math.round(progressPct);
-
   const currentRankImage = LEGION_RANK_PORTRAITS[legion.title] || '/ranks/recruit.png';
+  const NextRankIcon = legion.nextRank ? LEGION_RANK_ICONS[legion.nextRank] : null;
   const currentRankInfo = {
     label: legion.title,
     text: isMaster
@@ -47,39 +49,74 @@ export function ColorChoiceScreen({ app }) {
     || 'The legion marches onward when discipline and study are kept in balance.';
 
   return (
-    <div className="color-choice page-transition">
+    <div className={`color-choice color-choice--${isMaster ? 'master' : 'club'} page-transition`}>
       <div className="color-choice__wrap">
         <Panel className="color-choice__panel">
           <div className={`color-choice__panel-title color-choice__panel-title--${isMaster ? 'master' : 'club'}`}>
             {isMaster ? 'Masters Legion' : 'Club Legion'}
           </div>
 
-          <div className="color-choice__rank-line">
-            {legion.icon} {legion.title} <span className="color-choice__rank-line-merit">({merit} merit)</span>
+          <div className="color-choice__rank-section">
+            <div className="color-choice__hero">
+              <div className="color-choice__rank-grid">
+                <div className="color-choice__rank-grid-cell">
+                  <div className="color-choice__rank-grid-label">Current Rank</div>
+                  <div className="color-choice__rank-grid-value">
+                    <span className="color-choice__rank-grid-icon" aria-hidden="true"><legion.icon /></span>
+                    {legion.title}
+                  </div>
+                </div>
+                <div className="color-choice__rank-grid-divider" aria-hidden="true" />
+                <div className="color-choice__rank-grid-cell color-choice__rank-grid-cell--next">
+                  <div className="color-choice__rank-grid-label">Next Rank</div>
+                  <div className="color-choice__rank-grid-value color-choice__rank-grid-value--next">
+                    {legion.nextRank ? (
+                      <>
+                        <span className="color-choice__rank-grid-icon" aria-hidden="true">{NextRankIcon && <NextRankIcon />}</span>
+                        {legion.nextRank}
+                      </>
+                    ) : 'Highest Rank'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="color-choice__progress-section">
+              <div className="color-choice__progress-track">
+                <div className="color-choice__progress-fill" style={{ width: `${progressPct}%` }}>
+                  <span className="color-choice__progress-shine" aria-hidden="true" />
+                </div>
+                {legion.nextRank && legion.title !== 'Recruit' && (
+                  <div
+                    className={`color-choice__safety-tick${progressPct >= 50 ? ' color-choice__safety-tick--reached' : ''}`}
+                    title="Safety Net: past this point, a demotion resets you to the start of this rank instead of dropping you a full rank"
+                  />
+                )}
+              </div>
+              <div className="color-choice__progress-caption">
+                {legion.nextRank
+                  ? `${merit} / ${nextThreshold} Merit Achieved`
+                  : `${merit} Merit \u2014 Highest Rank Attained`}
+              </div>
+            </div>
           </div>
 
-          <div className="color-choice__road">
-            <LegionPath legion={legion} />
+          <div className="color-choice__progression">
+            <div className="color-choice__section-heading">Career Progression (Road to Legatus)</div>
+            <div className="color-choice__road">
+              <LegionPath legion={legion} />
+            </div>
           </div>
 
-          <div className="color-choice__progress-section">
-            <div className="color-choice__progress-heading">
-              {legion.nextRank ? `${legion.title} \u2192 ${legion.nextRank}` : `${legion.title} \u2014 Highest Rank Attained`}
-            </div>
-            <div className="color-choice__progress-track">
-              <div className="color-choice__progress-fill" style={{ width: `${progressPct}%` }} />
-            </div>
-            <div className="color-choice__progress-caption">
-              {legion.nextRank
-                ? `${merit} / ${nextThreshold} merit (${progressPctRounded}%)`
-                : `${merit} merit (100%)`}
-            </div>
+          <div className="color-choice__battle-history">
+            <BattleHistory app={app} source={source} />
           </div>
 
           <div className="color-choice__panel-actions">
             <div className="color-choice__start">
-              <Button variant="danger" size="sm" className="color-choice__start-btn" onClick={() => app.startBattle()}>
-                ⚔️ Start Battle
+              <Button variant="danger" size="lg" className="color-choice__start-btn" onClick={() => app.startBattle()}>
+                <IconCrossedGladius className="color-choice__start-icon" aria-hidden="true" />
+                <span className="color-choice__start-label">Start Battle</span>
               </Button>
             </div>
 
@@ -93,8 +130,13 @@ export function ColorChoiceScreen({ app }) {
                 />
               </div>
               <div className="color-choice__rank-info-body">
-                <div className="color-choice__rank-info-title">{legion.icon} {currentRankInfo.label}</div>
+                <div className="color-choice__rank-info-title"><legion.icon className="color-choice__rank-info-icon" aria-hidden="true" /> {currentRankInfo.label}</div>
                 <p className="color-choice__rank-info-text">{currentRankInfo.text}</p>
+                <div className="color-choice__rank-divider" role="separator" aria-hidden="true">
+                  <span className="color-choice__rank-divider-line" />
+                  <span className="color-choice__rank-divider-dot" />
+                  <span className="color-choice__rank-divider-line" />
+                </div>
                 <div className="rank-fact">
                   <div className="rank-fact-title">Did you know?</div>
                   <div className="rank-fact-text">{currentRankFact}</div>

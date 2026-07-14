@@ -17,7 +17,7 @@
 .game-screen__info-line,
 .info-line {
   margin: 1px 0;
-  font-family: 'Cinzel', serif;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
   font-size: 0.45rem;
   font-weight: 600;
   color: #ffffff;
@@ -66,7 +66,7 @@
   border: 2px solid rgba(212, 175, 55, 0.4);
   background: rgba(20, 10, 5, 0.95);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  font-size: 0.48rem;
+  font-size: 0.67rem;
   line-height: 1.4;
   color: var(--marble);
 }
@@ -81,6 +81,20 @@
   gap: 6px;
   margin-top: 2px;
   flex-wrap: wrap;
+  /* Docked to the bottom of the viewport so New Battle / Consult Commander
+     are always in view on load, regardless of whether the browser's
+     address bar is currently showing or has collapsed — no more needing
+     to scroll to find them on a fresh URL load. */
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(180deg, transparent, var(--ink) 35%);
+}
+
+.game-screen__actions .btn {
+  padding: 7px 13px;
+  font-size: 0.78rem;
 }
 
 .game-screen__error {
@@ -88,8 +102,10 @@
   max-width: 420px;
 }
 
-.game-screen__error h3 { color: var(--oxblood-text); margin-bottom: var(--space-3); }
+.game-screen__error h3 { color: var(--oxblood-text); margin-bottom: var(--space-3); display: flex; align-items: center; justify-content: center; gap: 6px; }
 .game-screen__error p { color: var(--marble-dim); margin-bottom: var(--space-4); }
+.game-screen__heading-icon { width: 1em; height: 1em; flex-shrink: 0; }
+.game-screen__btn-icon { width: 1em; height: 1em; flex-shrink: 0; }
 
 @media (max-width: 600px) {
   .game-screen { padding: 4px 2px 8px; }

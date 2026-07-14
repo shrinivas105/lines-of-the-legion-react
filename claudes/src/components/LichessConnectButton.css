@@ -18,3 +18,12 @@
   color: var(--verdigris-text);
   border-color: var(--verdigris-dim);
 }
+.lichess-btn__icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+.lichess-btn__icon--sm {
+  width: 0.8em;
+  height: 0.8em;
+}

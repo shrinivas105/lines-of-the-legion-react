@@ -32,6 +32,16 @@
   border: 1px solid #27ae60;
   color: #fff;
 }
+.end-summary__promo-message {
+  font-size: 0.72rem;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+}
+.end-summary__promo-cta {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+}
 .end-summary__rank-change--demo {
   background: linear-gradient(135deg, rgba(231, 76, 60, 0.95), rgba(178, 34, 34, 0.95));
   border: 1px solid #ff0000;

@@ -9,6 +9,7 @@ import { Panel } from './Panel';
 import { Button } from './Button';
 import { BATTLE_RANK_COLORS } from './rankColors';
 import { IconReset, IconStoneTablet, IconCrossedGladius, IconFortress } from './RomanIcons';
+import { Scoring } from '../logic/scoring';
 import './EndGameSummary.css';
 import PromotionScreen from './PromotionScreen';
 
@@ -156,15 +157,27 @@ export function EndGameSummary({ app }) {
         </div>
       )}
 
-      {showPromotionScreen && (
-        <PromotionScreen
-          onContinue={() => { setShowPromotionScreen(false); app.returnToCampaign(); }}
-          onExit={() => { setShowPromotionScreen(false); app.goHome(); }}
-          commanderName={app.commanderName || 'COMMANDER VALERIUS'}
-          prevRank={(() => { const idx = RANK_ORDER.indexOf(battleRank.title); return idx > 0 ? RANK_ORDER[idx - 1] : battleRank.title; })()}
-          newRank={battleRank.title}
-        />
-      )}
+      {showPromotionScreen && (() => {
+        // The promotion ceremony is about the campaign Legion rank
+        // (Recruit -> Legionary -> Optio -> Centurion -> Tribunus -> Legatus),
+        // which is a different scale entirely from `battleRank` (that's the
+        // per-battle performance rank: Levy/Hastatus/Principes/Triarius/
+        // Imperator). Deriving prev/new Legion rank from merit directly,
+        // via the same rankOrder Scoring.getLegionRank() already returns.
+        const meritKey = `${app.aiSource}_merit`;
+        const currentMerit = app.legionMerits?.[meritKey] || 0;
+        const newLegion = Scoring.getLegionRank(currentMerit);
+        const prevLegionTitle = newLegion.level > 0 ? newLegion.rankOrder[newLegion.level - 1] : newLegion.title;
+        return (
+          <PromotionScreen
+            onContinue={() => { setShowPromotionScreen(false); app.returnToCampaign(); }}
+            onExit={() => { setShowPromotionScreen(false); app.goHome(); }}
+            commanderName={app.commanderName || 'COMMANDER VALERIUS'}
+            prevRank={prevLegionTitle}
+            newRank={newLegion.title}
+          />
+        );
+      })()}
     </Panel>
   );
 }

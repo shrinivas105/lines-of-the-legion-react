@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { isConnected, startLogin, disconnect } from '../services/lichessAuth';
 import { Button } from './Button';
+import { IconChessKnightLaurel, IconCircularLaurel } from './RomanIcons';
 import './LichessConnectButton.css';
 
 export function LichessConnectButton() {
@@ -16,14 +17,14 @@ export function LichessConnectButton() {
   if (connected) {
     return (
       <Button variant="danger" size="sm" onClick={() => { disconnect(); window.location.reload(); }}>
-        ♟ Lichess ✓
+        <IconChessKnightLaurel className="lichess-btn__icon" aria-hidden="true" /> Lichess <IconCircularLaurel className="lichess-btn__icon lichess-btn__icon--sm" aria-hidden="true" />
       </Button>
     );
   }
 
   return (
     <Button variant="danger" size="sm" onClick={() => startLogin()}>
-      ♟ Connect Lichess
+      <IconChessKnightLaurel className="lichess-btn__icon" aria-hidden="true" /> Connect Lichess
     </Button>
   );
 }
