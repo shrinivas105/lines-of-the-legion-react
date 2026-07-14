@@ -145,6 +145,14 @@ function ComparisonTable({ app }) {
   if (ab.tableData.length === 0) {
     return <div className="analysis-compare__placeholder">{ab.positionText}</div>;
   }
+  // Always render exactly 4 row slots (3 top-move rows + 1 slot for a played
+  // move outside the top 3). Real rows can number 1-4 depending on the
+  // position; the shortfall is padded with invisible spacer rows so the
+  // panel's height — and therefore everything below it — never shifts as
+  // you step through moves. That's what stops the page from jumping/needing
+  // a re-scroll on every Prev/Next tap.
+  const spacerCount = Math.max(0, 4 - ab.tableData.length);
+
   return (
     <div className="analysis-compare">
       <div className="analysis-compare__head">
@@ -173,10 +181,18 @@ function ComparisonTable({ app }) {
             <tr
               key={i}
               className={row.isCurrentMove ? 'current' : ''}
-              style={{ borderLeft: `3px solid ${row.color}` }}
+              style={{
+                borderLeft: `5px solid ${row.color}`,
+                background: row.isCurrentMove ? undefined : `${row.color}20`
+              }}
             >
               <td className="analysis-compare__move-cell">
-                <span style={{ color: row.color, fontWeight: 'bold' }}>{row.label}:</span>
+                <span
+                  className="analysis-compare__chip"
+                  style={{ background: row.color }}
+                  title={row.label}
+                  aria-label={row.label}
+                />
                 <span className="analysis-compare__move-text">{row.move}</span>
                 {row.isCurrentMove ? (
                   <span
@@ -193,6 +209,11 @@ function ComparisonTable({ app }) {
               <td className="draw">{row.draws}%</td>
               <td className="games">{row.totalGames.toLocaleString()}</td>
               <td style={{ color: row.evalColor, fontWeight: 'bold' }}>{row.eval}</td>
+            </tr>
+          ))}
+          {Array.from({ length: spacerCount }).map((_, i) => (
+            <tr key={`spacer-${i}`} className="analysis-compare__spacer-row" aria-hidden="true">
+              <td colSpan={6}>&nbsp;</td>
             </tr>
           ))}
         </tbody>
