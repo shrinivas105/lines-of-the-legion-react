@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lines of the Legion</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style-part2.css">
+  <link rel="stylesheet" href="style-mobile-board-fix.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Eagle+Lake:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Spectral:wght@600&family=Marcellus&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- IMPORTANT: Load scripts in this exact order -->
+  
+  <!-- 1. Chess.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+  
+  <!-- 2. Core modules (no dependencies) -->
+  <script src="config.js"></script>
+  <script src="practice-openings.js"></script>
+  <script src="chess-api.js"></script>
+  <script src="lichess-auth.js"></script>
+  <script src="scoring.js"></script>
+  
+  <!-- 3. Export and Analysis modules -->
+  <script src="pgn-exporter.js"></script>
+  <script src="analysis-board.js"></script>
+  
+  <!-- 4. Supabase and Auth (if using cloud sync) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <script src="auth.js"></script>
+  
+  <!-- 5. UI and Game Logic -->
+  <script src="ui-renderer.js"></script>
+<script src="game-logic.js"></script>
+  
+  <!-- 6. Main initialization (must be last) -->
+  <script src="roman-battle-effects.js"></script>
+  <script src="main.js"></script>
+</body>
+
+</html>
