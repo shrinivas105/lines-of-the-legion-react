@@ -10,6 +10,7 @@ import { Button } from './Button';
 import { BATTLE_RANK_COLORS } from './rankColors';
 import { IconReset, IconStoneTablet, IconCrossedGladius, IconFortress } from './RomanIcons';
 import './EndGameSummary.css';
+import PromotionScreen from './PromotionScreen';
 
 const RANK_COLORS = BATTLE_RANK_COLORS;
 const RANK_ORDER = ['Levy', 'Hastatus', 'Principes', 'Triarius', 'Imperator'];
@@ -28,6 +29,7 @@ export function EndGameSummary({ app }) {
     return { rankChangeMessage: message, rankChangeType: type };
   });
   const isPromotion = rankChangeType === 'promotion';
+  const [showPromotionScreen, setShowPromotionScreen] = useState(false);
 
   const { battleRank, moveQuality, displayEval, isPractice, gamesToShow } = app.endGameData;
   const rankColor = RANK_COLORS[battleRank.title] || '#d4af37';
@@ -42,11 +44,23 @@ export function EndGameSummary({ app }) {
 
   return (
     <Panel className="end-summary">
-      {rankChangeMessage && (
-        <div
-          className={isPromotion ? 'end-summary__rank-change end-summary__rank-change--promo' : 'end-summary__rank-change end-summary__rank-change--demo'}
-          dangerouslySetInnerHTML={{ __html: rankChangeMessage }}
-        />
+      {/* Promotion trigger: show simple message and Join ceremony button */}
+      {isPromotion ? (
+        <div className="end-summary__rank-change end-summary__rank-change--promo">
+          <div className="end-summary__promo-message">You have been promoted</div>
+          {!showPromotionScreen && (
+            <div className="end-summary__promo-cta">
+              <Button className="join-ceremony" variant="primary" size="md" onClick={() => setShowPromotionScreen(true)}>Join ceremony</Button>
+            </div>
+          )}
+        </div>
+      ) : (
+        rankChangeMessage && (
+          <div
+            className={'end-summary__rank-change end-summary__rank-change--demo'}
+            dangerouslySetInnerHTML={{ __html: rankChangeMessage }}
+          />
+        )
       )}
 
       <h3 className="end-summary__heading" style={{ color: rankColor, textShadow: `0 0 20px ${rankColor}` }}>
@@ -91,15 +105,18 @@ export function EndGameSummary({ app }) {
         })}
       </div>
 
-      <div className="end-summary__buttons">
-        <Button variant="danger" size="sm" onClick={() => app.showAnalysis()}><IconStoneTablet className="end-summary__btn-icon" aria-hidden="true" /> Analyze</Button>
-        {isPractice ? (
-          <Button variant="danger" size="sm" onClick={handleTryAgain}><IconReset className="end-summary__btn-icon" aria-hidden="true" /> Try Again</Button>
-        ) : (
-          <Button variant="danger" size="sm" onClick={() => app.returnToCampaign()}><IconCrossedGladius className="end-summary__btn-icon" aria-hidden="true" /> Continue Campaign</Button>
-        )}
-        <Button variant="danger" size="sm" onClick={() => app.goHome()}><IconFortress className="end-summary__btn-icon" aria-hidden="true" /> Exit</Button>
-      </div>
+      {/* Hide standard buttons when a promotion prompt is showing */}
+      {!isPromotion && (
+        <div className="end-summary__buttons">
+          <Button variant="danger" size="sm" onClick={() => app.showAnalysis()}><IconStoneTablet className="end-summary__btn-icon" aria-hidden="true" /> Analyze</Button>
+          {isPractice ? (
+            <Button variant="danger" size="sm" onClick={handleTryAgain}><IconReset className="end-summary__btn-icon" aria-hidden="true" /> Try Again</Button>
+          ) : (
+            <Button variant="danger" size="sm" onClick={() => app.returnToCampaign()}><IconCrossedGladius className="end-summary__btn-icon" aria-hidden="true" /> Continue Campaign</Button>
+          )}
+          <Button variant="danger" size="sm" onClick={() => app.goHome()}><IconFortress className="end-summary__btn-icon" aria-hidden="true" /> Exit</Button>
+        </div>
+      )}
 
       {isPractice && (
         <div className="end-summary__practice-note">
@@ -137,6 +154,16 @@ export function EndGameSummary({ app }) {
             })}
           </div>
         </div>
+      )}
+
+      {showPromotionScreen && (
+        <PromotionScreen
+          onContinue={() => { setShowPromotionScreen(false); app.returnToCampaign(); }}
+          onExit={() => { setShowPromotionScreen(false); app.goHome(); }}
+          commanderName={app.commanderName || 'COMMANDER VALERIUS'}
+          prevRank={(() => { const idx = RANK_ORDER.indexOf(battleRank.title); return idx > 0 ? RANK_ORDER[idx - 1] : battleRank.title; })()}
+          newRank={battleRank.title}
+        />
       )}
     </Panel>
   );
