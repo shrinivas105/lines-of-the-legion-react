@@ -129,6 +129,9 @@
   table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.7rem;
+  border: 2px solid var(--oxblood);
+  border-radius: 6px;
+  overflow: hidden;
 }
 /* Move column no longer carries "Top:"/"2nd:"/"3rd:" prefix text (that's
    now a small color chip instead), so it can give more of its width back
@@ -197,6 +200,10 @@
   gap: 6px;
   flex-wrap: wrap;
   justify-content: center;
+  /* Pulls this row closer to the comparison panel above it, on top of
+     the .analysis-screen flex gap (which is shared by every section and
+     can't be tuned per-pair on its own). */
+  margin-top: -6px;
 }
 
 .analysis-movelist__empty {
