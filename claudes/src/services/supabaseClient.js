@@ -19,9 +19,19 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     detectSessionInUrl: true,
     storage: window.localStorage,
     storageKey: 'chess-theory-supabase-auth',
-    flowType: 'implicit',
   }
 });
+
+// Expose a legacy-global for older scripts that expect `window.supabaseClient`
+// (the tmp_archive/legacy code used this pattern). Assign synchronously so
+// importing modules and non-module scripts can both access the same client.
+if (typeof window !== 'undefined' && typeof window.supabaseClient === 'undefined') {
+  try {
+    window.supabaseClient = supabase;
+  } catch (e) {
+    // noop in non-browser environments
+  }
+}
 
 // Clean stale OAuth params on load
 const params = new URLSearchParams(window.location.search);

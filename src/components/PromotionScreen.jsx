@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import './PromotionScreen.css';
 import { Button } from './Button';
 import { LEGION_RANK_PORTRAITS } from './rankColors';
+import romanFallbackImg from '../roman.png';
 
 const DUTIES = {
   Legionary: {
@@ -111,7 +112,7 @@ export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', 
             className="promotion-screen__commander-portrait"
             src={'/commandar.png'}
             alt="Commander"
-            onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/roman.png'; }}
+            onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = romanFallbackImg; }}
           />
           <div className="promotion-screen__commander-name">{commanderName}</div>
         </div>
@@ -134,7 +135,7 @@ export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', 
               <img
                 src={rankImagePath(prevRank)}
                 alt={prevRank}
-                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/roman.png'; }}
+                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = romanFallbackImg; }}
               />
               <div className="promotion-screen__rank-label">{prevRank}</div>
             </div>
@@ -143,7 +144,7 @@ export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', 
               <img
                 src={rankImagePath(newRank)}
                 alt={newRank}
-                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/roman.png'; }}
+                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = romanFallbackImg; }}
               />
               <div className="promotion-screen__rank-label">PROMOTED<br />{newRank}</div>
             </div>
