@@ -8,7 +8,12 @@
 .promotion-screen__speech{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:14px;border-radius:8px;margin:10px 0;color:#efe7d1}
 .promotion-screen__speech-line{opacity:0;max-height:0;transform:translateY(6px);transition:all 420ms ease;overflow:hidden}
 .promotion-screen__speech-line.visible{opacity:1;max-height:48px;transform:none}
-.promotion-screen__ranks{display:flex;align-items:center;justify-content:center;gap:28px;margin:18px 0}
+.promotion-screen__ranks{display:grid;grid-template-columns:minmax(180px,1fr) minmax(220px,260px);gap:26px;margin:18px 0;align-items:center}
+.promotion-screen__rank-copy{display:flex;flex-direction:column;justify-content:center;gap:12px;padding:20px 18px;border-radius:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08)}
+.promotion-screen__rank-banner{text-transform:uppercase;font-size:0.8rem;letter-spacing:1.8px;color:#ffd966;font-weight:800}
+.promotion-screen__rank-name{font-size:2.5rem;line-height:1;letter-spacing:1px;color:#fff;font-weight:900}
+.promotion-screen__rank-subtitle{font-size:0.95rem;color:#efe7d1;max-width:16rem}
+.promotion-screen__rank-preview{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
 .promotion-screen__rank{width:140px;height:140px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 900ms cubic-bezier(.2,.9,.2,1),box-shadow 400ms}
 .promotion-screen__rank img{width:88px;height:88px;border-radius:50%;object-fit:cover}
 .promotion-screen__rank.prev{opacity:1}
@@ -19,9 +24,11 @@
 .promotion-screen__rank-label{margin-top:8px;text-align:center;font-weight:700;color:#fff}
 .promotion-screen__duties{margin-top:6px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:14px;border-radius:8px}
 .promotion-screen__duties h2{text-align:center;margin:0 0 8px;color:#ffd966}
-.promotion-screen__duty-list{display:flex;flex-direction:column;gap:6px;padding:6px 10px}
-.promotion-screen__duty-item{color:#efe7d1}
-.promotion-screen__quote{margin-top:10px;padding:8px 12px;background:rgba(0,0,0,0.12);border-left:4px solid rgba(212,175,55,0.5);font-style:italic}
+.promotion-screen__duty-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}
+.promotion-screen__duty-card{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)}
+.promotion-screen__duty-number{min-width:30px;height:30px;border-radius:999px;background:rgba(212,175,55,0.18);color:#ffd966;font-weight:800;display:flex;align-items:center;justify-content:center}
+.promotion-screen__duty-card p{margin:0;color:#efe7d1;line-height:1.4}
+.promotion-screen__quote{margin-top:10px;padding:12px 14px;background:rgba(0,0,0,0.12);border-left:4px solid rgba(212,175,55,0.5);font-style:italic}
 .promotion-screen__actions{display:flex;gap:12px;justify-content:center;margin-top:16px}
 
 /* Responsive adjustments */

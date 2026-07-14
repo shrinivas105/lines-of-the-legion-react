@@ -111,14 +111,22 @@ export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', 
         </div>
 
         <div className="promotion-screen__ranks">
-          <div className={`promotion-screen__rank prev ${showRankSwap ? 'swap-out' : ''}`}>
-            <img src={rankImagePath(prevRank)} alt={prevRank} />
-            <div className="promotion-screen__rank-label">{prevRank}</div>
+          <div className="promotion-screen__rank-copy">
+            <div className="promotion-screen__rank-banner">NEW RANK</div>
+            <div className="promotion-screen__rank-name">{newRank}</div>
+            <div className="promotion-screen__rank-subtitle">An honour befitting your battlefield mastery.</div>
           </div>
 
-          <div className={`promotion-screen__rank new ${showRankSwap ? 'swap-in' : ''}`}>
-            <img src={rankImagePath(newRank)} alt={newRank} />
-            <div className="promotion-screen__rank-label">PROMOTED<br />{newRank}</div>
+          <div className="promotion-screen__rank-preview">
+            <div className={`promotion-screen__rank prev ${showRankSwap ? 'swap-out' : ''}`}>
+              <img src={rankImagePath(prevRank)} alt={prevRank} />
+              <div className="promotion-screen__rank-label">{prevRank}</div>
+            </div>
+
+            <div className={`promotion-screen__rank new ${showRankSwap ? 'swap-in' : ''}`}>
+              <img src={rankImagePath(newRank)} alt={newRank} />
+              <div className="promotion-screen__rank-label">PROMOTED<br />{newRank}</div>
+            </div>
           </div>
         </div>
 
@@ -126,7 +134,10 @@ export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', 
           <h2>YOUR NEW DUTIES</h2>
           <div className="promotion-screen__duty-list">
             {duty.duties.map((d, i) => (
-              <div key={i} className="promotion-screen__duty-item">• {d}</div>
+              <div key={i} className="promotion-screen__duty-card">
+                <div className="promotion-screen__duty-number">{i + 1}</div>
+                <p>{d}</p>
+              </div>
             ))}
           </div>
           <blockquote className="promotion-screen__quote">{duty.quote}</blockquote>
