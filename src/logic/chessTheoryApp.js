@@ -281,6 +281,23 @@ export class ChessTheoryApp {
     this.render();
   }
 
+  // Used by "Continue Campaign" on the end-game summary: unlike startBattle()
+  // (which immediately begins the next game), this clears playerColor so the
+  // routing in App.jsx falls back to ColorChoiceScreen (Master/Club Legion)
+  // for the current aiSource, letting the player see updated rank/merit
+  // before choosing to start the next battle.
+  returnToCampaign() {
+    console.log('🏛️ returnToCampaign() called — playerColor before:', this.playerColor, 'aiSource:', this.aiSource);
+    if (typeof RomanBattleEffects !== 'undefined') {
+      RomanBattleEffects.stopMusic();
+    }
+    this.playerColor = null;
+    this.showingAnalysis = false;
+    this.resetGameState();
+    console.log('🏛️ returnToCampaign() done — playerColor after:', this.playerColor);
+    this.render();
+  }
+
   startBattle() {
     // Determine next color based on last played color
     const lastColor = this.aiSource === 'master' ? this.lastColorMaster : this.lastColorLichess;

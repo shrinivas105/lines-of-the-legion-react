@@ -286,6 +286,46 @@
   animation: color-choice-progress-glow 3.2s ease-in-out infinite;
 }
 
+/* Safety-net marker: sits at the halfway point of the current rank's span.
+   Once merit crosses it, a demotion only resets you to the start of the
+   current rank instead of dropping you a full rank (see the Last Battle
+   tooltip for the full rule). Dim/muted before it's reached, gold and
+   glowing once it is — a quick "you're protected" read at a glance. */
+.color-choice__safety-tick {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: rgba(230, 221, 196, 0.4);
+  border-radius: 1px;
+  z-index: 2;
+  cursor: help;
+}
+
+.color-choice__safety-tick::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(230, 221, 196, 0.5);
+}
+
+.color-choice__safety-tick--reached {
+  background: var(--gold);
+  box-shadow: 0 0 4px var(--gold-glow);
+}
+
+.color-choice__safety-tick--reached::after {
+  background: var(--gold);
+  box-shadow: 0 0 5px var(--gold-glow);
+}
+
 @keyframes color-choice-progress-glow {
   0%, 100% { box-shadow: 0 0 8px var(--legion-glow), inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -2px 3px rgba(0,0,0,0.35); }
   50%      { box-shadow: 0 0 14px var(--legion-glow), inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -2px 3px rgba(0,0,0,0.35); }

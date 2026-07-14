@@ -96,7 +96,7 @@ export function EndGameSummary({ app }) {
         {isPractice ? (
           <Button variant="danger" size="sm" onClick={handleTryAgain}><IconReset className="end-summary__btn-icon" aria-hidden="true" /> Try Again</Button>
         ) : (
-          <Button variant="danger" size="sm" onClick={() => app.startBattle()}><IconCrossedGladius className="end-summary__btn-icon" aria-hidden="true" /> Continue Campaign</Button>
+          <Button variant="danger" size="sm" onClick={() => app.returnToCampaign()}><IconCrossedGladius className="end-summary__btn-icon" aria-hidden="true" /> Continue Campaign</Button>
         )}
         <Button variant="danger" size="sm" onClick={() => app.goHome()}><IconFortress className="end-summary__btn-icon" aria-hidden="true" /> Exit</Button>
       </div>

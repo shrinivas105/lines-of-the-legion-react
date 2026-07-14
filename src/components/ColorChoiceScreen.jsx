@@ -86,6 +86,12 @@ export function ColorChoiceScreen({ app }) {
                 <div className="color-choice__progress-fill" style={{ width: `${progressPct}%` }}>
                   <span className="color-choice__progress-shine" aria-hidden="true" />
                 </div>
+                {legion.nextRank && legion.title !== 'Recruit' && (
+                  <div
+                    className={`color-choice__safety-tick${progressPct >= 50 ? ' color-choice__safety-tick--reached' : ''}`}
+                    title="Safety Net: past this point, a demotion resets you to the start of this rank instead of dropping you a full rank"
+                  />
+                )}
               </div>
               <div className="color-choice__progress-caption">
                 {legion.nextRank

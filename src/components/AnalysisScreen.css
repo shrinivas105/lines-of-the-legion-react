@@ -81,7 +81,11 @@
 }
 
 .analysis-screen__compare-panel {
-  min-height: 216px;
+  /* sizes to its actual content now — the fixed 216px reservation left a
+     large empty gap below the table on shorter comparison lists (e.g. only
+     3 rows), which pushed the page height enough to force extra scrolling
+     on mobile. The placeholder state below still reserves its own
+     min-height so switching in/out of it doesn't jar the layout. */
 }
 
 .analysis-compare__placeholder {
@@ -183,14 +187,7 @@
   display: flex;
   gap: var(--space-3);
   justify-content: center;
-  /* Same rationale as GameScreen__actions — keep Exit / Download PGN
-     reachable on the first paint instead of depending on how much of the
-     viewport the address bar happens to be occupying. */
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
   padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(180deg, transparent, var(--ink) 35%);
 }
 
 /* ── Loading state ── */
