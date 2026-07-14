@@ -9,7 +9,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Panel } from './Panel';
 import { Button } from './Button';
-import { IconCornu, IconCircularLaurel, IconCrossedGladius } from './RomanIcons';
+import { IconCornu, IconCrossedGladius, IconPlayedMark } from './RomanIcons';
 import './AnalysisScreen.css';
 
 function squareToCoords(square, isFlipped, squareSize) {
@@ -155,6 +155,14 @@ function ComparisonTable({ app }) {
         </div>
       </div>
       <table className="analysis-compare__table">
+        <colgroup>
+          <col className="col-move" />
+          <col className="col-num" />
+          <col className="col-num" />
+          <col className="col-num" />
+          <col className="col-num" />
+          <col className="col-num" />
+        </colgroup>
         <thead>
           <tr>
             <th>Move</th><th>White Win</th><th>Black Win</th><th>Draw</th><th>Games</th><th>Eval</th>
@@ -167,7 +175,19 @@ function ComparisonTable({ app }) {
               className={row.isCurrentMove ? 'current' : ''}
               style={{ borderLeft: `3px solid ${row.color}` }}
             >
-              <td><span style={{ color: row.color, fontWeight: 'bold' }}>{row.label}:</span> {row.move}{row.isCurrentMove ? (row.moveType === 'Your' ? <IconCircularLaurel className="analysis-compare__icon" aria-hidden="true" /> : <IconCornu className="analysis-compare__icon" aria-hidden="true" />) : ''}</td>
+              <td className="analysis-compare__move-cell">
+                <span style={{ color: row.color, fontWeight: 'bold' }}>{row.label}:</span>
+                <span className="analysis-compare__move-text">{row.move}</span>
+                {row.isCurrentMove ? (
+                  <span
+                    className="analysis-compare__played-mark"
+                    style={{ color: row.moveType === 'Your' ? 'var(--gold)' : 'var(--oxblood-text)' }}
+                    title={row.moveType === 'Your' ? 'Move you played' : "Opponent's move"}
+                  >
+                    <IconPlayedMark className="analysis-compare__icon" />
+                  </span>
+                ) : null}
+              </td>
               <td>{row.whiteWin}%</td>
               <td>{row.blackWin}%</td>
               <td className="draw">{row.draws}%</td>

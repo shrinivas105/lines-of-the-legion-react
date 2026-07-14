@@ -233,6 +233,24 @@ export function IconCornu({ className }) {
   );
 }
 
+// IconPlayedMark — bold "this is the move that was actually played" flag,
+// used next to the current-move row in the analysis Move Comparison table.
+// Replaces the old IconCircularLaurel/IconCornu pairing there: those read as
+// fine hairline scrollwork at the ~0.85em size the table renders them at,
+// so at a glance they just look like a smudge next to the move text. This
+// is a single flat-filled disc + thick checkmark instead — same "struck in
+// bronze" flat/thick-shape rule as the rest of this file, just applied at a
+// size where it actually survives. Color is driven by `currentColor` from
+// the wrapping element, so callers pick gold/oxblood/etc per row.
+export function IconPlayedMark({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="12" cy="12" r="11" fill="currentColor" />
+      <path d="M7 12.3l3.4 3.4L17.2 8" fill="none" stroke="#140b04" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function IconRomanCoin({ className }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
