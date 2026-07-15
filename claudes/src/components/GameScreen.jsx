@@ -23,7 +23,11 @@ export function GameScreen({ app }) {
       <div className="game-screen page-transition">
         <Panel className="game-screen__error">
           <h3><IconBrokenStandard className="game-screen__heading-icon" aria-hidden="true" /> Connection Lost</h3>
-          <p>The opening database is unreachable right now. Please try again shortly.</p>
+          <p>
+            {app.apiErrorSource === 'eval'
+              ? 'The evaluation engine is down right now. Try again in a few minutes.'
+              : 'The opening database is unreachable right now. Please try again shortly.'}
+          </p>
           <Button variant="secondary" onClick={() => app.goHome()}><IconRomanTemple className="game-screen__btn-icon" aria-hidden="true" /> Return Home</Button>
         </Panel>
       </div>

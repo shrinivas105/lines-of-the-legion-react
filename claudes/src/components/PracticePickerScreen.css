@@ -1,15 +1,16 @@
 .practice-picker {
   max-width: 680px;
   margin: 0 auto;
-  padding: var(--space-8) var(--space-4) var(--space-7);
+  padding: 8px 4px 16px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-2);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.practice-picker__hero { text-align: center; margin-bottom: var(--space-2); }
-.practice-picker__title { font-size: clamp(1.6rem, 4.5vw, 2.2rem); color: var(--marble); }
-.practice-picker__subtitle { margin-top: var(--space-2); color: var(--marble-dim); font-size: 0.88rem; }
+.practice-picker__hero { text-align: center; }
+.practice-picker__title { font-size: clamp(1.3rem, 4vw, 1.7rem); color: var(--marble); }
 
 .practice-picker__toolbar {
   display: flex;
@@ -42,18 +43,25 @@
   color: var(--marble-dim);
 }
 
+.practice-picker__category {
+  /* Panel's default padding (var(--space-5) = 24px on every side) is
+     needlessly wide for a plain list of rows — this reclaims that space
+     for mobile, same rationale as the analysis screen's compare panel. */
+  padding: var(--space-3) var(--space-2);
+}
+
 .practice-picker__category-title {
   font-size: 0.82rem;
   color: var(--gold);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
 }
 
 .practice-picker__rows {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 /* Row: bronze/parchment theme matching every other screen in the app
@@ -69,7 +77,6 @@
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   background:
     linear-gradient(180deg, rgba(230,221,196,0.04), transparent 45%),
@@ -77,7 +84,7 @@
   color: var(--marble);
   border: 1px solid var(--bronze-dim);
   border-radius: var(--radius-sm);
-  padding: 10px 14px;
+  padding: 8px 10px;
   cursor: pointer;
   text-align: left;
   font-family: var(--font-body);
@@ -112,25 +119,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.practice-picker__row-side {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 3px 8px;
-  border-radius: 3px;
-  flex-shrink: 0;
-  margin-left: var(--space-3);
-}
-.practice-picker__row-side.white {
-  background: rgba(232,220,200,0.12);
-  color: var(--marble);
-}
-.practice-picker__row-side.black {
-  background: rgba(0,0,0,0.3);
-  color: var(--marble-dim);
-  border: 1px solid var(--hairline);
 }
 
 /* ── Add Flashcard modal ──────────────────────────────────────────────

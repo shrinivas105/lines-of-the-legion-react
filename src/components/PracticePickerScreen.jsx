@@ -188,9 +188,6 @@ export function PracticePickerScreen({ app }) {
                   onClick={() => app.startPracticeOpening(opening)}
                 >
                   <span className="practice-picker__row-name">{opening.name}</span>
-                  <span className={`practice-picker__row-side ${opening.orientation}`}>
-                    {opening.orientation === 'white' ? 'White' : 'Black'}
-                  </span>
                 </button>
                 <button
                   className="practice-picker__row-remove"
