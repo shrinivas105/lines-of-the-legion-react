@@ -1,0 +1,29 @@
+.lichess-btn {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline);
+  background: var(--umber);
+  color: var(--marble-dim);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.lichess-btn:hover {
+  border-color: var(--bronze-dim);
+  color: var(--marble);
+}
+.lichess-btn--connected {
+  color: var(--verdigris-text);
+  border-color: var(--verdigris-dim);
+}
+.lichess-btn__icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+.lichess-btn__icon--sm {
+  width: 0.8em;
+  height: 0.8em;
+}

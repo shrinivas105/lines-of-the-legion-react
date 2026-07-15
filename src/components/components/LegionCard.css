@@ -1,0 +1,121 @@
+/* ── Metal identity: Master Legion reads gold, Club Legion reads silver.
+   This is on the card itself (border + corner glow), not just a small
+   badge color, so the two are unmistakable even at a glance. ── */
+.legion-card--gold {
+  margin: calc(-1 * var(--space-2));
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(216,182,107,0.35);
+  box-shadow: 0 0 0 1px rgba(216,182,107,0.08) inset, 0 0 28px rgba(216,182,107,0.07);
+}
+
+.legion-card--silver {
+  margin: calc(-1 * var(--space-2));
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(199,204,209,0.3);
+  box-shadow: 0 0 0 1px rgba(199,204,209,0.07) inset, 0 0 28px rgba(199,204,209,0.05);
+}
+
+.legion-card__metal-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-title);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-4);
+}
+
+.legion-card__metal-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex-shrink: 0;
+}
+
+.legion-card__metal-tag--gold {
+  color: #2a1f0d;
+  background: linear-gradient(180deg, #ecd5a0, var(--gold));
+  box-shadow: 0 2px 8px rgba(216,182,107,0.3);
+}
+
+.legion-card__metal-tag--silver {
+  color: #1c2024;
+  background: linear-gradient(180deg, #eef0f2, var(--silver));
+  box-shadow: 0 2px 8px rgba(199,204,209,0.25);
+}
+
+.legion-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.legion-card__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.legion-card__source {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--marble-dim);
+}
+
+.legion-card__rank {
+  font-family: var(--font-title);
+  font-size: 1.15rem;
+  color: var(--marble);
+  letter-spacing: 0.02em;
+}
+
+.legion-card__progress-track {
+  margin-top: var(--space-4);
+  height: 8px;
+  border-radius: 4px;
+  background: var(--ink);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.4) inset;
+  overflow: hidden;
+}
+
+.legion-card__progress-fill {
+  position: relative;
+  height: 100%;
+  background: linear-gradient(90deg, var(--bronze), var(--gold));
+  box-shadow: 0 0 8px var(--bronze-glow);
+  transition: width 700ms var(--ease-standard);
+}
+
+.legion-card--silver .legion-card__progress-fill {
+  background: linear-gradient(90deg, #8d9298, var(--silver));
+  box-shadow: 0 0 8px var(--silver-glow);
+}
+
+.legion-card__progress-fill::after {
+  /* a soft traveling highlight, evokes a freshly-filled XP bar without
+     looping continuously — only visible as the bar grows */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 60%, rgba(255,255,255,0.35) 85%, transparent 100%);
+}
+
+.legion-card__progress-label {
+  margin-top: var(--space-2);
+  font-family: var(--font-stat);
+  font-size: 0.68rem;
+  color: var(--marble-dim);
+}
+
+.legion-card__games {
+  margin-top: 6px;
+  font-size: 0.7rem;
+  color: var(--marble-dim);
+}

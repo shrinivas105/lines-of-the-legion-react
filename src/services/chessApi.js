@@ -26,14 +26,17 @@ export class ChessAPI {
     return headers;
   }
 
-  static async queryExplorer(source, fen) {
-    const key = `${source}_${fen}`;
+  static async queryExplorer(source, fen, moveCount = 5) {
+    // The move count is part of the cache key: analysis normally needs only
+    // the top five moves, but occasionally asks for a wider list to locate
+    // the move that was actually played.
+    const key = `${source}_${moveCount}_${fen}`;
     if (this.cache[key]) return this.cache[key];
 
     let url = source === 'master'
       ? 'https://explorer.lichess.ovh/masters'
       : 'https://explorer.lichess.ovh/lichess';
-    url += `?variant=standard&fen=${encodeURIComponent(fen)}&topGames=0&moves=5`;
+    url += `?variant=standard&fen=${encodeURIComponent(fen)}&topGames=0&moves=${moveCount}`;
     if (source === 'lichess') url += '&ratings=1600,1800,2000,2200,2500';
 
     try {

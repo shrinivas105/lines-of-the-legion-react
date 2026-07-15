@@ -59,60 +59,53 @@ export class AnalysisBoard {
       if (!this.topMovesData[positionFen]) {
         try {
           const data = await ChessAPI.queryExplorer(this.app.aiSource, positionFen);
-          this.topMovesData[positionFen] = data.moves || [];
+          let movesForPosition = data.moves || [];
 
           if (i < this.moveHistory.length) {
             const isWhiteMove = i % 2 === 0;
             const isPlayerMove = (this.app.playerColor === 'w' && isWhiteMove) ||
                                  (this.app.playerColor === 'b' && !isWhiteMove);
+            const actualMove = this.moveHistory[i];
+            const actualMoveUci = actualMove.from + actualMove.to + (actualMove.promotion || '');
 
-            const topMoves = this.topMovesData[positionFen].slice(0, 3);
+            // Most positions only need five moves. If the played move falls
+            // outside that small response, expand just this position so the
+            // analysis can display its database values without making every
+            // analysis request heavier.
+            if (movesForPosition.length > 0 && !movesForPosition.some(move => move.uci === actualMoveUci)) {
+              const expandedData = await ChessAPI.queryExplorer(this.app.aiSource, positionFen, 20);
+              movesForPosition = expandedData.moves || movesForPosition;
+            }
 
-            if (isPlayerMove) {
-              for (const move of topMoves) {
-                const evalKey = `${positionFen}_${move.uci}`;
-                if (!this.evaluationCache[evalKey]) {
-                  const evalGame = new Chess(positionFen);
-                  const moveFrom = move.uci.substring(0, 2);
-                  const moveTo = move.uci.substring(2, 4);
-                  const movePromotion = move.uci.length > 4 ? move.uci[4] : undefined;
+            this.topMovesData[positionFen] = movesForPosition;
+            const topMoves = movesForPosition.slice(0, 3);
+            const movesToEvaluate = isPlayerMove ? [...topMoves, actualMove] : [actualMove];
+            const evaluatedUcis = new Set();
 
-                  evalGame.move({ from: moveFrom, to: moveTo, promotion: movePromotion });
-                  const evalFen = evalGame.fen();
+            for (const move of movesToEvaluate) {
+              const uci = move.uci || actualMoveUci;
+              if (evaluatedUcis.has(uci)) continue;
+              evaluatedUcis.add(uci);
 
-                  try {
-                    const rawEval = await ChessAPI.getEvaluation(evalFen, this.app.evalCache);
-                    this.evaluationCache[evalKey] = rawEval;
-                  } catch (err) {
-                    console.error('Error preloading eval:', err);
-                    this.evaluationCache[evalKey] = null;
-                  }
-                }
-              }
-            } else {
-              const actualMove = this.moveHistory[i];
-              const actualMoveUci = actualMove.from + actualMove.to + (actualMove.promotion || '');
-              const evalKey = `${positionFen}_${actualMoveUci}`;
+              const evalKey = `${positionFen}_${uci}`;
+              if (Object.hasOwn(this.evaluationCache, evalKey)) continue;
 
-              if (!this.evaluationCache[evalKey]) {
-                tempGame.move({
-                  from: actualMove.from,
-                  to: actualMove.to,
-                  promotion: actualMove.promotion
+              const evalGame = new Chess(positionFen);
+              try {
+                evalGame.move({
+                  from: uci.substring(0, 2),
+                  to: uci.substring(2, 4),
+                  promotion: uci.length > 4 ? uci[4] : undefined
                 });
-                const evalFen = tempGame.fen();
-
-                try {
-                  const rawEval = await ChessAPI.getEvaluation(evalFen, this.app.evalCache);
-                  this.evaluationCache[evalKey] = rawEval;
-                } catch (err) {
-                  console.error('Error preloading eval:', err);
-                  this.evaluationCache[evalKey] = null;
-                }
-
-                tempGame.undo();
+                const rawEval = await ChessAPI.getEvaluation(evalGame.fen(), this.app.evalCache);
+                this.evaluationCache[evalKey] = rawEval;
+              } catch (err) {
+                console.error('Error preloading eval:', err);
+                this.evaluationCache[evalKey] = null;
               }
             }
+          } else {
+            this.topMovesData[positionFen] = movesForPosition;
           }
         } catch (error) {
           console.error('Error preloading data for position:', error);
@@ -338,6 +331,7 @@ export class AnalysisBoard {
 
         tableData.push({
           move: move.san,
+          hasStats: true,
           color: colors[idx],
           label: labels[idx],
           whiteWin,
@@ -375,12 +369,40 @@ export class AnalysisBoard {
 
           tableData.push({
             move: currentMove.san,
+            hasStats: true,
             color: '#3498db',
             label: moveLabel,
             whiteWin,
             draws,
             blackWin,
             totalGames,
+            isCurrentMove: true,
+            moveType: moveLabel,
+            eval: moveEval,
+            evalColor: moveEvalColor
+          });
+        } else {
+          // The wider Explorer request did not contain this legal move. Keep
+          // it visible and be explicit that its database statistics are
+          // unavailable instead of silently omitting it from the analysis.
+          const evalKey = `${positionFen}_${currentMoveUci}`;
+          const cachedEval = this.evaluationCache[evalKey];
+          let moveEval = 'N/A';
+          let moveEvalColor = '#888';
+          if (cachedEval !== undefined && cachedEval !== null) {
+            const playerEval = this.app.playerColor === 'b' ? -cachedEval : cachedEval;
+            moveEval = playerEval > 0 ? '+' + playerEval.toFixed(1) : playerEval.toFixed(1);
+            moveEvalColor = playerEval > 1 ? '#2ecc71' : playerEval < -1 ? '#e74c3c' : '#f1c40f';
+          }
+          tableData.push({
+            move: currentMove.san,
+            hasStats: false,
+            color: '#3498db',
+            label: moveLabel,
+            whiteWin: null,
+            draws: null,
+            blackWin: null,
+            totalGames: null,
             isCurrentMove: true,
             moveType: moveLabel,
             eval: moveEval,
