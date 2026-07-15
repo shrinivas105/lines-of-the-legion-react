@@ -112,7 +112,25 @@
   .game-screen__board-area,
   .game-container { max-width: 100%; gap: 3px; }
   .game-screen__actions,
-  .action-buttons { gap: 4px; }
+  .action-buttons {
+    gap: 4px;
+    /* Force New Battle / Consult Commander onto one row instead of
+       letting flex-wrap stack them — the smaller sizing below is what
+       actually makes room for both at once on a phone-width screen. */
+    flex-wrap: nowrap;
+  }
+  .game-screen__actions .btn {
+    padding: 5px 8px;
+    font-size: 0.62rem;
+    gap: 4px;
+  }
   .game-screen__info-line,
   .info-line { font-size: 0.41rem; }
+}
+
+@media (max-width: 360px) {
+  .game-screen__actions .btn {
+    padding: 4px 6px;
+    font-size: 0.56rem;
+  }
 }
