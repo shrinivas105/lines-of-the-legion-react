@@ -12,6 +12,20 @@
 import { Chess } from 'chess.js';
 import { ChessAPI } from '../services/chessApi';
 
+// Standard chess UCI writes castling as king-to-destination (e1g1), while
+// some Explorer-compatible sources use king-to-rook-square (e1h1). Normalize
+// both forms before comparing or replaying a move.
+const CASTLING_UCI_ALIASES = {
+  e1h1: 'e1g1', e1a1: 'e1c1',
+  e8h8: 'e8g8', e8a8: 'e8c8'
+};
+
+function canonicalUci(uci) {
+  if (!uci) return uci;
+  const move = uci.slice(0, 4);
+  return (CASTLING_UCI_ALIASES[move] || move) + uci.slice(4);
+}
+
 export class AnalysisBoard {
   constructor(app) {
     this.app = app;
@@ -72,7 +86,7 @@ export class AnalysisBoard {
             // outside that small response, expand just this position so the
             // analysis can display its database values without making every
             // analysis request heavier.
-            if (movesForPosition.length > 0 && !movesForPosition.some(move => move.uci === actualMoveUci)) {
+            if (movesForPosition.length > 0 && !movesForPosition.some(move => canonicalUci(move.uci) === actualMoveUci)) {
               const expandedData = await ChessAPI.queryExplorer(this.app.aiSource, positionFen, 20);
               movesForPosition = expandedData.moves || movesForPosition;
             }
@@ -83,7 +97,7 @@ export class AnalysisBoard {
             const evaluatedUcis = new Set();
 
             for (const move of movesToEvaluate) {
-              const uci = move.uci || actualMoveUci;
+              const uci = canonicalUci(move.uci || actualMoveUci);
               if (evaluatedUcis.has(uci)) continue;
               evaluatedUcis.add(uci);
 
@@ -295,7 +309,7 @@ export class AnalysisBoard {
       }
 
       const currentMoveUci = currentMove.from + currentMove.to + (currentMove.promotion || '');
-      const currentMoveIndexInTop = topMoves.findIndex(m => m.uci === currentMoveUci);
+      const currentMoveIndexInTop = topMoves.findIndex(m => canonicalUci(m.uci) === currentMoveUci);
 
       const tableData = [];
       const colors = ['#2ecc71', '#f1c40f', '#e67e22'];
@@ -309,7 +323,7 @@ export class AnalysisBoard {
         const draws = totalGames > 0 ? ((move.draws / totalGames) * 100).toFixed(1) : 0;
         const blackWin = totalGames > 0 ? ((move.black / totalGames) * 100).toFixed(1) : 0;
 
-        const isCurrentMove = move.uci === currentMoveUci;
+        const isCurrentMove = canonicalUci(move.uci) === currentMoveUci;
 
         let moveEval = '-';
         let moveEvalColor = '#888';
@@ -317,7 +331,7 @@ export class AnalysisBoard {
         const shouldShowEval = isPlayerMove || isCurrentMove;
 
         if (shouldShowEval) {
-          const evalKey = `${positionFen}_${move.uci}`;
+          const evalKey = `${positionFen}_${canonicalUci(move.uci)}`;
           const cachedEval = this.evaluationCache[evalKey];
 
           if (cachedEval !== undefined && cachedEval !== null) {
@@ -346,7 +360,7 @@ export class AnalysisBoard {
       }
 
       if (currentMoveIndexInTop === -1 || currentMoveIndexInTop > 2) {
-        const currentMoveData = topMoves.find(m => m.uci === currentMoveUci);
+        const currentMoveData = topMoves.find(m => canonicalUci(m.uci) === currentMoveUci);
         if (currentMoveData) {
           const totalGames = currentMoveData.white + currentMoveData.draws + currentMoveData.black;
           const whiteWin = totalGames > 0 ? ((currentMoveData.white / totalGames) * 100).toFixed(1) : 0;
@@ -448,9 +462,10 @@ export class AnalysisBoard {
     const colors = ['#2ecc71', '#f1c40f', '#e67e22'];
 
     topMoves.forEach((move, idx) => {
-      if (move.uci === currentMoveUci) return;
-      const from = move.uci.substring(0, 2);
-      const to = move.uci.substring(2, 4);
+      const uci = canonicalUci(move.uci);
+      if (uci === currentMoveUci) return;
+      const from = uci.substring(0, 2);
+      const to = uci.substring(2, 4);
       arrows.push({ from, to, color: colors[idx], width: 6, outlineColor: null, dashed: false });
     });
 
