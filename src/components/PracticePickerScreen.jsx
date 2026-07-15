@@ -125,13 +125,17 @@ export function PracticePickerScreen({ app }) {
 
   const refresh = () => setOpenings(getEffectiveOpenings());
 
-  const grouped = openings.reduce((acc, opening, index) => {
-    if (!acc[opening.category]) acc[opening.category] = [];
-    acc[opening.category].push({ ...opening, index });
-    return acc;
-  }, {});
+  // Was grouped by opening.category (e.g. "d4 Openings (White)", "e4
+  // Defenses (Black)") which fragmented the list into many small headed
+  // sections. Only the color you're practicing actually matters for
+  // picking a drill, so this collapses everything down to two sections.
+  const sections = [
+    { key: 'white', title: 'White', items: openings.filter(o => o.orientation !== 'black') },
+    { key: 'black', title: 'Black', items: openings.filter(o => o.orientation === 'black') },
+  ]
+    .map(section => ({ ...section, items: section.items.map((opening, i) => ({ ...opening, index: i })) }))
+    .filter(section => section.items.length > 0);
 
-  const categories = Object.keys(grouped).sort();
   const needsLichessAuth = !isConnected();
 
   const handleRemove = (e, opening) => {
@@ -160,24 +164,7 @@ export function PracticePickerScreen({ app }) {
     <div className="practice-picker page-transition">
       <header className="practice-picker__hero">
         <h1 className="practice-picker__title">Practice Mode</h1>
-        <p className="practice-picker__subtitle">
-          Pick an opening and drill the position from a real-game opening book.
-        </p>
       </header>
-
-      <div className="practice-picker__toolbar">
-        <Button variant="bronze" size="sm" onClick={() => setShowAddModal(true)}>+ Add Flashcard</Button>
-        <Button variant="bronze" size="sm" onClick={handleUploadClick}>Upload CSV</Button>
-        <Button variant="bronze" size="sm" onClick={() => downloadCsv()}>Download CSV</Button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".csv,text/csv"
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-        />
-      </div>
-      {statusMessage && <div className="practice-picker__status">{statusMessage}</div>}
 
       {needsLichessAuth && (
         <Panel className="practice-picker__notice">
@@ -190,11 +177,11 @@ export function PracticePickerScreen({ app }) {
         </Panel>
       )}
 
-      {categories.map(category => (
-        <Panel key={category} className="practice-picker__category">
-          <h3 className="practice-picker__category-title">{category}</h3>
+      {sections.map(section => (
+        <Panel key={section.key} className="practice-picker__category">
+          <h3 className="practice-picker__category-title">{section.title}</h3>
           <div className="practice-picker__rows">
-            {grouped[category].map(opening => (
+            {section.items.map(opening => (
               <div key={opening.index} className="practice-picker__row">
                 <button
                   className="practice-picker__row-start"
@@ -218,6 +205,20 @@ export function PracticePickerScreen({ app }) {
           </div>
         </Panel>
       ))}
+
+      <div className="practice-picker__toolbar">
+        <Button variant="bronze" size="sm" onClick={() => setShowAddModal(true)}>+ Add Flashcard</Button>
+        <Button variant="bronze" size="sm" onClick={handleUploadClick}>Upload CSV</Button>
+        <Button variant="bronze" size="sm" onClick={() => downloadCsv()}>Download CSV</Button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".csv,text/csv"
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+        />
+      </div>
+      {statusMessage && <div className="practice-picker__status">{statusMessage}</div>}
 
       {showAddModal && (
         <AddFlashcardModal
