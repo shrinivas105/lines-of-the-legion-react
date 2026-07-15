@@ -1,6 +1,6 @@
 .promotion-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:1200;font-family:inherit}
 .promotion-screen__backdrop{position:absolute;inset:0;background:radial-gradient(ellipse at center, rgba(0,0,0,0.45), rgba(0,0,0,0.7));backdrop-filter:blur(2px)}
-.promotion-screen__panel{position:relative;width:92%;max-width:820px;background:linear-gradient(180deg,#121012 0%,#1b1510 100%);border-radius:12px;padding:20px;color:#f6e7c3;box-shadow:0 10px 50px rgba(0,0,0,0.6);overflow:auto;max-height:92vh}
+.promotion-screen__panel{position:relative;width:96%;max-width:820px;background:linear-gradient(180deg,#121012 0%,#1b1510 100%);border-radius:12px;padding:20px;color:#f6e7c3;box-shadow:0 10px 50px rgba(0,0,0,0.6);overflow:auto;max-height:92vh}
 .promotion-screen__title{font-size:17px;letter-spacing:1.3px;text-align:center;color:#ffd966;margin:4px 0 12px;text-shadow:0 2px 12px rgba(212,175,55,0.7)}
 .promotion-screen__commander{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:10px}
 .promotion-screen__commander-portrait{width:60px;height:60px;border-radius:50%;object-fit:cover;border:3px solid rgba(212,175,55,0.15);box-shadow:0 6px 30px rgba(213,175,55,0.08)}
@@ -50,26 +50,29 @@
 .promotion-screen__duty-number{min-width:19px;width:19px;height:19px;flex-shrink:0;border-radius:999px;background:rgba(212,175,55,0.18);color:#ffd966;font-weight:800;font-size:0.58rem;display:flex;align-items:center;justify-content:center}
 .promotion-screen__duty-card p{margin:0;color:#efe7d1;font-size:0.6rem;line-height:1.35}
 
-.promotion-screen__historical-note{margin-top:10px;padding:9px 11px;font-size:0.58rem;line-height:1.4;background:rgba(0,0,0,0.14);border-left:4px solid rgba(212,175,55,0.5);font-style:italic;color:#d9cfc0}
-.promotion-screen__historical-note strong{font-style:normal;color:#ffd966;font-weight:800}
-
 .promotion-screen__actions{display:flex;gap:10px;justify-content:center;margin-top:14px}
 
 /* Responsive adjustments — ranks stay side-by-side (left copy, right
-   portrait), just at smaller sizes; reward and duty cards both stack to
-   a single column on narrow screens. */
+   portrait); reward and duty cards KEEP their 2-column grid even on
+   mobile instead of stacking to one — collapsing to a single column was
+   what made this modal so tall it required endless scrolling on phones.
+   Using the full device width (not just a narrow centered strip) is what
+   makes 2 columns still comfortably legible here. */
 @media (max-width:640px){
-  .promotion-screen__panel{padding:14px}
+  .promotion-screen__panel{width:98%;padding:12px}
   .promotion-screen__title{font-size:13px}
-  .promotion-screen__commander-portrait{width:46px;height:46px}
-  .promotion-screen__ranks{grid-template-columns:minmax(110px,160px) minmax(72px,90px);gap:10px}
+  .promotion-screen__commander-portrait{width:44px;height:44px}
+  .promotion-screen__ranks{grid-template-columns:minmax(140px,1fr) minmax(76px,96px);gap:10px}
   .promotion-screen__rank-copy{padding:10px 8px}
   .promotion-screen__rank-name{font-size:1.2rem}
   .promotion-screen__rank-subtitle{font-size:0.54rem}
-  .promotion-screen__rank-preview{width:72px;height:72px}
-  .promotion-screen__rank{width:72px;height:72px}
-  .promotion-screen__rank img{width:62px;height:62px}
+  .promotion-screen__rank-preview{width:76px;height:76px}
+  .promotion-screen__rank{width:76px;height:76px}
+  .promotion-screen__rank img{width:66px;height:66px}
   .promotion-screen__speech-line.visible{max-height:72px}
   .promotion-screen__rewards h2,.promotion-screen__duties h2{font-size:0.72rem}
-  .promotion-screen__reward-list,.promotion-screen__duty-list{grid-template-columns:1fr}
+  .promotion-screen__reward-list,.promotion-screen__duty-list{gap:6px}
+  .promotion-screen__reward-card,.promotion-screen__duty-card{padding:6px 7px}
+  .promotion-screen__reward-name{font-size:0.58rem}
+  .promotion-screen__reward-card p,.promotion-screen__duty-card p{font-size:0.52rem;line-height:1.25}
 }

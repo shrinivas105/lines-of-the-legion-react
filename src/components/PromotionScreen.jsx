@@ -14,8 +14,8 @@ import romanFallbackImg from '../roman.png';
 // - rewards: tangible, historically plausible equipment/decorations/
 //   privileges for the rank — no invented or fantastical items.
 // - duties: the chess-strategy responsibilities tied to the new rank.
-// - historicalNote: brief real-world grounding for why the rewards and
-//   duties fit the actual Roman military hierarchy.
+// (Historical grounding for each rank now lives in rankLore.js, surfaced
+// in the "Did you know?" card on the Legion screen instead of here.)
 const RANK_CONTENT = {
   Legionary: {
     displayTitle: 'Legionary',
@@ -40,20 +40,19 @@ const RANK_CONTENT = {
       ]
     ],
     rewards: [
-      { name: 'Gladius Hispaniensis', why: 'Primary sidearm, issued only once basic training is complete.' },
-      { name: 'Pugio', why: 'Reserve dagger carried at the belt, a mark of a fully equipped soldier.' },
-      { name: 'Scutum with legion insignia', why: 'Shield bearing your legion\u2019s own emblem, in place of a bare training shield.' },
-      { name: 'Pilum', why: 'Armor-piercing javelin thrown before the charge; standard legionary issue.' },
-      { name: 'Lorica Hamata', why: 'Chainmail armor granted to line infantry for its flexibility and protection.' },
-      { name: 'Montefortino helmet', why: 'Bronze battle helmet worn by Rome\u2019s rank-and-file infantry.' }
+      { name: 'Gladius Hispaniensis', why: 'You are issued the gladius, a legionary\u2019s primary sidearm, now that training is complete.' },
+      { name: 'Pugio', why: 'You now carry a pugio at your belt, marking you as a fully equipped soldier.' },
+      { name: 'Scutum with legion insignia', why: 'Your shield now bears your legion\u2019s own insignia, in place of a bare training shield.' },
+      { name: 'Pilum', why: 'You are issued the pilum, the armor-piercing javelin thrown before every charge.' },
+      { name: 'Lorica Hamata', why: 'You are granted a Lorica Hamata, flexible chainmail worn by Rome\u2019s line infantry.' },
+      { name: 'Montefortino helmet', why: 'You receive a Montefortino helmet, the bronze protection of Rome\u2019s rank-and-file.' }
     ],
     duties: [
       'Hold the line — maintain solid structure before advancing.',
       'Protect allied pieces before seeking exchanges.',
       'Stay composed when the position becomes unfamiliar.',
       'Earn merit through disciplined, consistent decision-making.'
-    ],
-    historicalNote: 'Completing training earned a Roman soldier his full kit — sword, shield, armor, and pay — transforming an untested recruit into a legionary of the line.'
+    ]
   },
   Optio: {
     displayTitle: 'Optio',
@@ -78,12 +77,12 @@ const RANK_CONTENT = {
       ]
     ],
     rewards: [
-      { name: 'Increased pay (duplicarius)', why: 'Optiones were paid double the standard legionary wage.' },
-      { name: 'Phalerae', why: 'Disc-shaped decorations worn on a harness, awarded for proven valor.' },
-      { name: 'Armillae', why: 'Ornamental arm bracelets given as military decorations for distinguished service.' },
-      { name: 'Lorica Squamata', why: 'Scale armor sometimes issued to officers, a step up in status from mail.' },
-      { name: 'Imperial Gallic helmet', why: 'A pattern with added face and neck protection, befitting an officer.' },
-      { name: 'Personal servant (calo)', why: 'A camp attendant assigned to assist with equipment and baggage.' }
+      { name: 'Increased pay (duplicarius)', why: 'You will now be paid double the standard legionary wage, as befits a duplicarius.' },
+      { name: 'Phalerae', why: 'You are awarded phalerae, disc decorations worn on the harness for proven valor.' },
+      { name: 'Armillae', why: 'You receive armillae, ornamental arm bracelets marking your distinguished service.' },
+      { name: 'Lorica Squamata', why: 'You have been granted a Lorica Squamata, scale armor befitting an officer\u2019s status.' },
+      { name: 'Imperial Gallic helmet', why: 'You are issued an Imperial Gallic helmet, with added protection for face and neck.' },
+      { name: 'Personal servant (calo)', why: 'You are assigned a calo, a personal attendant for your equipment and baggage.' }
     ],
     duties: [
       'Recognize tactical opportunities within opening theory.',
@@ -91,7 +90,6 @@ const RANK_CONTENT = {
       'Recover confidently from unfamiliar positions.',
       'Demonstrate reliability in every campaign.'
     ],
-    historicalNote: 'The Optio, meaning \u201cchosen one,\u201d was hand-picked by his centurion as second-in-command, earning double pay for the added trust placed upon him.'
   },
   Centurion: {
     displayTitle: 'Centurion',
@@ -116,12 +114,12 @@ const RANK_CONTENT = {
       ]
     ],
     rewards: [
-      { name: 'Vitis (vine staff)', why: 'The defining symbol of centurion rank — badge of office and instrument of discipline.' },
-      { name: 'Musculata cuirass', why: 'Ceremonial muscle-form armor marking a proven, senior officer.' },
-      { name: 'Transverse-crested helmet', why: 'Horsehair crest worn crosswise, identifying a centurion instantly in battle.' },
-      { name: 'Torc', why: 'Twisted metal neck ornament awarded for exceptional battlefield bravery.' },
-      { name: 'Officer\u2019s cloak', why: 'A distinct cloak setting centurions visibly apart from the ranks they command.' },
-      { name: 'Greatly increased pay', why: 'Centurions earned many times a legionary\u2019s wage.' }
+      { name: 'Vitis (vine staff)', why: 'You are handed the vitis, the vine staff that marks a centurion\u2019s authority.' },
+      { name: 'Musculata cuirass', why: 'You are granted a Musculata cuirass, ceremonial muscle armor of a senior officer.' },
+      { name: 'Transverse-crested helmet', why: 'Your new helmet bears the transverse crest, marking you instantly as a centurion in battle.' },
+      { name: 'Torc', why: 'You are awarded a torc, a twisted neck ornament for exceptional battlefield bravery.' },
+      { name: 'Officer\u2019s cloak', why: 'You receive an officer\u2019s cloak, setting you visibly apart from the ranks you command.' },
+      { name: 'Greatly increased pay', why: 'Your pay is raised many times over, as befits a centurion\u2019s rank.' }
     ],
     duties: [
       'Defend key files, diagonals, and ranks as your own ground.',
@@ -129,7 +127,6 @@ const RANK_CONTENT = {
       'Punish inaccuracies with confidence and precision.',
       'Lead by precision rather than aggression.'
     ],
-    historicalNote: 'Centurions were the backbone of the Roman army\u2019s command structure — battle-hardened professionals who led from the front and were paid and decorated accordingly.'
   },
   Tribunus: {
     displayTitle: 'Tribunus Militum',
@@ -154,12 +151,12 @@ const RANK_CONTENT = {
       ]
     ],
     rewards: [
-      { name: 'Paludamentum', why: 'The scarlet military cloak reserved for senior officers, visible across the field.' },
-      { name: 'Musculata cuirass', why: 'Ceremonial armor projecting the authority of senior command.' },
-      { name: 'Signet ring', why: 'Used to seal official orders issued in the legion\u2019s name.' },
-      { name: 'Personal horse', why: 'Tribunes commanded from horseback, granted a mount befitting their station.' },
-      { name: 'Officer\u2019s quarters', why: 'Private quarters within camp, apart from the common soldiers\u2019 tents.' },
-      { name: 'Audience with senior command', why: 'Direct access to the Legatus when matters of strategy are decided.' }
+      { name: 'Paludamentum', why: 'You are given the paludamentum, the scarlet cloak reserved for senior officers.' },
+      { name: 'Musculata cuirass', why: 'You are granted a Musculata cuirass, ceremonial armor befitting senior command.' },
+      { name: 'Signet ring', why: 'You receive a signet ring, used to seal orders issued in the legion\u2019s name.' },
+      { name: 'Personal horse', why: 'You are given a personal horse, for you now command from horseback.' },
+      { name: 'Officer\u2019s quarters', why: 'You are granted private officer\u2019s quarters, apart from the common soldiers\u2019 tents.' },
+      { name: 'Audience with senior command', why: 'You are granted direct audience with the Legatus when matters of strategy are decided.' }
     ],
     duties: [
       'Organize combined assaults across multiple sectors of the board.',
@@ -167,7 +164,6 @@ const RANK_CONTENT = {
       'Preserve elite pieces for decisive moments rather than trading them early.',
       'Balance offense and defense across the entire position.'
     ],
-    historicalNote: 'Tribuni Militum were typically men of equestrian or senatorial rank serving as senior staff officers — trusted with strategy and logistics beyond a single century.'
   },
   Legatus: {
     displayTitle: 'Legatus',
@@ -192,12 +188,12 @@ const RANK_CONTENT = {
       ]
     ],
     rewards: [
-      { name: 'Paludamentum', why: 'The unmistakable mark of supreme field command, worn by no rank beneath a Legatus.' },
-      { name: 'Musculata cuirass', why: 'Ornate ceremonial armor befitting the legion\u2019s supreme commander.' },
-      { name: 'Corona Aurea', why: 'A rare gold crown awarded for extraordinary acts of valor and leadership.' },
-      { name: 'Signet ring', why: 'The seal of a man empowered to issue orders in the legion\u2019s name.' },
-      { name: 'Land grant upon retirement', why: 'A senator\u2019s reward for a lifetime of loyal, successful command.' },
-      { name: 'Audience with the Senate', why: 'The highest honor — a Legatus\u2019s counsel sought directly by Rome\u2019s leadership.' }
+      { name: 'Paludamentum', why: 'You wear the paludamentum, the unmistakable mark of supreme field command.' },
+      { name: 'Musculata cuirass', why: 'You are granted an ornate Musculata cuirass, befitting the legion\u2019s supreme commander.' },
+      { name: 'Corona Aurea', why: 'You are awarded the Corona Aurea, a rare gold crown for extraordinary valor and leadership.' },
+      { name: 'Signet ring', why: 'You receive the signet ring of a man empowered to issue orders in Rome\u2019s name.' },
+      { name: 'Land grant upon retirement', why: 'You are promised a land grant upon honorable retirement, a senator\u2019s reward for service.' },
+      { name: 'Audience with the Senate', why: 'You are granted audience with the Senate itself — Rome\u2019s leadership now seeks your counsel.' }
     ],
     duties: [
       'Command the entire battlefield with complete strategic oversight.',
@@ -205,7 +201,6 @@ const RANK_CONTENT = {
       'Adapt calmly to every position, however unfamiliar.',
       'Inspire excellence through consistently flawless play.'
     ],
-    historicalNote: 'The Legatus Legionis held senatorial rank and answered only to the provincial governor or the Emperor himself — the pinnacle of Roman military command.'
   }
 };
 
@@ -324,10 +319,6 @@ export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', 
             ))}
           </div>
         </section>
-
-        <div className="promotion-screen__historical-note">
-          <strong>Historically speaking:</strong> {content.historicalNote}
-        </div>
 
         <div className="promotion-screen__actions">
           <Button variant="danger" size="md" onClick={onContinue}>Continue campaign</Button>
