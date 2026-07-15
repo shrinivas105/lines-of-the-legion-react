@@ -114,11 +114,18 @@ export class ChessAPI {
           cache[fen] = data.eval;
           return data.eval;
         }
+        console.warn('Evaluation API returned no numeric eval field');
+      } else {
+        console.warn(`Evaluation API error ${response.status}`);
       }
     } catch (e) {
-      console.log('Evaluation unavailable');
+      console.warn('Evaluation API unreachable:', e);
     }
-    return 0;
+    // null (not 0) signals "the call failed" — a real 0.0 eval is a
+    // legitimate, meaningful result and must stay distinguishable from an
+    // outage. Do NOT cache the failure: the next call for this fen should
+    // retry rather than being stuck on a permanently-cached miss.
+    return null;
   }
 }
 

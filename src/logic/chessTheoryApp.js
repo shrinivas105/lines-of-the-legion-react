@@ -60,6 +60,9 @@ export class ChessTheoryApp {
     this.gameEnded = false;
     this.endGameData = null;
     this.apiErrorState = false; // replaces direct DOM error screen painting
+    this.apiErrorSource = null; // 'explorer' | 'eval' — which service failed, for the error message
+    this.evalHealthChecked = false;    // true once the eval API has proven reachable this game
+    this.evalHealthCheckInFlight = false;
     this.theoryMessage = null;  // hint / commander message text (was painted to #theoryMessage)
     this.theoryMessageVisible = false;
 
@@ -343,6 +346,9 @@ export class ChessTheoryApp {
     this.gameEnded = false;
     this.endGameData = null;
     this.apiErrorState = false;
+    this.apiErrorSource = null;
+    this.evalHealthChecked = false;
+    this.evalHealthCheckInFlight = false;
     this.theoryMessage = null;
     this.theoryMessageVisible = false;
   }
@@ -850,7 +856,7 @@ export class ChessTheoryApp {
     }
   }
 
-  endGameApiError() {
+  endGameApiError(source = 'explorer') {
     // End the game cleanly — API was unreachable, no scoring or rank/merit changes applied.
     this.clearActiveGameState();
     // NOTE: the original does NOT call render() here — it directly paints an
@@ -863,7 +869,35 @@ export class ChessTheoryApp {
     this.gameEnded = true;
     this.endGameData = null;
     this.apiErrorState = true;
+    this.apiErrorSource = source;
     if (this._notify) this._notify();
+  }
+
+  // Fired once per game, right after the first move lands (see render()).
+  // The Explorer API failing is caught immediately because every move
+  // depends on it, but the evaluation API (chess-api.com) is only ever
+  // called once, at game end, to score the result — so a silent outage
+  // there wouldn't surface until after a full game had already been played,
+  // and the fallback would score it as an artificial 0.0 instead of failing
+  // loudly. This proves the eval API is actually reachable early, so a dead
+  // service ends the game immediately instead of wasting the player's game
+  // and awarding a bogus result.
+  async checkEvalApiHealth() {
+    try {
+      const rawEval = await ChessAPI.getEvaluation(this.game.fen(), this.evalCache);
+      this.evalHealthCheckInFlight = false;
+      if (rawEval === null) {
+        console.error('❌ Evaluation API is unreachable.');
+        this.endGameApiError('eval');
+        return;
+      }
+      this.evalHealthChecked = true;
+      if (this._notify) this._notify();
+    } catch (e) {
+      this.evalHealthCheckInFlight = false;
+      console.error('❌ Evaluation API health check failed:', e);
+      this.endGameApiError('eval');
+    }
   }
 
   async stopGameDueToThinTheory() {
@@ -899,6 +933,13 @@ export class ChessTheoryApp {
     } else {
       const fen = this.game.fen();
       const rawEval = await ChessAPI.getEvaluation(fen, this.evalCache);
+      if (rawEval === null) {
+        // Passed the start-of-game health check but died before scoring —
+        // rare, but still must not save a result built on a fabricated 0.0.
+        console.error('❌ Evaluation API failed at game end.');
+        this.endGameApiError('eval');
+        return;
+      }
       this.finalPlayerEval = Scoring.getPlayerEval(rawEval, this.playerColor);
       scoreResult = Scoring.getTotalScore(
         this.playerMoves,
@@ -1029,19 +1070,28 @@ export class ChessTheoryApp {
   render() {
     // Determines which "screen" is active. All branching logic preserved verbatim;
     // React components read these fields to decide what to paint.
-    if (this.game.turn() !== this.playerColor && this.playerColor && this.aiSource &&
-        !(this.mode === 'practice' && !this.practiceOpening) &&
-        !(this.gameEnded && this.endGameData) && !this.showingAnalysis) {
+    const gameActive = this.playerColor && this.aiSource &&
+      !(this.mode === 'practice' && !this.practiceOpening) &&
+      !(this.gameEnded && this.endGameData) && !this.showingAnalysis;
+
+    if (this.game.turn() !== this.playerColor && gameActive) {
       const currentFEN = this.game.fen();
       if (this.lastAIMoveFEN !== currentFEN) {
         setTimeout(() => this.aiMove(), 800);
       }
     }
 
-    if (!this.showingAnalysis && this.playerColor && this.aiSource &&
-        !(this.mode === 'practice' && !this.practiceOpening) &&
-        !(this.gameEnded && this.endGameData)) {
+    if (gameActive) {
       this.queryExplorer();
+    }
+
+    // One-shot check, fired the instant the game's first move is on the
+    // board (by either side) — see checkEvalApiHealth() for why this can't
+    // just wait for the Explorer check above to catch it.
+    if (gameActive && !this.evalHealthChecked && !this.evalHealthCheckInFlight &&
+        this.game.history().length >= 1) {
+      this.evalHealthCheckInFlight = true;
+      this.checkEvalApiHealth();
     }
 
     if (this._notify) this._notify();
