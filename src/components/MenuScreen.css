@@ -9,7 +9,6 @@
 .menu-screen__wrap {
   position: relative;
   padding: 28px clamp(20px, 3vw, 48px) 32px;
-  border: 2px solid var(--oxblood);
   border-radius: 12px;
   background: rgba(20, 10, 5, 0.74);
   box-shadow: var(--elev-lg);
