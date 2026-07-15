@@ -156,14 +156,15 @@ class Scoring {
     const accuracyResult = this.getAccuracyBonus(m, qualityPercent, e);
     const finalScore = penalizedScore + accuracyResult.bonus;
     
-    // Cap score based on penalty (but allow bonus to push slightly over)
+    // Cap score based on penalty.
     const maxScore = mul === penaltyMultipliers.catastrophic ? 30 : 
                      mul === penaltyMultipliers.poor ? 60 : 100;
     
-    // Only cap if no bonus, otherwise allow bonus to add to capped score
-    const s = accuracyResult.bonus > 0 
-      ? Math.round(Math.min(penalizedScore, maxScore) + accuracyResult.bonus)
-      : Math.min(Math.round(penalizedScore), maxScore);
+    // Accuracy bonus may improve a capped result, but battle scores are
+    // always valid percentages and must never exceed 100.
+    const s = Math.max(0, Math.min(100,
+      Math.round(Math.min(penalizedScore, maxScore) + accuracyResult.bonus)
+    ));
     
     // Return WITHOUT bonus information (hidden from user)
     return { 

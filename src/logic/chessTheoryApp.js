@@ -492,7 +492,11 @@ export class ChessTheoryApp {
     try {
       this.qualityTrackedMoves++;
 
-      if (this.playerMoves <= SKIP_QUALITY_MOVES) {
+      // Practice openings already begin from a curated mid-opening FEN, so
+      // every player move should be judged. Campaign battles still retain
+      // the original four-move opening grace period.
+      const skippedQualityMoves = this.mode === 'practice' ? 0 : SKIP_QUALITY_MOVES;
+      if (this.playerMoves <= skippedQualityMoves) {
         this.topMoveChoices++;
         console.log(`⭐️ Opening book move ${this.playerMoves} - auto-counted as top 3 (${this.topMoveChoices}/${this.qualityTrackedMoves})`);
         return;
@@ -852,17 +856,34 @@ export class ChessTheoryApp {
 
   async stopGameDueToThinTheory() {
     this.clearActiveGameState();
-    const fen = this.game.fen();
-    const rawEval = await ChessAPI.getEvaluation(fen, this.evalCache);
-    this.finalPlayerEval = Scoring.getPlayerEval(rawEval, this.playerColor);
+    let scoreResult;
 
-    const scoreResult = Scoring.getTotalScore(
-      this.playerMoves,
-      this.topMoveChoices,
-      this.finalPlayerEval,
-      this.aiSource,
-      this.qualityTrackedMoves
-    );
+    // A checkmate is a decisive game result, not an engine-evaluation case.
+    // chess.js leaves the losing side to move after mate, so this tells us
+    // whether the player delivered it or was checkmated. Apply this before
+    // either campaign's normal scoring formula and avoid relying on a remote
+    // evaluation API, which may report a terminal position as 0.0.
+    if (this.game.isCheckmate()) {
+      const playerDeliveredCheckmate = this.game.turn() !== this.playerColor;
+      this.finalPlayerEval = playerDeliveredCheckmate ? 99 : -99;
+      scoreResult = {
+        score: playerDeliveredCheckmate ? 100 : 0,
+        penaltyReason: playerDeliveredCheckmate
+          ? 'Checkmate delivered! The enemy king has fallen.'
+          : 'Checkmate suffered! The king has fallen.'
+      };
+    } else {
+      const fen = this.game.fen();
+      const rawEval = await ChessAPI.getEvaluation(fen, this.evalCache);
+      this.finalPlayerEval = Scoring.getPlayerEval(rawEval, this.playerColor);
+      scoreResult = Scoring.getTotalScore(
+        this.playerMoves,
+        this.topMoveChoices,
+        this.finalPlayerEval,
+        this.aiSource,
+        this.qualityTrackedMoves
+      );
+    }
 
     const score = scoreResult.score;
     const penaltyReason = scoreResult.penaltyReason;
