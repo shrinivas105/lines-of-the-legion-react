@@ -8,10 +8,12 @@ import { Panel } from './Panel';
 import { Button } from './Button';
 import { EndGameSummary } from './EndGameSummary';
 import { IconBrokenStandard, IconRomanTemple, IconReset, IconCircularLaurel, IconVexillum } from './RomanIcons';
+import { legionVariant } from '../utils/legionVariant';
 import './GameScreen.css';
 
 export function GameScreen({ app }) {
   const isPlayerTurn = app.game.turn() === app.playerColor;
+  const campaignVariant = legionVariant(app);
   const hintEnabled = app.mode === 'practice' ? !app.hintUsed : (isPlayerTurn && !app.hintUsed);
 
   const gameCountText = app.gameCount > 0
@@ -60,11 +62,11 @@ export function GameScreen({ app }) {
 
         {!app.gameEnded && (
           <div className="game-screen__actions">
-            <Button variant="danger" size="sm" onClick={() => window.location.reload()}>
+            <Button variant={campaignVariant} size="sm" onClick={() => window.location.reload()}>
               <IconReset className="game-screen__btn-icon" aria-hidden="true" /> New Battle
             </Button>
             <Button
-              variant="danger"
+              variant={campaignVariant}
               size="sm"
               disabled={!hintEnabled}
               onClick={() => app.getHints()}

@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Panel } from './Panel';
 import { Button } from './Button';
 import { IconCornu, IconCrossedGladius, IconPlayedMark } from './RomanIcons';
+import { legionVariant } from '../utils/legionVariant';
 import './AnalysisScreen.css';
 
 function squareToCoords(square, isFlipped, squareSize) {
@@ -225,6 +226,7 @@ function ComparisonTable({ app }) {
 export function AnalysisScreen({ app }) {
   const [boardSize, setBoardSize] = useState(0);
   const ab = app.analysisBoard;
+  const campaignVariant = legionVariant(app);
 
   if (app.analysisLoading) {
     return (
@@ -251,10 +253,10 @@ export function AnalysisScreen({ app }) {
       </Panel>
 
       <div className="analysis-screen__nav">
-        <Button variant="danger" size="sm" disabled={ab.currentMoveIndex < 0} onClick={() => ab.goToMove(0)}>First</Button>
-        <Button variant="danger" size="sm" disabled={ab.currentMoveIndex < 0} onClick={() => ab.previousMove()}>Prev</Button>
-        <Button variant="danger" size="sm" disabled={ab.currentMoveIndex >= ab.moveHistory.length - 1} onClick={() => ab.nextMove()}>Next</Button>
-        <Button variant="danger" size="sm" disabled={ab.currentMoveIndex >= ab.moveHistory.length - 1} onClick={() => ab.goToMove(ab.moveHistory.length)}>Last</Button>
+        <Button variant={campaignVariant} size="sm" disabled={ab.currentMoveIndex < 0} onClick={() => ab.goToMove(0)}>First</Button>
+        <Button variant={campaignVariant} size="sm" disabled={ab.currentMoveIndex < 0} onClick={() => ab.previousMove()}>Prev</Button>
+        <Button variant={campaignVariant} size="sm" disabled={ab.currentMoveIndex >= ab.moveHistory.length - 1} onClick={() => ab.nextMove()}>Next</Button>
+        <Button variant={campaignVariant} size="sm" disabled={ab.currentMoveIndex >= ab.moveHistory.length - 1} onClick={() => ab.goToMove(ab.moveHistory.length)}>Last</Button>
       </div>
 
       <Panel className="analysis-screen__legend">
@@ -268,8 +270,8 @@ export function AnalysisScreen({ app }) {
       </Panel>
 
       <div className="analysis-screen__actions">
-        <Button variant="danger" size="sm" onClick={() => app.analysisBoard.exitAnalysis()}>Exit</Button>
-        <Button variant="danger" size="sm" onClick={() => app.downloadPGN()}>Download PGN</Button>
+        <Button variant={campaignVariant} size="sm" onClick={() => app.analysisBoard.exitAnalysis()}>Exit</Button>
+        <Button variant={campaignVariant} size="sm" onClick={() => app.downloadPGN()}>Download PGN</Button>
       </div>
     </div>
   );

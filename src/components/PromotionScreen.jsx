@@ -210,7 +210,7 @@ function rankImagePath(rankName) {
   return LEGION_RANK_PORTRAITS[rankName] || LEGION_RANK_PORTRAITS.Legionary;
 }
 
-export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', prevRank = 'Recruit', newRank = 'Legionary', onContinue, onExit }) {
+export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', prevRank = 'Recruit', newRank = 'Legionary', onContinue, onExit, variant = 'gold' }) {
   const [visibleLines, setVisibleLines] = useState(0);
   const [showRankSwap, setShowRankSwap] = useState(false);
 
@@ -321,7 +321,7 @@ export default function PromotionScreen({ commanderName = 'COMMANDER VALERIUS', 
         </section>
 
         <div className="promotion-screen__actions">
-          <Button variant="danger" size="md" onClick={onContinue}>Continue campaign</Button>
+          <Button variant={variant} size="md" onClick={onContinue}>Continue campaign</Button>
           <Button variant="ghost" size="md" onClick={onExit}>Exit</Button>
         </div>
       </div>

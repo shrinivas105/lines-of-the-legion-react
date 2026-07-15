@@ -10,6 +10,7 @@ import { Button } from './Button';
 import { BATTLE_RANK_COLORS } from './rankColors';
 import { IconReset, IconStoneTablet, IconCrossedGladius, IconFortress } from './RomanIcons';
 import { Scoring } from '../logic/scoring';
+import { legionVariant } from '../utils/legionVariant';
 import './EndGameSummary.css';
 import PromotionScreen from './PromotionScreen';
 
@@ -34,6 +35,7 @@ export function EndGameSummary({ app }) {
 
   const { battleRank, moveQuality, displayEval, isPractice, gamesToShow } = app.endGameData;
   const rankColor = RANK_COLORS[battleRank.title] || '#d4af37';
+  const campaignVariant = legionVariant(app);
 
   const handleTryAgain = () => {
     if (isPractice && app.practiceOpening) {
@@ -51,7 +53,7 @@ export function EndGameSummary({ app }) {
           <div className="end-summary__promo-message">You have been promoted</div>
           {!showPromotionScreen && (
             <div className="end-summary__promo-cta">
-              <Button className="join-ceremony" variant="primary" size="md" onClick={() => setShowPromotionScreen(true)}>Join ceremony</Button>
+              <Button className="join-ceremony" variant={campaignVariant} size="md" onClick={() => setShowPromotionScreen(true)}>Join ceremony</Button>
             </div>
           )}
         </div>
@@ -118,13 +120,13 @@ export function EndGameSummary({ app }) {
       {/* Hide standard buttons when a promotion prompt is showing */}
       {!isPromotion && (
         <div className="end-summary__buttons">
-          <Button variant="danger" size="sm" onClick={() => app.showAnalysis()}><IconStoneTablet className="end-summary__btn-icon" aria-hidden="true" /> Analyze</Button>
+          <Button variant={campaignVariant} size="sm" onClick={() => app.showAnalysis()}><IconStoneTablet className="end-summary__btn-icon" aria-hidden="true" /> Analyze</Button>
           {isPractice ? (
-            <Button variant="danger" size="sm" onClick={handleTryAgain}><IconReset className="end-summary__btn-icon" aria-hidden="true" /> Try Again</Button>
+            <Button variant={campaignVariant} size="sm" onClick={handleTryAgain}><IconReset className="end-summary__btn-icon" aria-hidden="true" /> Try Again</Button>
           ) : (
-            <Button variant="danger" size="sm" onClick={() => app.returnToCampaign()}><IconCrossedGladius className="end-summary__btn-icon" aria-hidden="true" /> Continue Campaign</Button>
+            <Button variant={campaignVariant} size="sm" onClick={() => app.returnToCampaign()}><IconCrossedGladius className="end-summary__btn-icon" aria-hidden="true" /> Continue Campaign</Button>
           )}
-          <Button variant="danger" size="sm" onClick={() => app.goHome()}><IconFortress className="end-summary__btn-icon" aria-hidden="true" /> Exit</Button>
+          <Button variant={campaignVariant} size="sm" onClick={() => app.goHome()}><IconFortress className="end-summary__btn-icon" aria-hidden="true" /> Exit</Button>
         </div>
       )}
 
@@ -184,6 +186,7 @@ export function EndGameSummary({ app }) {
             commanderName={app.commanderName || 'COMMANDER VALERIUS'}
             prevRank={prevLegionTitle}
             newRank={newLegion.title}
+            variant={campaignVariant}
           />
         );
       })()}
