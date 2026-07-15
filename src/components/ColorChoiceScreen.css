@@ -417,7 +417,7 @@
   letter-spacing: 0.08em;
   gap: 8px;
   border-radius: 8px;
-  border: 2px solid var(--legion-accent);
+  border: 1px solid var(--legion-accent);
   background: linear-gradient(180deg, var(--legion-accent-strong) 0%, var(--legion-accent) 45%, var(--legion-secondary) 100%);
   color: #1a0f04;
   box-shadow:
@@ -496,7 +496,7 @@
   height: 168px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid var(--legion-accent);
+  border: 1.5px solid var(--legion-accent);
   box-shadow:
     0 4px 14px rgba(0, 0, 0, 0.6),
     0 0 26px var(--legion-glow),

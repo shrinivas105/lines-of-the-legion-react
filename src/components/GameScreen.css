@@ -33,7 +33,7 @@
   background:
     repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.16) 0 2px, transparent 2px 18px),
     linear-gradient(180deg, #2b1d10 0%, #1c1209 100%);
-  border: 2px solid var(--legion-accent);
+  border: 1px solid var(--legion-accent);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.2);
 }
 
@@ -63,7 +63,7 @@
   width: 100%;
   padding: 8px 10px;
   border-radius: 8px;
-  border: 2px solid var(--legion-accent-dim);
+  border: 1px solid var(--legion-accent-dim);
   background: rgba(20, 10, 5, 0.95);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   font-size: 0.67rem;

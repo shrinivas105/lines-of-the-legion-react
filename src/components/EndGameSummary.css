@@ -4,7 +4,7 @@
   background: rgba(20, 10, 5, 0.98);
   padding: 12px 14px;
   border-radius: 10px;
-  border: 2px solid var(--legion-accent);
+  border: 1px solid var(--legion-accent);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
   font-size: 0.8rem;
   line-height: 1.45;
