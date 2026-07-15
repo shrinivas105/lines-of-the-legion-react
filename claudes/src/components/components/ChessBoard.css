@@ -1,0 +1,22 @@
+.board-shell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  touch-action: manipulation;
+}
+
+/* react-chessboard v5 no longer exposes stable hashed class names
+   (.board-b72b1, .square-55d63, .piece-417db from v4 are gone), so the
+   board border/shadow is now set via the `boardStyle` option in
+   ChessBoard.jsx instead of being targeted here. The wrapper div's inline
+   width/height (driven by the boardWidth state) controls sizing. */
+.board-shell > div {
+  max-width: min(560px, 100%);
+}
+
+@media (max-width: 600px) {
+  .board-shell > div {
+    max-width: 100%;
+  }
+}

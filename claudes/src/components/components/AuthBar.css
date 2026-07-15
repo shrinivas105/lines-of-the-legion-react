@@ -1,0 +1,72 @@
+.auth-bar {
+  position: relative;
+  top: auto;
+  right: auto;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.auth-bar__user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--umber);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  font-size: 0.7rem;
+}
+
+.auth-bar__email {
+  color: var(--marble-dim);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.auth-bar__signout {
+  background: transparent;
+  border: none;
+  color: var(--oxblood-text);
+  font-size: 0.68rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.auth-bar__signin {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--bronze-dim);
+  background: var(--umber);
+  color: var(--gold);
+  cursor: pointer;
+  transition: filter 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.auth-bar__signin:hover {
+  filter: brightness(1.2);
+}
+.auth-bar__icon {
+  width: 0.9em;
+  height: 0.9em;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .auth-bar {
+    gap: 6px;
+  }
+  .auth-bar__email { display: none; }
+  .auth-bar__signin,
+  .auth-bar__signout {
+    font-size: 0.64rem;
+  }
+}

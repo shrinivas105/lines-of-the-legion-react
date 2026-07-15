@@ -12,6 +12,20 @@
 import { Chess } from 'chess.js';
 import { ChessAPI } from '../services/chessApi';
 
+// Standard chess UCI writes castling as king-to-destination (e1g1), while
+// some Explorer-compatible sources use king-to-rook-square (e1h1). Normalize
+// both forms before comparing or replaying a move.
+const CASTLING_UCI_ALIASES = {
+  e1h1: 'e1g1', e1a1: 'e1c1',
+  e8h8: 'e8g8', e8a8: 'e8c8'
+};
+
+function canonicalUci(uci) {
+  if (!uci) return uci;
+  const move = uci.slice(0, 4);
+  return (CASTLING_UCI_ALIASES[move] || move) + uci.slice(4);
+}
+
 export class AnalysisBoard {
   constructor(app) {
     this.app = app;
@@ -59,60 +73,53 @@ export class AnalysisBoard {
       if (!this.topMovesData[positionFen]) {
         try {
           const data = await ChessAPI.queryExplorer(this.app.aiSource, positionFen);
-          this.topMovesData[positionFen] = data.moves || [];
+          let movesForPosition = data.moves || [];
 
           if (i < this.moveHistory.length) {
             const isWhiteMove = i % 2 === 0;
             const isPlayerMove = (this.app.playerColor === 'w' && isWhiteMove) ||
                                  (this.app.playerColor === 'b' && !isWhiteMove);
+            const actualMove = this.moveHistory[i];
+            const actualMoveUci = actualMove.from + actualMove.to + (actualMove.promotion || '');
 
-            const topMoves = this.topMovesData[positionFen].slice(0, 3);
+            // Most positions only need five moves. If the played move falls
+            // outside that small response, expand just this position so the
+            // analysis can display its database values without making every
+            // analysis request heavier.
+            if (movesForPosition.length > 0 && !movesForPosition.some(move => canonicalUci(move.uci) === actualMoveUci)) {
+              const expandedData = await ChessAPI.queryExplorer(this.app.aiSource, positionFen, 20);
+              movesForPosition = expandedData.moves || movesForPosition;
+            }
 
-            if (isPlayerMove) {
-              for (const move of topMoves) {
-                const evalKey = `${positionFen}_${move.uci}`;
-                if (!this.evaluationCache[evalKey]) {
-                  const evalGame = new Chess(positionFen);
-                  const moveFrom = move.uci.substring(0, 2);
-                  const moveTo = move.uci.substring(2, 4);
-                  const movePromotion = move.uci.length > 4 ? move.uci[4] : undefined;
+            this.topMovesData[positionFen] = movesForPosition;
+            const topMoves = movesForPosition.slice(0, 3);
+            const movesToEvaluate = isPlayerMove ? [...topMoves, actualMove] : [actualMove];
+            const evaluatedUcis = new Set();
 
-                  evalGame.move({ from: moveFrom, to: moveTo, promotion: movePromotion });
-                  const evalFen = evalGame.fen();
+            for (const move of movesToEvaluate) {
+              const uci = canonicalUci(move.uci || actualMoveUci);
+              if (evaluatedUcis.has(uci)) continue;
+              evaluatedUcis.add(uci);
 
-                  try {
-                    const rawEval = await ChessAPI.getEvaluation(evalFen, this.app.evalCache);
-                    this.evaluationCache[evalKey] = rawEval;
-                  } catch (err) {
-                    console.error('Error preloading eval:', err);
-                    this.evaluationCache[evalKey] = null;
-                  }
-                }
-              }
-            } else {
-              const actualMove = this.moveHistory[i];
-              const actualMoveUci = actualMove.from + actualMove.to + (actualMove.promotion || '');
-              const evalKey = `${positionFen}_${actualMoveUci}`;
+              const evalKey = `${positionFen}_${uci}`;
+              if (Object.hasOwn(this.evaluationCache, evalKey)) continue;
 
-              if (!this.evaluationCache[evalKey]) {
-                tempGame.move({
-                  from: actualMove.from,
-                  to: actualMove.to,
-                  promotion: actualMove.promotion
+              const evalGame = new Chess(positionFen);
+              try {
+                evalGame.move({
+                  from: uci.substring(0, 2),
+                  to: uci.substring(2, 4),
+                  promotion: uci.length > 4 ? uci[4] : undefined
                 });
-                const evalFen = tempGame.fen();
-
-                try {
-                  const rawEval = await ChessAPI.getEvaluation(evalFen, this.app.evalCache);
-                  this.evaluationCache[evalKey] = rawEval;
-                } catch (err) {
-                  console.error('Error preloading eval:', err);
-                  this.evaluationCache[evalKey] = null;
-                }
-
-                tempGame.undo();
+                const rawEval = await ChessAPI.getEvaluation(evalGame.fen(), this.app.evalCache);
+                this.evaluationCache[evalKey] = rawEval;
+              } catch (err) {
+                console.error('Error preloading eval:', err);
+                this.evaluationCache[evalKey] = null;
               }
             }
+          } else {
+            this.topMovesData[positionFen] = movesForPosition;
           }
         } catch (error) {
           console.error('Error preloading data for position:', error);
@@ -302,7 +309,7 @@ export class AnalysisBoard {
       }
 
       const currentMoveUci = currentMove.from + currentMove.to + (currentMove.promotion || '');
-      const currentMoveIndexInTop = topMoves.findIndex(m => m.uci === currentMoveUci);
+      const currentMoveIndexInTop = topMoves.findIndex(m => canonicalUci(m.uci) === currentMoveUci);
 
       const tableData = [];
       const colors = ['#2ecc71', '#f1c40f', '#e67e22'];
@@ -316,7 +323,7 @@ export class AnalysisBoard {
         const draws = totalGames > 0 ? ((move.draws / totalGames) * 100).toFixed(1) : 0;
         const blackWin = totalGames > 0 ? ((move.black / totalGames) * 100).toFixed(1) : 0;
 
-        const isCurrentMove = move.uci === currentMoveUci;
+        const isCurrentMove = canonicalUci(move.uci) === currentMoveUci;
 
         let moveEval = '-';
         let moveEvalColor = '#888';
@@ -324,7 +331,7 @@ export class AnalysisBoard {
         const shouldShowEval = isPlayerMove || isCurrentMove;
 
         if (shouldShowEval) {
-          const evalKey = `${positionFen}_${move.uci}`;
+          const evalKey = `${positionFen}_${canonicalUci(move.uci)}`;
           const cachedEval = this.evaluationCache[evalKey];
 
           if (cachedEval !== undefined && cachedEval !== null) {
@@ -338,6 +345,7 @@ export class AnalysisBoard {
 
         tableData.push({
           move: move.san,
+          hasStats: true,
           color: colors[idx],
           label: labels[idx],
           whiteWin,
@@ -352,7 +360,7 @@ export class AnalysisBoard {
       }
 
       if (currentMoveIndexInTop === -1 || currentMoveIndexInTop > 2) {
-        const currentMoveData = topMoves.find(m => m.uci === currentMoveUci);
+        const currentMoveData = topMoves.find(m => canonicalUci(m.uci) === currentMoveUci);
         if (currentMoveData) {
           const totalGames = currentMoveData.white + currentMoveData.draws + currentMoveData.black;
           const whiteWin = totalGames > 0 ? ((currentMoveData.white / totalGames) * 100).toFixed(1) : 0;
@@ -375,12 +383,40 @@ export class AnalysisBoard {
 
           tableData.push({
             move: currentMove.san,
+            hasStats: true,
             color: '#3498db',
             label: moveLabel,
             whiteWin,
             draws,
             blackWin,
             totalGames,
+            isCurrentMove: true,
+            moveType: moveLabel,
+            eval: moveEval,
+            evalColor: moveEvalColor
+          });
+        } else {
+          // The wider Explorer request did not contain this legal move. Keep
+          // it visible and be explicit that its database statistics are
+          // unavailable instead of silently omitting it from the analysis.
+          const evalKey = `${positionFen}_${currentMoveUci}`;
+          const cachedEval = this.evaluationCache[evalKey];
+          let moveEval = 'N/A';
+          let moveEvalColor = '#888';
+          if (cachedEval !== undefined && cachedEval !== null) {
+            const playerEval = this.app.playerColor === 'b' ? -cachedEval : cachedEval;
+            moveEval = playerEval > 0 ? '+' + playerEval.toFixed(1) : playerEval.toFixed(1);
+            moveEvalColor = playerEval > 1 ? '#2ecc71' : playerEval < -1 ? '#e74c3c' : '#f1c40f';
+          }
+          tableData.push({
+            move: currentMove.san,
+            hasStats: false,
+            color: '#3498db',
+            label: moveLabel,
+            whiteWin: null,
+            draws: null,
+            blackWin: null,
+            totalGames: null,
             isCurrentMove: true,
             moveType: moveLabel,
             eval: moveEval,
@@ -426,9 +462,10 @@ export class AnalysisBoard {
     const colors = ['#2ecc71', '#f1c40f', '#e67e22'];
 
     topMoves.forEach((move, idx) => {
-      if (move.uci === currentMoveUci) return;
-      const from = move.uci.substring(0, 2);
-      const to = move.uci.substring(2, 4);
+      const uci = canonicalUci(move.uci);
+      if (uci === currentMoveUci) return;
+      const from = uci.substring(0, 2);
+      const to = uci.substring(2, 4);
       arrows.push({ from, to, color: colors[idx], width: 6, outlineColor: null, dashed: false });
     });
 

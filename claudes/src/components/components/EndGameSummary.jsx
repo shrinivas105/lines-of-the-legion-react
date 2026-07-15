@@ -64,14 +64,9 @@ export function EndGameSummary({ app }) {
         )
       )}
 
-      {isPractice && (
-        <h3 className="end-summary__heading" style={{ color: rankColor, textShadow: `0 0 20px ${rankColor}` }}>
-          <battleRank.icon className="end-summary__rank-icon" aria-hidden="true" /> {battleRank.title} — Practice Score: {battleRank.score}/100
-        </h3>
-      )}
-      {!isPractice && <h3 className="end-summary__heading" style={{ color: rankColor, textShadow: `0 0 20px ${rankColor}` }}>
+      <h3 className="end-summary__heading" style={{ color: rankColor, textShadow: `0 0 20px ${rankColor}` }}>
         <battleRank.icon className="end-summary__rank-icon" aria-hidden="true" /> {battleRank.title} • Score: {battleRank.score}/100
-      </h3>}
+      </h3>
 
       <div className="end-summary__stats">
         <div className="end-summary__stat">
@@ -88,12 +83,8 @@ export function EndGameSummary({ app }) {
         </div>
       </div>
 
-      {!isPractice && (
-        <>
-          <div className="end-summary__quote" style={{ color: rankColor }}>Commander says - "{battleRank.msg}"</div>
-          <div className="end-summary__sub"><em>{battleRank.sub}</em></div>
-        </>
-      )}
+      <div className="end-summary__quote" style={{ color: rankColor }}>Commander says - "{battleRank.msg}"</div>
+      <div className="end-summary__sub"><em>{battleRank.sub}</em></div>
 
       <div className="end-summary__ladder">
         {RANK_ORDER.map(r => {

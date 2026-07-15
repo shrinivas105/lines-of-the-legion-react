@@ -41,6 +41,10 @@ export class ChessTheoryApp {
     this.gameCount = 0;
     this.evalCache = {};
     this.lastAIMoveFEN = null;
+    // Holds the promise for the most recent checkMoveQuality() call. The move
+    // repaint no longer waits on this, but final scoring must — see
+    // stopGameDueToThinTheory().
+    this.pendingQualityCheck = null;
     this.playerMoves = 0;
     this.topMoveChoices = 0;
     this.qualityTrackedMoves = 0;
@@ -427,7 +431,11 @@ export class ChessTheoryApp {
         }
 
         const moveUCI = move.from + move.to + (move.promotion || '');
-        await this.checkMoveQuality(preMoveFEN, moveUCI);
+        // Don't block the repaint on the Explorer round-trip: score the move
+        // in the background and re-persist state once it resolves. Final
+        // scoring (stopGameDueToThinTheory) still awaits this promise.
+        this.pendingQualityCheck = this.checkMoveQuality(preMoveFEN, moveUCI)
+          .then(() => this.saveActiveGameState());
         this.saveActiveGameState();
         this.selected = null;
         this.theoryMessageVisible = false;
@@ -481,7 +489,11 @@ export class ChessTheoryApp {
     }
 
     const moveUCI = move.from + move.to + (move.promotion || '');
-    await this.checkMoveQuality(preMoveFEN, moveUCI);
+    // Don't block the repaint on the Explorer round-trip: score the move in
+    // the background and re-persist state once it resolves. Final scoring
+    // (stopGameDueToThinTheory) still awaits this promise.
+    this.pendingQualityCheck = this.checkMoveQuality(preMoveFEN, moveUCI)
+      .then(() => this.saveActiveGameState());
     this.saveActiveGameState();
     this.selected = null;
     this.theoryMessageVisible = false;
@@ -855,6 +867,18 @@ export class ChessTheoryApp {
   }
 
   async stopGameDueToThinTheory() {
+    // The last player move's quality check may still be running in the
+    // background (see handleClick/handleDragMove) — final scoring reads
+    // topMoveChoices/qualityTrackedMoves, so it must wait for it here.
+    if (this.pendingQualityCheck) {
+      try {
+        await this.pendingQualityCheck;
+      } catch (e) {
+        // checkMoveQuality already catches its own errors internally; this
+        // is just a safety net.
+      }
+    }
+
     this.clearActiveGameState();
     let scoreResult;
 

@@ -18,6 +18,10 @@ export const pieces = {
 
 export class ChessAPI {
   static cache = {};
+  // In-flight request tracking: if board info, quality scoring, and AI move
+  // selection all ask for the same FEN before the first response lands, they
+  // share this one promise instead of each firing a separate network request.
+  static inflight = {};
 
   static _explorerHeaders() {
     const headers = {};
@@ -32,6 +36,7 @@ export class ChessAPI {
     // the move that was actually played.
     const key = `${source}_${moveCount}_${fen}`;
     if (this.cache[key]) return this.cache[key];
+    if (this.inflight[key]) return this.inflight[key];
 
     let url = source === 'master'
       ? 'https://explorer.lichess.ovh/masters'
@@ -39,30 +44,40 @@ export class ChessAPI {
     url += `?variant=standard&fen=${encodeURIComponent(fen)}&topGames=0&moves=${moveCount}`;
     if (source === 'lichess') url += '&ratings=1600,1800,2000,2200,2500';
 
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 15000);
+    const request = (async () => {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
 
-      const response = await fetch(url, {
-        signal: controller.signal,
-        headers: this._explorerHeaders(),
-      });
-      clearTimeout(timeout);
+        const response = await fetch(url, {
+          signal: controller.signal,
+          headers: this._explorerHeaders(),
+        });
+        clearTimeout(timeout);
 
-      if (response.status === 401 || response.status === 403) {
-        console.warn('Explorer: auth required. Please connect your Lichess account.');
-        return { white: 0, draws: 0, black: 0, moves: [], needsAuth: true };
+        if (response.status === 401 || response.status === 403) {
+          console.warn('Explorer: auth required. Please connect your Lichess account.');
+          return { white: 0, draws: 0, black: 0, moves: [], needsAuth: true };
+        }
+
+        if (!response.ok) throw new Error(`API error ${response.status}`);
+
+        const data = await response.json();
+        this.cache[key] = data;
+        return data;
+      } catch (e) {
+        console.warn('Explorer failed:', e);
+        return { white: 0, draws: 0, black: 0, moves: [], apiError: true };
+      } finally {
+        // Always release the in-flight slot, including on failure/auth-needed,
+        // so a later retry issues a fresh request instead of reusing a
+        // settled-but-uncached promise forever.
+        delete this.inflight[key];
       }
+    })();
 
-      if (!response.ok) throw new Error(`API error ${response.status}`);
-
-      const data = await response.json();
-      this.cache[key] = data;
-      return data;
-    } catch (e) {
-      console.warn('Explorer failed:', e);
-      return { white: 0, draws: 0, black: 0, moves: [], apiError: true };
-    }
+    this.inflight[key] = request;
+    return request;
   }
 
   static async queryGames(source, fen) {

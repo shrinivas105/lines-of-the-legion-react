@@ -204,10 +204,10 @@ function ComparisonTable({ app }) {
                   </span>
                 ) : null}
               </td>
-              <td>{row.hasStats === false ? '—' : `${row.whiteWin}%`}</td>
-              <td>{row.hasStats === false ? '—' : `${row.blackWin}%`}</td>
-              <td className="draw">{row.hasStats === false ? '—' : `${row.draws}%`}</td>
-              <td className="games">{row.hasStats === false ? 'No Explorer record' : row.totalGames.toLocaleString()}</td>
+              <td>{row.whiteWin}%</td>
+              <td>{row.blackWin}%</td>
+              <td className="draw">{row.draws}%</td>
+              <td className="games">{row.totalGames.toLocaleString()}</td>
               <td style={{ color: row.evalColor, fontWeight: 'bold' }}>{row.eval}</td>
             </tr>
           ))}

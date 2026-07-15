@@ -102,7 +102,7 @@ export async function loadProgress() {
     if (!user) return null;
 
     const { data, error } = await supabase
-      .from('user_progress')
+      .from('player_progress')
       .select('*')
       .eq('user_id', user.id)
       .single();
@@ -124,7 +124,7 @@ export async function saveProgress(progress) {
     if (!user) return { success: false, error: 'Not logged in' };
 
     const { data, error } = await supabase
-      .from('user_progress')
+      .from('player_progress')
       .upsert({
         user_id: user.id,
         ...progress,
