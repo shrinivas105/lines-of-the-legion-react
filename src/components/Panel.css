@@ -4,7 +4,7 @@
     linear-gradient(180deg, rgba(230,221,196,0.04), transparent 45%),
     radial-gradient(ellipse at 50% 0%, rgba(138,106,59,0.06), transparent 70%),
     var(--umber);
-  border: 1px solid var(--oxblood);
+  border: 1px solid var(--legion-accent);
   border-radius: var(--radius-lg);
   box-shadow: var(--elev-md);
   padding: var(--space-5);

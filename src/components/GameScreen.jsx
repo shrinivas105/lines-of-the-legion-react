@@ -22,7 +22,7 @@ export function GameScreen({ app }) {
 
   if (app.apiErrorState) {
     return (
-      <div className="game-screen page-transition">
+      <div className={`game-screen page-transition campaign-${campaignVariant}`}>
         <Panel className="game-screen__error">
           <h3><IconBrokenStandard className="game-screen__heading-icon" aria-hidden="true" /> Connection Lost</h3>
           <p>
@@ -37,7 +37,7 @@ export function GameScreen({ app }) {
   }
 
   return (
-    <div className="game-container page-transition">
+    <div className={`game-container page-transition campaign-${campaignVariant}`}>
       <div className="game-screen__board-area">
         <div className="war-table">
           <div className="war-table__corner war-table__corner--tl" aria-hidden="true" />

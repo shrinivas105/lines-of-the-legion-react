@@ -243,7 +243,7 @@ export function AnalysisScreen({ app }) {
   }
 
   return (
-    <div className="analysis-screen page-transition">
+    <div className={`analysis-screen page-transition campaign-${campaignVariant}`}>
       <h2 className="analysis-screen__title"><IconCrossedGladius className="analysis-screen__title-icon" aria-hidden="true" /> Battle Analysis <IconCrossedGladius className="analysis-screen__title-icon" aria-hidden="true" /></h2>
 
       <AnalysisBoardGrid app={app} boardSize={boardSize} setBoardSize={setBoardSize} />

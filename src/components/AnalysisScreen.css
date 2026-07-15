@@ -129,7 +129,7 @@
   table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.7rem;
-  border: 2px solid var(--oxblood);
+  border: 2px solid var(--legion-accent);
   border-radius: 6px;
   overflow: hidden;
 }

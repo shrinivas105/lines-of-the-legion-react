@@ -161,7 +161,7 @@ export function PracticePickerScreen({ app }) {
   };
 
   return (
-    <div className="practice-picker page-transition">
+    <div className="practice-picker campaign-bronze page-transition">
       <header className="practice-picker__hero">
         <h1 className="practice-picker__title">Practice Mode</h1>
       </header>
