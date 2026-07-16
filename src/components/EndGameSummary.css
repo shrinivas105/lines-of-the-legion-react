@@ -1,0 +1,335 @@
+.end-summary {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: center;
+  background: rgba(20, 10, 5, 0.98);
+  padding: 12px 14px;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  animation: end-summary-rise var(--duration-slow) var(--ease-standard) both;
+}
+
+@keyframes end-summary-rise {
+  from { opacity: 0; transform: translateY(14px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .end-summary { animation: none; }
+}
+
+.end-summary__rank-change {
+  font-size: 0.6rem;
+  padding: 6px 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.end-summary__rank-change--promo {
+  background: linear-gradient(135deg, rgba(39, 174, 96, 0.9), rgba(27, 143, 78, 0.9));
+  border: 1px solid #27ae60;
+  color: #fff;
+}
+.end-summary__promo-message {
+  font-size: 0.72rem;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+}
+.end-summary__promo-cta {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+}
+.end-summary__rank-change--demo {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.95), rgba(178, 34, 34, 0.95));
+  border: 1px solid #ff0000;
+  color: #fff;
+}
+
+.end-summary__medal {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-2);
+}
+
+.end-summary__heading {
+  font-size: 0.84rem;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.end-summary__rank-icon {
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: -0.15em;
+}
+
+.end-summary__btn-icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+.end-summary__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.end-summary__stat {
+  background: var(--ink);
+  border: 1.5px solid #ffffff;
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.48rem;
+  color: var(--marble-dim);
+}
+.end-summary__stat strong {
+  font-size: 0.49rem;
+  color: var(--gold);
+  font-family: var(--font-stat);
+}
+
+.end-summary__quote {
+  font-family: var(--font-accent);
+  font-style: italic;
+  color: var(--gold);
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+.end-summary__sub {
+  font-size: 0.52rem;
+  color: var(--marble-dim);
+  margin-bottom: 8px;
+}
+
+.end-summary__ladder {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.end-summary__ladder-step {
+  font-size: 0.72rem;
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--hairline);
+  color: var(--marble-dim);
+}
+
+.end-summary__history {
+  margin-top: 10px;
+  text-align: left;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 10px;
+}
+.end-summary__history-title {
+  font-size: 0.7rem;
+  margin-bottom: 8px;
+  color: var(--gold);
+}
+.end-summary__history-list {
+  display: grid;
+  gap: 8px;
+}
+.end-summary__history-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.66rem;
+  color: var(--marble-dim);
+  line-height: 1.35;
+}
+.end-summary__history-meta {
+  flex: 1;
+}
+.end-summary__history-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  white-space: nowrap;
+}
+.end-summary__history-result {
+  font-family: var(--font-stat);
+}
+.end-summary__history-item a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.end-summary__buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: nowrap;
+  margin-bottom: 8px;
+}
+
+.end-summary__buttons .btn {
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: normal;
+  text-align: center;
+}
+
+.end-summary__practice-note {
+  font-size: 0.58rem;
+  color: var(--marble-dim);
+  margin-bottom: 8px;
+}
+
+.end-summary__donate-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #c0392b, #96281b);
+  color: #fff !important;
+  text-decoration: none !important;
+  font-size: 0.74rem;
+}
+
+@media (max-width: 600px) {
+  .end-summary {
+    padding: 10px 10px 8px;
+    border-radius: 8px;
+    font-size: 0.74rem;
+  }
+
+  .end-summary__heading {
+    font-size: 0.74rem;
+    margin-bottom: 6px;
+  }
+
+  .end-summary__stats {
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .end-summary__stat {
+    padding: 4px;
+    font-size: 0.42rem;
+    border-width: 1.5px;
+  }
+
+  .end-summary__stat strong {
+    font-size: 0.63rem;
+  }
+
+  .end-summary__quote {
+    font-size: 0.70rem;
+  }
+
+  .end-summary__sub {
+    font-size: 0.46rem;
+    margin-bottom: 6px;
+  }
+
+  .end-summary__ladder {
+    gap: 3px;
+    margin-bottom: 6px;
+  }
+
+  .end-summary__ladder-step {
+    font-size: 0.65rem;
+    padding: 3px 6px;
+  }
+
+  .end-summary__buttons {
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .end-summary__buttons .btn {
+    padding: 5px 4px;
+    font-size: 0.52rem;
+  }
+
+  .end-summary__practice-note {
+    font-size: 0.5rem;
+  }
+
+  .end-summary__donate-btn {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.62rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .end-summary {
+    font-size: 0.92rem;
+    padding: 14px 18px 16px;
+  }
+
+  .end-summary__rank-change {
+    font-size: 0.78rem;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+  }
+
+  .end-summary__promo-message {
+    font-size: 0.95rem;
+  }
+
+  .end-summary__heading {
+    font-size: 0.95rem;
+  }
+
+  .end-summary__stats {
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .end-summary__stat {
+    padding: 8px;
+    font-size: 0.72rem;
+  }
+
+  .end-summary__stat strong {
+    font-size: 0.95rem;
+  }
+
+  .end-summary__quote {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .end-summary__sub {
+    font-size: 0.72rem;
+    margin-bottom: 10px;
+  }
+
+  .end-summary__ladder-step {
+    font-size: 0.82rem;
+    padding: 5px 8px;
+  }
+
+  .end-summary__history-title {
+    font-size: 0.82rem;
+  }
+
+  .end-summary__history-item {
+    font-size: 0.78rem;
+  }
+
+  .end-summary__buttons .btn {
+    font-size: 0.88rem;
+  }
+
+  .end-summary__practice-note {
+    font-size: 0.7rem;
+  }
+
+  .end-summary__donate-btn {
+    font-size: 0.82rem;
+    padding: 10px 16px;
+  }
+}
