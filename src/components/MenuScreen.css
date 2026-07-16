@@ -254,11 +254,25 @@
   gap: 3px;
 }
 
-.battle-rank--levy { color: #5ccf7a; }
-.battle-rank--hastatus { color: #f3f0e8; }
-.battle-rank--principes { color: #ff6f6f; }
-.battle-rank--triarius { color: #7eb7ff; }
-.battle-rank--imperator { color: #ffd166; }
+.battle-rank--levy {
+  color: #58C472;      /* Green */
+}
+
+.battle-rank--hastatus {
+  color: #E8E2D6;      /* Ivory / Parchment */
+}
+
+.battle-rank--principes {
+  color: #C95A3A;      /* Roman Red */
+}
+
+.battle-rank--triarius {
+  color: #4E78D1;      /* Deep Royal Blue */
+}
+
+.battle-rank--imperator {
+  color: #6B3FA0;      /* Imperial Purple */
+}
 
 .rules-content ul { padding-left: 16px; }
 
