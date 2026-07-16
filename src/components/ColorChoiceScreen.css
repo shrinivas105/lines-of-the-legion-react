@@ -38,6 +38,16 @@
   }
 }
 
+@media (max-width: 600px) {
+  .color-choice {
+    padding: 4px 0 var(--space-6);
+  }
+
+  .color-choice__panel {
+    padding: var(--space-3) var(--space-4) var(--space-5);
+  }
+}
+
 .color-choice__wrap {
   display: flex;
   flex-direction: column;
