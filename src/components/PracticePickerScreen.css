@@ -34,7 +34,6 @@
   flex-direction: column;
   gap: var(--space-3);
   align-items: flex-start;
-  border-color: var(--bronze-dim);
 }
 .practice-picker__notice p {
   margin: 0;
