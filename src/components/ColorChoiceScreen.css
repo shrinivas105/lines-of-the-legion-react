@@ -27,9 +27,10 @@
 }
 
 .color-choice {
-  max-width: 980px;
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
-  padding: 4px var(--space-4) var(--space-6);
+  padding: 4px 0 var(--space-6);
 }
 
 @media (min-width: 900px) {
@@ -656,6 +657,8 @@
   }
 
   .color-choice__panel {
+    width: calc(100% - 0px);
+    margin: 0;
     padding: 0 var(--space-2) var(--space-3);
   }
 
