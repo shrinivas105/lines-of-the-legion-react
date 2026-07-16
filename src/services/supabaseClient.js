@@ -143,3 +143,86 @@ export async function saveProgress(progress) {
 }
 
 export default supabase;
+
+// --- Practice openings (cloud sync) ----------------------------------------
+// Mirrors the loadProgress/saveProgress pattern above: every call checks
+// for a logged-in user itself rather than trusting a passed-in id, and
+// fails soft (returns null/false) when logged out so callers can fall back
+// to local-only storage without special-casing "not logged in" everywhere.
+
+export async function fetchPracticeOpenings() {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
+
+    const { data, error } = await supabase
+      .from('practice_openings')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('fetchPracticeOpenings error:', error);
+      return null;
+    }
+    return data;
+  } catch (e) {
+    console.error('fetchPracticeOpenings exception:', e);
+    return null;
+  }
+}
+
+// Inserts one row for the current user. The 20-cap is enforced by a
+// database trigger (see supabase/migrations) — this surfaces that
+// rejection as a normal { success: false } result rather than throwing.
+export async function insertPracticeOpening(row) {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { success: false, error: 'Not logged in' };
+
+    const { data, error } = await supabase
+      .from('practice_openings')
+      .insert({
+        user_id: user.id,
+        name: row.name,
+        fen: row.fen,
+        orientation: row.orientation,
+        mode: row.mode,
+        category: row.category,
+        source: row.source || 'user',
+      })
+      .select()
+      .single();
+
+    if (error) {
+      const capHit = error.message?.includes('practice_openings_cap_exceeded');
+      return { success: false, error: capHit ? 'cap' : error };
+    }
+    return { success: true, data };
+  } catch (e) {
+    console.error('insertPracticeOpening exception:', e);
+    return { success: false, error: e };
+  }
+}
+
+export async function deletePracticeOpening(id) {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { success: false, error: 'Not logged in' };
+
+    const { error } = await supabase
+      .from('practice_openings')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('deletePracticeOpening error:', error);
+      return { success: false, error };
+    }
+    return { success: true };
+  } catch (e) {
+    console.error('deletePracticeOpening exception:', e);
+    return { success: false, error: e };
+  }
+}

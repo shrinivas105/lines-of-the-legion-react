@@ -1,0 +1,94 @@
+/* components/CaptureModal.css — shared small-form modal (name/FEN/etc.)
+   used via createPortal from both PracticePickerScreen (Add Flashcard) and
+   AnalysisScreen (Add to Practice). Portaling to document.body means these
+   render outside any .campaign-gold/silver/bronze ancestor, so the caller
+   must put that class directly on .capture-modal itself (see
+   CapturePositionModal / AddFlashcardModal) to get the right accent color
+   here rather than silently falling back to the neutral default. */
+
+/* position:fixed needs an unbroken chain to the viewport — some page-root
+   ancestors use `animation: ... both`, which leaves a non-`none` transform
+   in place and would otherwise become the containing block for a
+   position:fixed modal, breaking full-screen presentation. */
+.capture-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.capture-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.5), rgba(0,0,0,0.75));
+  backdrop-filter: blur(2px);
+}
+.capture-modal__panel {
+  position: relative;
+  width: 92%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow: auto;
+  background: linear-gradient(180deg, #121012 0%, #1b1510 100%);
+  border: 1px solid var(--legion-accent-dim);
+  border-radius: 12px;
+  padding: 20px;
+  color: var(--marble);
+  box-shadow: 0 10px 50px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.capture-modal__title {
+  font-size: 1rem;
+  color: var(--legion-accent);
+  text-align: center;
+  margin: 0 0 4px;
+}
+.capture-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.7rem;
+  color: var(--marble-dim);
+}
+.capture-modal__field input[type="text"] {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--legion-accent-dim);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: var(--marble);
+  font-size: 0.8rem;
+  font-family: var(--font-body);
+}
+.capture-modal__field input[type="text"]:focus {
+  outline: none;
+  border-color: var(--legion-accent);
+}
+.capture-modal__radio-row {
+  display: flex;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: var(--marble);
+}
+.capture-modal__radio-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.capture-modal__error {
+  font-size: 0.72rem;
+  color: var(--oxblood-text);
+  background: rgba(122, 31, 31, 0.12);
+  border: 1px solid var(--oxblood-dim);
+  border-radius: 6px;
+  padding: 6px 9px;
+}
+.capture-modal__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 6px;
+}

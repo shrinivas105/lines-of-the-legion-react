@@ -19,22 +19,26 @@ import { LichessConnectButton } from './LichessConnectButton';
 import { isConnected } from '../services/lichessAuth';
 import {
   getEffectiveOpenings,
+  getUserOpeningsCount,
   addOpening,
   removeOpening,
   downloadCsv,
   uploadCsv,
+  MAX_OPENINGS,
 } from '../services/practiceOpeningsStore';
+import './CaptureModal.css';
 import './PracticePickerScreen.css';
 
 function AddFlashcardModal({ onClose, onSaved }) {
   const [name, setName] = useState('');
   const [fen, setFen] = useState('');
   const [orientation, setOrientation] = useState('white');
+  const [mode, setMode] = useState('club');
   const [category, setCategory] = useState('');
   const [error, setError] = useState('');
 
   const handleSave = () => {
-    const result = addOpening({ name, fen, orientation, category });
+    const result = addOpening({ name, fen, orientation, mode, category });
     if (!result.ok) {
       setError(result.error);
       return;
@@ -43,12 +47,12 @@ function AddFlashcardModal({ onClose, onSaved }) {
   };
 
   return createPortal(
-    <div className="flashcard-modal" role="dialog" aria-modal="true" aria-labelledby="flashcard-modal-title">
-      <div className="flashcard-modal__backdrop" onClick={onClose} />
-      <div className="flashcard-modal__panel">
-        <h2 id="flashcard-modal-title" className="flashcard-modal__title">Add Practice Flashcard</h2>
+    <div className="capture-modal campaign-bronze" role="dialog" aria-modal="true" aria-labelledby="flashcard-modal-title">
+      <div className="capture-modal__backdrop" onClick={onClose} />
+      <div className="capture-modal__panel">
+        <h2 id="flashcard-modal-title" className="capture-modal__title">Add Practice Flashcard</h2>
 
-        <label className="flashcard-modal__field">
+        <label className="capture-modal__field">
           <span>Name</span>
           <input
             type="text"
@@ -59,7 +63,7 @@ function AddFlashcardModal({ onClose, onSaved }) {
           />
         </label>
 
-        <label className="flashcard-modal__field">
+        <label className="capture-modal__field">
           <span>FEN</span>
           <input
             type="text"
@@ -69,7 +73,7 @@ function AddFlashcardModal({ onClose, onSaved }) {
           />
         </label>
 
-        <label className="flashcard-modal__field">
+        <label className="capture-modal__field">
           <span>Category</span>
           <input
             type="text"
@@ -79,9 +83,9 @@ function AddFlashcardModal({ onClose, onSaved }) {
           />
         </label>
 
-        <div className="flashcard-modal__field">
+        <div className="capture-modal__field">
           <span>Play as</span>
-          <div className="flashcard-modal__orientation">
+          <div className="capture-modal__radio-row">
             <label>
               <input
                 type="radio"
@@ -105,9 +109,35 @@ function AddFlashcardModal({ onClose, onSaved }) {
           </div>
         </div>
 
-        {error && <div className="flashcard-modal__error">{error}</div>}
+        <div className="capture-modal__field">
+          <span>Evaluate against</span>
+          <div className="capture-modal__radio-row">
+            <label>
+              <input
+                type="radio"
+                name="flashcard-mode"
+                value="club"
+                checked={mode === 'club'}
+                onChange={() => setMode('club')}
+              />
+              Club
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="flashcard-mode"
+                value="master"
+                checked={mode === 'master'}
+                onChange={() => setMode('master')}
+              />
+              Master
+            </label>
+          </div>
+        </div>
 
-        <div className="flashcard-modal__actions">
+        {error && <div className="capture-modal__error">{error}</div>}
+
+        <div className="capture-modal__actions">
           <Button variant="bronze" size="md" onClick={handleSave}>Save Flashcard</Button>
           <Button variant="ghost" size="md" onClick={onClose}>Cancel</Button>
         </div>
@@ -119,11 +149,16 @@ function AddFlashcardModal({ onClose, onSaved }) {
 
 export function PracticePickerScreen({ app }) {
   const [openings, setOpenings] = useState(() => getEffectiveOpenings());
+  const [userOpeningsCount, setUserOpeningsCount] = useState(() => getUserOpeningsCount());
   const [showAddModal, setShowAddModal] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const fileInputRef = useRef(null);
+  const atCap = userOpeningsCount >= MAX_OPENINGS;
 
-  const refresh = () => setOpenings(getEffectiveOpenings());
+  const refresh = () => {
+    setOpenings(getEffectiveOpenings());
+    setUserOpeningsCount(getUserOpeningsCount());
+  };
 
   // Was grouped by opening.category (e.g. "d4 Openings (White)", "e4
   // Defenses (Black)") which fragmented the list into many small headed
@@ -188,6 +223,11 @@ export function PracticePickerScreen({ app }) {
                   onClick={() => app.startPracticeOpening(opening)}
                 >
                   <span className="practice-picker__row-name">{opening.name}</span>
+                  {opening.mode && (
+                    <span className={`practice-picker__row-badge practice-picker__row-badge--${opening.mode}`}>
+                      {opening.mode === 'master' ? 'Master' : 'Club'}
+                    </span>
+                  )}
                 </button>
                 <button
                   className="practice-picker__row-remove"
@@ -204,8 +244,8 @@ export function PracticePickerScreen({ app }) {
       ))}
 
       <div className="practice-picker__toolbar">
-        <Button variant="bronze" size="sm" onClick={() => setShowAddModal(true)}>+ Add Flashcard</Button>
-        <Button variant="bronze" size="sm" onClick={handleUploadClick}>Upload CSV</Button>
+        <Button variant="bronze" size="sm" disabled={atCap} onClick={() => setShowAddModal(true)}>+ Add Flashcard</Button>
+        <Button variant="bronze" size="sm" disabled={atCap} onClick={handleUploadClick}>Upload CSV</Button>
         <Button variant="bronze" size="sm" onClick={() => downloadCsv()}>Download CSV</Button>
         <input
           ref={fileInputRef}
@@ -214,6 +254,10 @@ export function PracticePickerScreen({ app }) {
           onChange={handleFileChange}
           style={{ display: 'none' }}
         />
+      </div>
+      <div className="practice-picker__cap-note">
+        {userOpeningsCount}/{MAX_OPENINGS} practice openings used
+        {atCap && ' — remove one to add another'}
       </div>
       {statusMessage && <div className="practice-picker__status">{statusMessage}</div>}
 

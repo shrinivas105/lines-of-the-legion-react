@@ -7,11 +7,56 @@
 // All underlying data comes from app.analysisBoard (AnalysisBoard class) —
 // no analysis logic is reimplemented here, only painted as JSX/SVG.
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Panel } from './Panel';
 import { Button } from './Button';
 import { IconCornu, IconCrossedGladius, IconPlayedMark } from './RomanIcons';
 import { legionVariant } from '../utils/legionVariant';
+import './CaptureModal.css';
 import './AnalysisScreen.css';
+
+// Shown when "Add to Practice" is clicked — FEN, orientation, and mode are
+// all captured silently from app state (see
+// ChessTheoryApp.addAnalysisPositionToPractice), so the only thing this
+// asks for is a name, pre-filled with the same "Move N (side): SAN" label
+// already shown above the comparison table, editable or usable as-is.
+function CapturePositionModal({ defaultName, variant, onClose, onSave }) {
+  const [name, setName] = useState(defaultName);
+  const [error, setError] = useState('');
+
+  const handleSave = () => {
+    const result = onSave(name);
+    if (!result.ok) {
+      setError(result.error);
+      return;
+    }
+  };
+
+  return createPortal(
+    <div className={`capture-modal campaign-${variant}`} role="dialog" aria-modal="true" aria-labelledby="capture-modal-title">
+      <div className="capture-modal__backdrop" onClick={onClose} />
+      <div className="capture-modal__panel">
+        <h2 id="capture-modal-title" className="capture-modal__title">Add to Practice</h2>
+        <label className="capture-modal__field">
+          <span>Name</span>
+          <input
+            type="text"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            autoFocus
+            onFocus={e => e.target.select()}
+          />
+        </label>
+        {error && <div className="capture-modal__error">{error}</div>}
+        <div className="capture-modal__actions">
+          <Button variant={variant} size="md" onClick={handleSave}>Save</Button>
+          <Button variant="ghost" size="md" onClick={onClose}>Cancel</Button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
 
 function squareToCoords(square, isFlipped, squareSize) {
   const file = square.charCodeAt(0) - 97;
@@ -225,8 +270,14 @@ function ComparisonTable({ app }) {
 
 export function AnalysisScreen({ app }) {
   const [boardSize, setBoardSize] = useState(0);
+  const [showCaptureModal, setShowCaptureModal] = useState(false);
+  const [captureStatus, setCaptureStatus] = useState('');
   const ab = app.analysisBoard;
   const campaignVariant = legionVariant(app);
+  // The button only makes sense after a real Master/Club battle — practice
+  // sessions already come from the practice opening list, so analyzing one
+  // has nothing new to capture.
+  const canCaptureToPractice = app.mode !== 'practice';
 
   if (app.analysisLoading) {
     return (
@@ -272,7 +323,35 @@ export function AnalysisScreen({ app }) {
       <div className="analysis-screen__actions">
         <Button variant={campaignVariant} size="sm" onClick={() => app.analysisBoard.exitAnalysis()}>Exit</Button>
         <Button variant={campaignVariant} size="sm" onClick={() => app.downloadPGN()}>Download PGN</Button>
+        {canCaptureToPractice && (
+          <Button
+            variant={campaignVariant}
+            size="sm"
+            disabled={ab.currentMoveIndex < 0}
+            onClick={() => setShowCaptureModal(true)}
+          >
+            Add to Practice
+          </Button>
+        )}
       </div>
+      {captureStatus && <div className="analysis-screen__capture-status">{captureStatus}</div>}
+
+      {showCaptureModal && (
+        <CapturePositionModal
+          defaultName={ab.positionText}
+          variant={campaignVariant}
+          onClose={() => setShowCaptureModal(false)}
+          onSave={(name) => {
+            const result = app.addAnalysisPositionToPractice(name);
+            if (result.ok) {
+              setShowCaptureModal(false);
+              setCaptureStatus(`Added "${name}" to your practice list.`);
+              setTimeout(() => setCaptureStatus(''), 4000);
+            }
+            return result;
+          }}
+        />
+      )}
     </div>
   );
 }

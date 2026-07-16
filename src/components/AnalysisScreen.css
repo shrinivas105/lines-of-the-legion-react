@@ -257,6 +257,13 @@
   padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px));
 }
 
+.analysis-screen__capture-status {
+  font-size: 0.7rem;
+  color: var(--marble-dim);
+  text-align: center;
+  margin-top: -4px;
+}
+
 /* ── Loading state ── */
 .analysis-loading {
   display: flex;
