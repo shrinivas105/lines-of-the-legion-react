@@ -1,0 +1,110 @@
+.rank-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  border-radius: 50%;
+  /* metallic face: a tight highlight near the top-left, falling off to
+     the badge color, with a darker rim — reads as struck metal rather
+     than a flat-filled circle */
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255,255,255,0.35), transparent 42%),
+    radial-gradient(circle at 65% 75%, rgba(0,0,0,0.35), transparent 55%),
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--badge-color, var(--bronze)) 55%, var(--umber)), var(--umber) 88%);
+  border: 1.5px solid var(--badge-color, var(--bronze));
+  color: var(--badge-color, var(--bronze));
+  box-shadow:
+    0 0 0 3px rgba(15,13,10,0.6),
+    0 0 0 4px rgba(216,182,107,0.12),
+    0 2px 6px rgba(0,0,0,0.45),
+    0 1px 0 rgba(255,255,255,0.12) inset;
+  font-family: var(--font-display);
+  flex-shrink: 0;
+  transition: transform var(--duration-base) var(--ease-standard),
+              box-shadow var(--duration-base) var(--ease-standard);
+}
+
+.rank-badge:hover {
+  transform: scale(1.03);
+}
+
+/* engraved ring: a thin inset circle just inside the rim, like a medal's
+   struck border groove */
+.rank-badge__ring {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.3);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset;
+  pointer-events: none;
+}
+
+.rank-badge--sm {
+  width: 22px;
+  height: 22px;
+  font-size: 0.65rem;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255,255,255,0.4), transparent 48%),
+    radial-gradient(circle at 65% 75%, rgba(0,0,0,0.3), transparent 60%),
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--badge-color, var(--bronze)) 75%, var(--umber)), var(--umber) 92%);
+}
+.rank-badge--md { width: 40px; height: 40px; font-size: 0.95rem; }
+.rank-badge--lg { width: 56px; height: 56px; font-size: 1.4rem; }
+
+.rank-badge--active {
+  box-shadow:
+    0 0 0 3px rgba(15,13,10,0.6),
+    0 0 0 4px rgba(216,182,107,0.18),
+    0 0 16px var(--bronze-glow),
+    0 2px 6px rgba(0,0,0,0.45),
+    0 1px 0 rgba(255,255,255,0.14) inset;
+  transform: scale(1.06);
+}
+
+.rank-badge__icon {
+  position: relative;
+  line-height: 1;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
+}
+
+.rank-badge__icon-svg {
+  position: relative;
+  width: 1.3em;
+  height: 1.3em;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
+}
+
+/* Portrait badges: the source artwork already is an engraved bronze coin,
+   so the synthetic metallic gradient/highlight backdrop is suppressed here
+   (it would double up and look muddy against real photographic shading).
+   Only the outer contact-shadow ring stays, since that reads as "medal
+   resting on the page" rather than coin texture. */
+.rank-badge--portrait {
+  background: var(--umber);
+}
+.rank-badge--portrait .rank-badge__ring {
+  display: none;
+}
+
+.rank-badge__portrait {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* promotion pulse — a single ~1s gold flare, opt-in via the `promoted`
+   prop, never looping. Respects reduced-motion globally (see tokens.css). */
+.rank-badge--promoted {
+  animation: rank-badge-promote 1s var(--ease-standard);
+}
+
+@keyframes rank-badge-promote {
+  0%   { box-shadow: 0 0 0 3px rgba(15,13,10,0.6), 0 0 0 4px rgba(216,182,107,0.18), 0 0 0 var(--gold-glow), 0 2px 6px rgba(0,0,0,0.45); }
+  35%  { box-shadow: 0 0 0 3px rgba(15,13,10,0.6), 0 0 0 8px rgba(216,182,107,0.5), 0 0 36px var(--gold-glow), 0 2px 6px rgba(0,0,0,0.45); transform: scale(1.12); }
+  100% { box-shadow: 0 0 0 3px rgba(15,13,10,0.6), 0 0 0 4px rgba(216,182,107,0.18), 0 0 16px var(--bronze-glow), 0 2px 6px rgba(0,0,0,0.45); transform: scale(1); }
+}

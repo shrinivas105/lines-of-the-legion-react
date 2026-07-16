@@ -1,11 +1,10 @@
 .end-summary {
   width: 100%;
-  max-width: 520px;
-  margin: 0 auto;
   text-align: center;
   background: rgba(20, 10, 5, 0.98);
   padding: 12px 14px;
   border-radius: 10px;
+  border: 2px solid var(--oxblood);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
   font-size: 0.8rem;
   line-height: 1.45;
@@ -260,76 +259,5 @@
     width: 100%;
     box-sizing: border-box;
     font-size: 0.62rem;
-  }
-}
-
-@media (min-width: 900px) {
-  .end-summary {
-    font-size: 0.92rem;
-    padding: 14px 18px 16px;
-  }
-
-  .end-summary__rank-change {
-    font-size: 0.78rem;
-    padding: 8px 10px;
-    margin-bottom: 10px;
-  }
-
-  .end-summary__promo-message {
-    font-size: 0.95rem;
-  }
-
-  .end-summary__heading {
-    font-size: 0.95rem;
-  }
-
-  .end-summary__stats {
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  .end-summary__stat {
-    padding: 8px;
-    font-size: 0.72rem;
-  }
-
-  .end-summary__stat strong {
-    font-size: 0.95rem;
-  }
-
-  .end-summary__quote {
-    font-size: 1rem;
-    margin-bottom: 8px;
-  }
-
-  .end-summary__sub {
-    font-size: 0.72rem;
-    margin-bottom: 10px;
-  }
-
-  .end-summary__ladder-step {
-    font-size: 0.82rem;
-    padding: 5px 8px;
-  }
-
-  .end-summary__history-title {
-    font-size: 0.82rem;
-  }
-
-  .end-summary__history-item {
-    font-size: 0.78rem;
-  }
-
-  .end-summary__buttons .btn {
-    font-size: 0.88rem;
-  }
-
-  .end-summary__practice-note {
-    font-size: 0.7rem;
-  }
-
-  .end-summary__donate-btn {
-    font-size: 0.82rem;
-    padding: 10px 16px;
   }
 }

@@ -8,7 +8,8 @@
 
 .menu-screen__wrap {
   position: relative;
-  padding: 18px clamp(18px, 3vw, 36px) 24px;
+  padding: 28px clamp(20px, 3vw, 48px) 32px;
+  border: 2px solid var(--oxblood);
   border-radius: 12px;
   background: rgba(20, 10, 5, 0.74);
   box-shadow: var(--elev-lg);
@@ -16,18 +17,23 @@
   -webkit-backdrop-filter: blur(0.5px);
 }
 
-.menu-title-image {
-  display: block;
-  width: min(100%, 760px);
-  height: auto;
-  margin: 0 auto 0.75rem;
-  object-fit: contain;
-  object-position: center;
-  filter: drop-shadow(0 0 12px rgba(216, 182, 107, 0.35));
+.menu-title {
+  width: 100%;
+  margin-bottom: var(--space-3);
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.6rem, 3.6vw, 2.7rem);
+  letter-spacing: 4px;
+  color: #f7e7a8;
+  text-shadow:
+    0 0 12px rgba(216, 182, 107, 0.65),
+    0 0 30px rgba(216, 182, 107, 0.4),
+    0 0 54px rgba(216, 182, 107, 0.18),
+    0 4px 10px rgba(0, 0, 0, 0.55);
 }
 
 .menu-subtitle {
-  margin-bottom: 0.9rem;
+  margin-bottom: var(--space-3);
   text-align: center;
   font-family: 'Marcellus', 'Cinzel', serif;
   font-size: clamp(0.72rem, 0.96vw, 0.84rem);
@@ -210,35 +216,6 @@
 
 .battle-rank {
   font-weight: 700;
-}
-
-@media (min-width: 900px) {
-  .game-description {
-    font-size: 0.9rem;
-    padding: 14px 24px;
-    line-height: 1.85;
-  }
-
-  .game-description p {
-    margin-bottom: 14px;
-  }
-
-  .read-more-toggle__text {
-    font-size: 0.75rem;
-  }
-
-  .rules-link {
-    font-size: 0.65rem;
-  }
-
-  .game-description .rules-content {
-    font-size: 0.72rem;
-    line-height: 1.7;
-  }
-
-  .rules-content h4 {
-    font-size: 0.92rem;
-  }
 }
 
 .rank-legend-icon {
