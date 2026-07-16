@@ -23,7 +23,7 @@
 
 .game-screen__board-panel,
 .game-screen__summary-panel {
-  flex: 1 1 520px;
+  flex: 1 1 auto;
   min-width: 0;
   width: 100%;
 }

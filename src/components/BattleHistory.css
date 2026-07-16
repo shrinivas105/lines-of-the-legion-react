@@ -157,10 +157,19 @@
   line-height: 1.4;
 }
 
+/* Boxed like the demotion callout on the result screen
+   (.end-summary__rank-change--demo) but in amber/orange, since this is a
+   heads-up ("you're at risk") rather than a rank change that already
+   happened. */
 .battle-history__warning {
-  margin-top: 6px;
+  margin-top: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(230, 126, 34, 0.95), rgba(180, 83, 9, 0.95));
+  border: 1px solid #e67e22;
+  color: #fff;
   font-size: 0.66rem;
-  color: var(--oxblood-text);
+  font-weight: 600;
   line-height: 1.4;
 }
 
@@ -199,5 +208,6 @@
 
   .battle-history__warning {
     font-size: 0.6rem;
+    padding: 5px 7px;
   }
 }

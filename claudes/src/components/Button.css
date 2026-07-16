@@ -25,24 +25,37 @@
 
 .btn--primary,
 .btn--secondary {
-  background: var(--gold);
+  background: linear-gradient(160deg, #f3dfa0 0%, var(--gold) 45%, #a9812f 100%);
   color: #140b04;
-  border-color: var(--oxblood);
-  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  border-color: #8a6423;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -2px 3px rgba(0,0,0,0.25);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+}
+.btn--primary:hover:not(:disabled),
+.btn--secondary:hover:not(:disabled) {
+  filter: brightness(1.08);
 }
 
 .btn--silver {
-  background: var(--silver);
-  color: #111111;
-  border-color: var(--oxblood);
-  text-shadow: 0 1px 0 rgba(255,255,255,0.25);
+  background: linear-gradient(160deg, #f2f4f6 0%, var(--silver) 45%, #8f979e 100%);
+  color: #14181b;
+  border-color: #6c747b;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -2px 3px rgba(0,0,0,0.2);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+}
+.btn--silver:hover:not(:disabled) {
+  filter: brightness(1.08);
 }
 
 .btn--bronze {
-  background: var(--bronze);
+  background: linear-gradient(160deg, #d9a468 0%, var(--bronze) 45%, #513c20 100%);
   color: #140b04;
-  border-color: var(--oxblood);
-  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  border-color: #3c2c15;
+  box-shadow: inset 0 1px 0 rgba(255,224,170,0.5), inset 0 -2px 3px rgba(0,0,0,0.3);
+  text-shadow: 0 1px 0 rgba(255,224,170,0.3);
+}
+.btn--bronze:hover:not(:disabled) {
+  filter: brightness(1.1);
 }
 
 .btn--ghost {
