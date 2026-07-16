@@ -9,7 +9,7 @@ import { CampaignCard } from './CampaignCard';
 import masterCardArt from '../assets/campaign-cards/master-card.webp';
 import clubCardArt from '../assets/campaign-cards/club-card.webp';
 import practiceCardArt from '../assets/campaign-cards/practice-card.webp';
-import titleImage from '../assets/title.png';
+import titleImage from '../assets/title1.png';
 import { IconReset, IconScroll, IconAmphora, IconOilLamp } from './RomanIcons';
 import { BATTLE_RANK_ICONS, LEGION_RANK_ICONS } from './rankColors';
 import './MenuScreen.css';
