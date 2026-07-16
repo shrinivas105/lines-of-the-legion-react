@@ -17,11 +17,11 @@
 }
 
 .menu-title-image {
-  display: inline-block;
+  display: block;
   width: auto;
-  max-width: 100%;
+  max-width: min(100%, 620px);
   height: auto;
-  max-height: clamp(120px, 18vw, 220px);
+  max-height: clamp(140px, 20vw, 240px);
   margin: 0 auto var(--space-3);
   object-fit: contain;
   filter: drop-shadow(0 0 12px rgba(216, 182, 107, 0.35));
