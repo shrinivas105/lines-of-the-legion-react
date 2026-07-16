@@ -27,20 +27,21 @@
 }
 
 .color-choice {
-  width: 100%;
-  max-width: none;
+  max-width: 980px;
   margin: 0 auto;
   padding: 4px 0 var(--space-6);
 }
 
 @media (min-width: 900px) {
   .color-choice {
-    padding: 8px var(--space-5) var(--space-7);
+    padding: 8px 0 var(--space-7);
   }
 }
 
 @media (max-width: 768px) {
   .color-choice {
+    width: 100%;
+    max-width: none;
     padding: 0;
   }
 
