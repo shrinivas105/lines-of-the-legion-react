@@ -652,11 +652,18 @@
 /* ── Narrow viewports ────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .color-choice {
-    padding: 0 var(--space-2) var(--space-4);
+    padding: 0;
   }
 
   .color-choice__panel {
     padding: 0 var(--space-2) var(--space-3);
+  }
+
+  .color-choice__rank-section,
+  .color-choice__progression,
+  .color-choice__battle-history {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .color-choice__panel-title {
