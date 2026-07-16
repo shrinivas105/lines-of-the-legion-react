@@ -4,21 +4,46 @@
   padding: 8px 6px 12px;
 }
 
-.game-screen__board-area,
 .game-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
   width: 100%;
-  max-width: 560px;
+  max-width: min(980px, 100%);
+  margin: 0 auto;
+}
+
+.game-screen__workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.game-screen__board-panel,
+.game-screen__summary-panel {
+  flex: 1 1 520px;
+  min-width: 0;
+  width: 100%;
+}
+
+.game-screen__summary-panel {
+  display: flex;
+  justify-content: center;
+  max-width: 520px;
+}
+
+.game-screen__summary-panel {
+  display: flex;
+  justify-content: center;
 }
 
 .game-screen__info-line,
 .info-line {
   margin: 1px 0;
   font-family: 'Inter', 'Segoe UI', sans-serif;
-  font-size: 0.45rem;
+  font-size: clamp(0.45rem, 0.75vw, 0.82rem);
   font-weight: 600;
   color: #ffffff;
   letter-spacing: 0.04em;
@@ -93,7 +118,66 @@
 
 .game-screen__actions .btn {
   padding: 7px 13px;
-  font-size: 0.78rem;
+  font-size: clamp(0.78rem, 0.9vw, 0.95rem);
+}
+
+@media (min-width: 900px) {
+  .game-container {
+    max-width: min(1180px, 100%);
+  }
+
+  .game-screen__workspace {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .game-screen__board-panel,
+  .game-screen__summary-panel {
+    flex: 0 0 520px;
+    max-width: 520px;
+    min-width: 420px;
+  }
+
+  .game-screen__summary-panel {
+    align-self: flex-start;
+  }
+
+  .game-screen__actions {
+    padding: 10px 8px calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .game-screen__actions .btn {
+    padding: 8px 16px;
+    font-size: 1rem;
+  }
+
+  .game-screen__info-line,
+  .info-line {
+    font-size: 0.82rem;
+  }
+
+  .game-screen__theory-message,
+  .theory-message {
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .game-screen__workspace {
+    flex-direction: column;
+  }
+
+  .game-screen__board-panel,
+  .game-screen__summary-panel {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .game-screen__summary-panel {
+    justify-content: center;
+  }
 }
 
 .game-screen__error {

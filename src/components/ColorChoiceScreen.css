@@ -27,9 +27,15 @@
 }
 
 .color-choice {
-  max-width: 720px;
+  max-width: 980px;
   margin: 0 auto;
   padding: 4px var(--space-4) var(--space-6);
+}
+
+@media (min-width: 900px) {
+  .color-choice {
+    padding: 8px var(--space-5) var(--space-7);
+  }
 }
 
 .color-choice__wrap {

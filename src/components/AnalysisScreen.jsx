@@ -66,18 +66,18 @@ function squareToCoords(square, isFlipped, squareSize) {
   return { x: (displayFile + 0.5) * squareSize, y: (displayRank + 0.5) * squareSize };
 }
 
-function arrowGeometry(from, to) {
+function arrowGeometry(from, to, scale = 1) {
   const dx = to.x - from.x;
   const dy = to.y - from.y;
   const angle = Math.atan2(dy, dx);
   const length = Math.sqrt(dx * dx + dy * dy);
-  const shortenBy = 20;
+  const shortenBy = 20 * scale;
   const adjustedLength = length - shortenBy;
   const startX = from.x + Math.cos(angle) * (shortenBy / 2);
   const startY = from.y + Math.sin(angle) * (shortenBy / 2);
   const endX = startX + Math.cos(angle) * adjustedLength;
   const endY = startY + Math.sin(angle) * adjustedLength;
-  const headLength = 15;
+  const headLength = 15 * scale;
   const headAngle = Math.PI / 6;
   const head1X = endX - headLength * Math.cos(angle - headAngle);
   const head1Y = endY - headLength * Math.sin(angle - headAngle);
@@ -87,24 +87,51 @@ function arrowGeometry(from, to) {
 }
 
 function ArrowSvg({ arrows, isFlipped, boardSize }) {
+  const referenceBoardSize = 520;
+  const scale = Math.min(1, referenceBoardSize / boardSize);
   const squareSize = boardSize / 8;
+
   return (
     <svg className="analysis-arrows" viewBox={`0 0 ${boardSize} ${boardSize}`} shapeRendering="geometricPrecision">
       {arrows.map((arrow, i) => {
         const from = squareToCoords(arrow.from, isFlipped, squareSize);
         const to = squareToCoords(arrow.to, isFlipped, squareSize);
-        const g = arrowGeometry(from, to);
+        const g = arrowGeometry(from, to, scale);
+        const lineWidth = Math.max(1.5, arrow.width * scale);
+        const outlineWidth = Math.max(3.5, lineWidth + 2);
+        const headStrokeWidth = Math.max(1.5, 2.5 * scale);
 
         return (
           <g key={i}>
             {/* dark halo underneath for crisp contrast on any square color */}
-            <line x1={g.startX} y1={g.startY} x2={g.endX} y2={g.endY}
-              stroke="#000" strokeWidth={arrow.width + 3} strokeLinecap="round" opacity={0.35} />
-            <line x1={g.startX} y1={g.startY} x2={g.endX} y2={g.endY}
-              stroke={arrow.color} strokeWidth={arrow.width} strokeLinecap="round"
-              strokeDasharray={arrow.dashed ? '8,4' : undefined} />
-            <polygon points={`${g.endX},${g.endY} ${g.head1X},${g.head1Y} ${g.head2X},${g.head2Y}`}
-              fill={arrow.color} stroke="#000" strokeWidth={2.5} strokeOpacity={0.35} strokeLinejoin="round" />
+            <line
+              x1={g.startX}
+              y1={g.startY}
+              x2={g.endX}
+              y2={g.endY}
+              stroke="#000"
+              strokeWidth={outlineWidth}
+              strokeLinecap="round"
+              opacity={0.35}
+            />
+            <line
+              x1={g.startX}
+              y1={g.startY}
+              x2={g.endX}
+              y2={g.endY}
+              stroke={arrow.color}
+              strokeWidth={lineWidth}
+              strokeLinecap="round"
+              strokeDasharray={arrow.dashed ? '8,4' : undefined}
+            />
+            <polygon
+              points={`${g.endX},${g.endY} ${g.head1X},${g.head1Y} ${g.head2X},${g.head2Y}`}
+              fill={arrow.color}
+              stroke="#000"
+              strokeWidth={headStrokeWidth}
+              strokeOpacity={0.35}
+              strokeLinejoin="round"
+            />
           </g>
         );
       })}

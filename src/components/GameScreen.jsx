@@ -38,46 +38,51 @@ export function GameScreen({ app }) {
 
   return (
     <div className={`game-container page-transition campaign-${campaignVariant}`}>
-      <div className="game-screen__board-area">
-        <div className="war-table">
-          <div className="war-table__corner war-table__corner--tl" aria-hidden="true" />
-          <div className="war-table__corner war-table__corner--tr" aria-hidden="true" />
-          <div className="war-table__corner war-table__corner--bl" aria-hidden="true" />
-          <div className="war-table__corner war-table__corner--br" aria-hidden="true" />
-          <ChessBoard app={app} />
-        </div>
-        {!app.gameEnded && (
-          <div className="game-screen__info-line">{gameCountText}</div>
-        )}
+      <div className="game-screen__workspace">
+        <div className="game-screen__board-panel">
+          <div className="war-table">
+            <div className="war-table__corner war-table__corner--tl" aria-hidden="true" />
+            <div className="war-table__corner war-table__corner--tr" aria-hidden="true" />
+            <div className="war-table__corner war-table__corner--bl" aria-hidden="true" />
+            <div className="war-table__corner war-table__corner--br" aria-hidden="true" />
+            <ChessBoard app={app} />
+          </div>
 
-        {app.theoryMessageVisible && app.theoryMessage && (
-          <Panel className="game-screen__theory-message">
-            <div dangerouslySetInnerHTML={{ __html: app.theoryMessage }} />
-          </Panel>
-        )}
+          {!app.gameEnded && (
+            <div className="game-screen__info-line">{gameCountText}</div>
+          )}
+
+          {app.theoryMessageVisible && app.theoryMessage && (
+            <Panel className="game-screen__theory-message">
+              <div dangerouslySetInnerHTML={{ __html: app.theoryMessage }} />
+            </Panel>
+          )}
+        </div>
 
         {app.gameEnded && app.endGameData && (
-          <EndGameSummary app={app} />
-        )}
-
-        {!app.gameEnded && (
-          <div className="game-screen__actions">
-            <Button variant={campaignVariant} size="sm" onClick={() => window.location.reload()}>
-              <IconReset className="game-screen__btn-icon" aria-hidden="true" /> New Battle
-            </Button>
-            <Button
-              variant={campaignVariant}
-              size="sm"
-              disabled={!hintEnabled}
-              onClick={() => app.getHints()}
-            >
-              {app.hintUsed
-                ? <><IconCircularLaurel className="game-screen__btn-icon" aria-hidden="true" /> Consulted</>
-                : <><IconVexillum className="game-screen__btn-icon" aria-hidden="true" /> Consult Commander</>}
-            </Button>
+          <div className="game-screen__summary-panel">
+            <EndGameSummary app={app} />
           </div>
         )}
       </div>
+
+      {!app.gameEnded && (
+        <div className="game-screen__actions">
+          <Button variant={campaignVariant} size="sm" onClick={() => window.location.reload()}>
+            <IconReset className="game-screen__btn-icon" aria-hidden="true" /> New Battle
+          </Button>
+          <Button
+            variant={campaignVariant}
+            size="sm"
+            disabled={!hintEnabled}
+            onClick={() => app.getHints()}
+          >
+            {app.hintUsed
+              ? <><IconCircularLaurel className="game-screen__btn-icon" aria-hidden="true" /> Consulted</>
+              : <><IconVexillum className="game-screen__btn-icon" aria-hidden="true" /> Consult Commander</>}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

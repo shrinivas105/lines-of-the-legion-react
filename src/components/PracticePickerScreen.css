@@ -1,12 +1,18 @@
 .practice-picker {
-  max-width: 680px;
+  max-width: 920px;
   margin: 0 auto;
-  padding: 8px 4px 16px;
+  padding: 10px 12px 20px;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
   width: 100%;
   box-sizing: border-box;
+}
+
+@media (min-width: 900px) {
+  .practice-picker {
+    padding: 14px 18px 26px;
+  }
 }
 
 .practice-picker__hero { text-align: center; }

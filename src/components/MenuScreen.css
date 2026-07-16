@@ -217,6 +217,35 @@
   font-weight: 700;
 }
 
+@media (min-width: 900px) {
+  .game-description {
+    font-size: 0.9rem;
+    padding: 14px 24px;
+    line-height: 1.85;
+  }
+
+  .game-description p {
+    margin-bottom: 14px;
+  }
+
+  .read-more-toggle__text {
+    font-size: 0.75rem;
+  }
+
+  .rules-link {
+    font-size: 0.65rem;
+  }
+
+  .game-description .rules-content {
+    font-size: 0.72rem;
+    line-height: 1.7;
+  }
+
+  .rules-content h4 {
+    font-size: 0.92rem;
+  }
+}
+
 .rank-legend-icon {
   width: 0.85em;
   height: 0.85em;

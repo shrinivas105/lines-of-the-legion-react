@@ -280,6 +280,12 @@ a:hover { color: #d4b27c; }
   .page-transition { animation: none; }
 }
 
+@media (min-width: 1200px) {
+  html {
+    font-size: 1.0625rem;
+  }
+}
+
 /* ── Campaign accent classes — see --legion-accent above. ── */
 .campaign-gold   { --legion-accent: var(--gold);   --legion-accent-dim: var(--gold-glow); }
 .campaign-silver { --legion-accent: var(--silver); --legion-accent-dim: var(--silver-glow); }

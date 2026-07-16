@@ -4,7 +4,7 @@
 // re-render), same stat fields, same rank-color map, same conditional button
 // set (PGN buttons hidden in practice mode), same Try Again behavior
 // (re-enters practice opening or starts a new battle).
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Panel } from './Panel';
 import { Button } from './Button';
 import { BATTLE_RANK_COLORS } from './rankColors';
@@ -32,6 +32,14 @@ export function EndGameSummary({ app }) {
   });
   const isPromotion = rankChangeType === 'promotion';
   const [showPromotionScreen, setShowPromotionScreen] = useState(false);
+  const summaryRef = useRef(null);
+
+  useEffect(() => {
+    if (summaryRef.current) {
+      const top = summaryRef.current.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: top - 16, behavior: 'smooth' });
+    }
+  }, []);
 
   const { battleRank, moveQuality, displayEval, isPractice, gamesToShow } = app.endGameData;
   const rankColor = RANK_COLORS[battleRank.title] || '#d4af37';
@@ -46,8 +54,9 @@ export function EndGameSummary({ app }) {
   };
 
   return (
-    <Panel className="end-summary">
-      {/* Promotion trigger: show simple message and Join ceremony button */}
+    <div ref={summaryRef} className="end-summary__scroll-anchor">
+      <Panel className="end-summary">
+        {/* Promotion trigger: show simple message and Join ceremony button */}
       {isPromotion ? (
         <div className="end-summary__rank-change end-summary__rank-change--promo">
           <div className="end-summary__promo-message">You have been promoted</div>
@@ -191,6 +200,7 @@ export function EndGameSummary({ app }) {
         );
       })()}
     </Panel>
+  </div>
   );
 }
 
