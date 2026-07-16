@@ -3,7 +3,7 @@ import './Button.css';
 
 export function Button({
   children,
-  variant = 'primary', // 'primary' | 'secondary' | 'silver' | 'ghost' | 'danger'
+  variant = 'primary', // 'primary' | 'secondary' | 'gold' | 'silver' | 'bronze' | 'ghost' | 'danger'
   size = 'md',          // 'sm' | 'md' | 'lg'
   disabled = false,
   className = '',
@@ -12,6 +12,7 @@ export function Button({
   const variantClass = {
     primary: 'btn--primary',
     secondary: 'btn--primary',
+    gold: 'btn--primary',
     silver: 'btn--silver',
     bronze: 'btn--bronze',
     ghost: 'btn--ghost',

@@ -1,5 +1,5 @@
 .analysis-screen {
-  max-width: 560px;
+  max-width: 980px;
   margin: 0 auto;
   padding: 8px 4px 16px;
   display: flex;
@@ -8,6 +8,10 @@
   gap: var(--space-2);
   width: 100%;
   box-sizing: border-box;
+}
+
+.analysis-screen > * {
+  min-width: 0;
 }
 
 .analysis-screen__title {
@@ -44,7 +48,7 @@
 
 .analysis-board-wrap {
   position: relative;
-  width: min(94vw, 520px);
+  width: min(94vw, 760px);
 }
 
 .analysis-board-grid {
@@ -78,7 +82,6 @@
   box-sizing: border-box;
   padding: var(--space-3) var(--space-4);
   background: rgba(20, 10, 5, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
@@ -93,7 +96,35 @@
      shifts between moves — no separate min-height reservation needed. */
   padding: var(--space-2) 6px;
 }
+@media (min-width: 1200px) {
+  .analysis-screen {
+    max-width: 1180px;
+    padding: 12px 16px 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--space-4);
+  }
 
+  .analysis-board-wrap,
+  .analysis-screen__compare-panel {
+    flex: 0 0 520px;
+    width: 100%;
+    max-width: 520px;
+    min-width: 440px;
+  }
+
+  .analysis-screen__compare-panel {
+    align-self: flex-start;
+  }
+
+  .analysis-screen__title,
+  .analysis-screen__nav,
+  .analysis-screen__legend {
+    width: 100%;
+  }
+}
 .analysis-compare__placeholder {
   display: flex;
   align-items: center;
@@ -129,7 +160,7 @@
   table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.7rem;
-  border: 2px solid var(--oxblood);
+  border: 1px solid var(--legion-accent);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -159,6 +190,47 @@
 .analysis-compare__table tr.current { background: var(--bronze-glow); font-weight: bold; }
 .analysis-compare__table .draw { color: var(--gold); }
 .analysis-compare__table .games { color: var(--marble-dim); font-size: 0.6rem; }
+
+@media (min-width: 900px) {
+  .analysis-compare__table {
+    font-size: 0.88rem;
+  }
+
+  .analysis-compare__table th,
+  .analysis-compare__table td {
+    padding: 7px 6px;
+  }
+
+  .analysis-compare__head {
+    font-size: 0.86rem;
+  }
+
+  .analysis-compare__head-meta {
+    font-size: 0.78rem;
+  }
+
+  .analysis-compare__placeholder {
+    font-size: 0.92rem;
+    min-height: 210px;
+  }
+
+  .analysis-compare__move-text {
+    font-size: 0.9rem;
+  }
+
+  .analysis-movelist__item {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+  }
+
+  .analysis-screen__legend-row {
+    font-size: 0.75rem;
+  }
+
+  .analysis-screen__legend-label {
+    font-size: 0.7rem;
+  }
+}
 
 /* Rows are padded out to a constant 4 (see ComparisonTable JSX) so the
    panel is always the same height whether a position has 1 or 4 rows of
@@ -256,6 +328,13 @@
   gap: var(--space-3);
   justify-content: center;
   padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px));
+}
+
+.analysis-screen__capture-status {
+  font-size: 0.7rem;
+  color: var(--marble-dim);
+  text-align: center;
+  margin-top: -4px;
 }
 
 /* ── Loading state ── */

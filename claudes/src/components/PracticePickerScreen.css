@@ -1,12 +1,18 @@
 .practice-picker {
-  max-width: 680px;
+  max-width: 920px;
   margin: 0 auto;
-  padding: 8px 4px 16px;
+  padding: 10px 12px 20px;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
   width: 100%;
   box-sizing: border-box;
+}
+
+@media (min-width: 900px) {
+  .practice-picker {
+    padding: 14px 18px 26px;
+  }
 }
 
 .practice-picker__hero { text-align: center; }
@@ -34,7 +40,6 @@
   flex-direction: column;
   gap: var(--space-3);
   align-items: flex-start;
-  border-color: var(--bronze-dim);
 }
 .practice-picker__notice p {
   margin: 0;
@@ -116,95 +121,37 @@
 }
 
 .practice-picker__row-name {
+  flex: 1 1 auto;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* ── Add Flashcard modal ──────────────────────────────────────────────
-   Portalled to document.body (see PromotionScreen.jsx for why): several
-   ancestors here use `animation: ... both`, which leaves a non-`none`
-   transform in place and would otherwise become the containing block for
-   a position:fixed modal, breaking full-screen presentation. */
-.flashcard-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 1200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.practice-picker__row-badge {
+  flex-shrink: 0;
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid;
 }
-.flashcard-modal__backdrop {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.5), rgba(0,0,0,0.75));
-  backdrop-filter: blur(2px);
-}
-.flashcard-modal__panel {
-  position: relative;
-  width: 92%;
-  max-width: 440px;
-  max-height: 90vh;
-  overflow: auto;
-  background: linear-gradient(180deg, #121012 0%, #1b1510 100%);
-  border: 1px solid var(--bronze-dim);
-  border-radius: 12px;
-  padding: 20px;
-  color: var(--marble);
-  box-shadow: 0 10px 50px rgba(0,0,0,0.6);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.flashcard-modal__title {
-  font-size: 1rem;
+.practice-picker__row-badge--master {
   color: var(--gold);
-  text-align: center;
-  margin: 0 0 4px;
+  border-color: var(--bronze-dim);
+  background: rgba(212, 175, 55, 0.12);
 }
-.flashcard-modal__field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 0.7rem;
+.practice-picker__row-badge--club {
+  color: var(--silver);
+  border-color: rgba(199, 204, 209, 0.35);
+  background: rgba(199, 204, 209, 0.1);
+}
+
+.practice-picker__cap-note {
+  font-size: 0.68rem;
   color: var(--marble-dim);
+  text-align: center;
+  margin-top: -4px;
 }
-.flashcard-modal__field input[type="text"] {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--bronze-dim);
-  border-radius: 6px;
-  padding: 8px 10px;
-  color: var(--marble);
-  font-size: 0.8rem;
-  font-family: var(--font-body);
-}
-.flashcard-modal__field input[type="text"]:focus {
-  outline: none;
-  border-color: var(--gold);
-}
-.flashcard-modal__orientation {
-  display: flex;
-  gap: 16px;
-  font-size: 0.8rem;
-  color: var(--marble);
-}
-.flashcard-modal__orientation label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
-.flashcard-modal__error {
-  font-size: 0.72rem;
-  color: var(--oxblood-text);
-  background: rgba(122, 31, 31, 0.12);
-  border: 1px solid var(--oxblood-dim);
-  border-radius: 6px;
-  padding: 6px 9px;
-}
-.flashcard-modal__actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 6px;
-}
+

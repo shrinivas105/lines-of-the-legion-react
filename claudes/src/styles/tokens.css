@@ -44,6 +44,16 @@
   --oxblood-text:   #d16a6a;
   --verdigris-text: #6fae9f;
 
+  /* ── Campaign accent: the border/frame color used throughout a screen
+     that belongs to a specific campaign — gold for Master, silver for
+     Club, bronze for Practice. Defaults to oxblood (the neutral panel
+     color) for screens with no campaign context yet, like the main menu.
+     Apply .campaign-gold / .campaign-silver / .campaign-bronze to a
+     screen's root element (see utils/legionVariant.js) to override this
+     for every Panel and frame border nested inside it. ── */
+  --legion-accent: var(--oxblood);
+  --legion-accent-dim: var(--oxblood-dim);
+
   /* ── Type: five-role system, each font doing one job rather than one
      pairing carrying everything. Cinzel remains the identity face — it's
      reserved for the logo, campaign names, and major headings so it stays
@@ -269,3 +279,14 @@ a:hover { color: #d4b27c; }
 @media (prefers-reduced-motion: reduce) {
   .page-transition { animation: none; }
 }
+
+@media (min-width: 1200px) {
+  html {
+    font-size: 1.0625rem;
+  }
+}
+
+/* ── Campaign accent classes — see --legion-accent above. ── */
+.campaign-gold   { --legion-accent: var(--gold);   --legion-accent-dim: var(--gold-glow); }
+.campaign-silver { --legion-accent: var(--silver); --legion-accent-dim: var(--silver-glow); }
+.campaign-bronze { --legion-accent: var(--bronze); --legion-accent-dim: var(--bronze-glow); }

@@ -9,7 +9,6 @@
 .menu-screen__wrap {
   position: relative;
   padding: 28px clamp(20px, 3vw, 48px) 32px;
-  border: 2px solid var(--oxblood);
   border-radius: 12px;
   background: rgba(20, 10, 5, 0.74);
   box-shadow: var(--elev-lg);
@@ -216,6 +215,35 @@
 
 .battle-rank {
   font-weight: 700;
+}
+
+@media (min-width: 900px) {
+  .game-description {
+    font-size: 0.9rem;
+    padding: 14px 24px;
+    line-height: 1.85;
+  }
+
+  .game-description p {
+    margin-bottom: 14px;
+  }
+
+  .read-more-toggle__text {
+    font-size: 0.75rem;
+  }
+
+  .rules-link {
+    font-size: 0.65rem;
+  }
+
+  .game-description .rules-content {
+    font-size: 0.72rem;
+    line-height: 1.7;
+  }
+
+  .rules-content h4 {
+    font-size: 0.92rem;
+  }
 }
 
 .rank-legend-icon {

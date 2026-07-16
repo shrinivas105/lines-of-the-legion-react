@@ -4,9 +4,8 @@
     linear-gradient(180deg, rgba(230,221,196,0.04), transparent 45%),
     radial-gradient(ellipse at 50% 0%, rgba(138,106,59,0.06), transparent 70%),
     var(--umber);
-  border: 1px solid var(--oxblood);
-  border-radius: var(--radius-lg);
   box-shadow: var(--elev-md);
+  border-radius: var(--radius-lg);
   padding: var(--space-5);
   transition: box-shadow var(--duration-base) var(--ease-standard),
               border-color var(--duration-base) var(--ease-standard),
@@ -31,7 +30,6 @@
 }
 .panel--interactive:hover {
   box-shadow: var(--elev-hover);
-  border-color: var(--bronze-dim);
   transform: translateY(-2px);
 }
 

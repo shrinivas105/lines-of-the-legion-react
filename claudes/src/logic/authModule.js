@@ -9,6 +9,7 @@ import {
   loadProgress,
   saveProgress,
 } from '../services/supabaseClient';
+import { syncPracticeOpeningsFromCloud } from '../services/practiceOpeningsStore';
 
 export class AuthModule {
   constructor(app) {
@@ -59,6 +60,7 @@ export class AuthModule {
         }
 
         await this.loadCloudProgress();
+        await syncPracticeOpeningsFromCloud();
       } else {
         console.log('ℹ️ No active session - using local storage');
       }
@@ -96,6 +98,7 @@ export class AuthModule {
         if (!wasLoggedIn) {
           console.log('✓ User signed in, loading cloud data...');
           await this.loadCloudProgress();
+          await syncPracticeOpeningsFromCloud();
           console.log('✓ Cloud data loaded, rendering app...');
           this.app.render();
         }

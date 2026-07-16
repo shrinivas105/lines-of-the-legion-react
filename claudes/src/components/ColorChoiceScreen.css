@@ -27,9 +27,34 @@
 }
 
 .color-choice {
-  max-width: 720px;
+  max-width: 980px;
   margin: 0 auto;
-  padding: 4px var(--space-4) var(--space-6);
+  padding: 4px 0 var(--space-6);
+}
+
+@media (min-width: 900px) {
+  .color-choice {
+    padding: 8px 0 var(--space-7);
+  }
+}
+
+@media (max-width: 768px) {
+  .color-choice {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+  }
+
+  .color-choice__panel {
+    padding: var(--space-3) var(--space-3) var(--space-5);
+  }
+
+  .color-choice__rank-section,
+  .color-choice__progression,
+  .color-choice__panel-actions {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .color-choice__wrap {
@@ -148,7 +173,7 @@
 .color-choice__rank-section {
   margin-bottom: 0;
   padding: var(--space-4) var(--space-5) var(--space-1);
-  border: 1px solid var(--oxblood);
+  border: 1px solid var(--legion-accent);
   border-radius: var(--radius-lg);
   background: rgba(8, 5, 3, 0.26);
   box-shadow: var(--elev-sm);
@@ -226,7 +251,7 @@
   margin-top: var(--space-3);
   margin-bottom: var(--space-3);
   padding: var(--space-4) var(--space-4) var(--space-3);
-  border: 1px solid var(--oxblood);
+  border: 1px solid var(--legion-accent);
   border-radius: var(--radius-lg);
   background: rgba(8, 5, 3, 0.26);
   box-shadow: var(--elev-sm);
@@ -375,7 +400,7 @@
 .color-choice__battle-history {
   margin-bottom: var(--space-4);
   padding: var(--space-3) var(--space-4) var(--space-2);
-  border: 1px solid var(--oxblood);
+  border: 1px solid var(--legion-accent);
   border-radius: var(--radius-lg);
   background: rgba(8, 5, 3, 0.26);
   box-shadow: var(--elev-sm);
@@ -417,7 +442,7 @@
   letter-spacing: 0.08em;
   gap: 8px;
   border-radius: 8px;
-  border: 2px solid var(--legion-accent);
+  border: 1px solid var(--legion-accent);
   background: linear-gradient(180deg, var(--legion-accent-strong) 0%, var(--legion-accent) 45%, var(--legion-secondary) 100%);
   color: #1a0f04;
   box-shadow:
@@ -471,7 +496,7 @@
   align-items: center;
   gap: var(--space-5);
   padding: var(--space-5);
-  border: 1px solid var(--oxblood);
+  border: 1px solid var(--legion-accent);
   border-radius: 12px;
   background: rgba(8, 5, 3, 0.26);
   box-shadow: var(--elev-lg);
@@ -496,7 +521,7 @@
   height: 168px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid var(--legion-accent);
+  border: 1.5px solid var(--legion-accent);
   box-shadow:
     0 4px 14px rgba(0, 0, 0, 0.6),
     0 0 26px var(--legion-glow),
@@ -614,7 +639,7 @@
   gap: var(--space-3);
   align-items: flex-start;
   padding: var(--space-4);
-  border: 1px solid var(--oxblood);
+  border: 1px solid var(--legion-accent);
   border-radius: var(--radius-lg);
   background: rgba(0, 0, 0, 0.2);
 }
@@ -629,11 +654,20 @@
 /* ── Narrow viewports ────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .color-choice {
-    padding: 0 var(--space-2) var(--space-4);
+    padding: 0;
   }
 
   .color-choice__panel {
+    width: calc(100% - 0px);
+    margin: 0;
     padding: 0 var(--space-2) var(--space-3);
+  }
+
+  .color-choice__rank-section,
+  .color-choice__progression,
+  .color-choice__battle-history {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .color-choice__panel-title {

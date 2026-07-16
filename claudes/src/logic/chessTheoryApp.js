@@ -19,6 +19,7 @@ import { PGNExporter } from './pgnExporter';
 import { RomanBattleEffects } from './romanBattleEffects';
 import { AuthModule } from './authModule';
 import { AnalysisBoard } from './analysisBoard';
+import { addOpening } from '../services/practiceOpeningsStore';
 import {
   SKIP_QUALITY_MOVES,
   PRACTICE_MODE,
@@ -266,7 +267,11 @@ export class ChessTheoryApp {
 
   startPracticeOpening(opening) {
     this.mode = 'practice';
-    this.aiSource = PRACTICE_MODE.source;
+    // opening.mode ('master' | 'club') records which explorer this specific
+    // position should be evaluated against — set once, at capture time (see
+    // services/practiceOpeningsStore.js) — rather than always using the
+    // Club/Lichess explorer regardless of where the line came from.
+    this.aiSource = opening.mode === 'master' ? 'master' : 'lichess';
     this.practiceOpening = opening;
     this.playerColor = opening.orientation === 'white' ? 'w' : 'b';
     this.practiceStartingPosition = true;
@@ -1038,6 +1043,23 @@ export class ChessTheoryApp {
     if (this.currentPGN) {
       PGNExporter.copyPGNToClipboard(this.currentPGN);
     }
+  }
+
+  // Called from the Analysis screen's "Add to Practice" button (post-Master
+  // or post-Club battles only — see AnalysisScreen.jsx). Captures whatever
+  // position is currently on the analysis board, tagged with the side the
+  // player played and which explorer (master/club) this battle used, so
+  // practice mode evaluates it the same way later. `name` comes from the
+  // small prompt shown at click time, since there's no reliable way to
+  // derive an opening name from an arbitrary mid-game position.
+  addAnalysisPositionToPractice(name) {
+    if (!this.analysisBoard || !this.analysisBoard.analysisGame) {
+      return { ok: false, error: 'Analysis board not available.' };
+    }
+    const fen = this.analysisBoard.analysisGame.fen();
+    const orientation = this.playerColor === 'w' ? 'white' : 'black';
+    const mode = this.aiSource === 'master' ? 'master' : 'club';
+    return addOpening({ name, fen, orientation, mode, source: 'captured' });
   }
 
   async showAnalysis() {

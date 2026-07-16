@@ -3,14 +3,37 @@
 // Ports the legacy PracticeOpeningsManager (practice-openings.js) behavior:
 // user-added/imported rows and deleted built-in rows both persist in
 // localStorage under the same keys, so nothing is lost switching between
-// the old and new app. CSV import/export use name/fen/orientation/category
-// columns (category is new here since the bundled list already has one).
+// the old and new app. CSV import/export use name/fen/orientation/mode/
+// category columns.
+//
+// CLOUD SYNC: when logged in (see logic/authModule.js), every user row also
+// syncs to the practice_openings Supabase table (see
+// supabase/migrations/20260716_practice_openings.sql). localStorage stays
+// the source of truth for synchronous reads — the UI never awaits a
+// network call just to render the list — and cloud writes happen
+// fire-and-forget in the background, same pattern the app already uses for
+// player_progress. Each locally-added row gets a `clientId` (independent of
+// the eventual cloud `id`) so an in-flight add/remove can still be matched
+// up correctly once its network call resolves, even if the array has
+// changed shape in the meantime.
+//
+// `mode` ('master' | 'club') records which explorer this opening's
+// move-quality evaluation should use during practice, replacing the old
+// hardcoded PRACTICE_MODE.source — see logic/chessTheoryApp.js
+// startPracticeOpening().
 
 import { PracticeOpenings as BASE_OPENINGS } from '../config/practiceOpenings';
+import { fetchPracticeOpenings, insertPracticeOpening, deletePracticeOpening } from './supabaseClient';
 
 const USER_ROWS_KEY = 'practiceOpeningsUserLines';
 const DELETED_BASE_KEY = 'practiceOpeningsDeletedBaseRows';
 const DEFAULT_CATEGORY = 'My Openings';
+export const MAX_OPENINGS = 20;
+
+function makeClientId() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+  return `local-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
 
 function loadJSON(key, fallback) {
   try {
@@ -39,6 +62,10 @@ function formatName(name) {
     .join(' ');
 }
 
+function normalizeMode(mode) {
+  return String(mode || '').trim().toLowerCase() === 'master' ? 'master' : 'club';
+}
+
 function getUserRows() {
   return loadJSON(USER_ROWS_KEY, []);
 }
@@ -56,23 +83,38 @@ export function getEffectiveOpenings() {
   const base = BASE_OPENINGS
     .map((row, index) => ({ ...row, source: 'base', originalIndex: index }))
     .filter(row => !deleted.includes(row.originalIndex));
-  const user = getUserRows().map((row, index) => ({ ...row, source: 'user', originalIndex: index }));
+  const user = getUserRows().map((row, index) => ({ ...row, source: row.source || 'user', originalIndex: index }));
   return [...base, ...user];
 }
 
-export function addOpening({ name, fen, orientation, category }) {
+export function getUserOpeningsCount() {
+  return getUserRows().length;
+}
+
+// `source` here distinguishes how the row was created for display/analytics
+// purposes ('user' = manual entry or CSV import, 'captured' = the Analysis
+// screen's "Add to Practice" button) — both count identically toward the
+// 20-cap and both sync to the cloud the same way.
+export function addOpening({ name, fen, orientation, mode, category, source }) {
   const row = {
+    clientId: makeClientId(),
     name: formatName(name),
     fen: String(fen || '').trim(),
     orientation: String(orientation || '').trim().toLowerCase() === 'black' ? 'black' : 'white',
+    mode: normalizeMode(mode),
     category: String(category || '').trim() || DEFAULT_CATEGORY,
+    source: source === 'captured' ? 'captured' : 'user',
   };
   if (!row.name || !row.fen) {
     return { ok: false, error: 'Name and FEN are both required.' };
   }
   const rows = getUserRows();
+  if (rows.length >= MAX_OPENINGS) {
+    return { ok: false, error: `You've reached the ${MAX_OPENINGS}-opening limit. Remove one before adding another.` };
+  }
   rows.push(row);
   saveJSON(USER_ROWS_KEY, rows);
+  syncRowToCloud(row.clientId);
   return { ok: true };
 }
 
@@ -87,8 +129,16 @@ export function removeOpening(source, originalIndex) {
   }
   const rows = getUserRows();
   if (originalIndex >= 0 && originalIndex < rows.length) {
-    rows.splice(originalIndex, 1);
+    const [removed] = rows.splice(originalIndex, 1);
     saveJSON(USER_ROWS_KEY, rows);
+    if (removed?.id) {
+      deletePracticeOpening(removed.id);
+    } else if (removed?.clientId) {
+      // A cloud insert may still be in flight for this row — flag it so
+      // syncRowToCloud() deletes it from the cloud the moment that insert
+      // resolves, instead of leaving an orphaned row the user never sees.
+      pendingRemovals.add(removed.clientId);
+    }
   }
 }
 
@@ -96,6 +146,92 @@ export function removeOpening(source, originalIndex) {
 // action rather than something upload/download touch.
 export function restoreDeletedBaseOpenings() {
   saveJSON(DELETED_BASE_KEY, []);
+}
+
+// --- Cloud sync -------------------------------------------------------------
+
+const pendingRemovals = new Set();
+
+// Fire-and-forget: pushes one newly-added local row to the cloud and patches
+// its cloud `id` back into localStorage once the insert resolves. Matched by
+// `clientId`, not array position, so this stays correct even if other rows
+// were added/removed while the network call was in flight.
+async function syncRowToCloud(clientId) {
+  const rows = getUserRows();
+  const row = rows.find(r => r.clientId === clientId);
+  if (!row) return; // already removed locally before the insert even started
+
+  const result = await insertPracticeOpening(row);
+
+  if (pendingRemovals.has(clientId)) {
+    pendingRemovals.delete(clientId);
+    if (result.success) deletePracticeOpening(result.data.id);
+    return;
+  }
+  if (!result.success) {
+    if (result.error === 'cap') {
+      // Cloud thinks we're already at 20 (e.g. added from another device
+      // since this session started) — leave the row local-only rather than
+      // losing it; it'll sync next time something frees up a slot.
+    }
+    return;
+  }
+
+  const current = getUserRows();
+  const idx = current.findIndex(r => r.clientId === clientId);
+  if (idx !== -1) {
+    current[idx] = { ...current[idx], id: result.data.id };
+    saveJSON(USER_ROWS_KEY, current);
+  }
+}
+
+function fromCloudRow(row) {
+  return {
+    clientId: row.id,
+    id: row.id,
+    name: row.name,
+    fen: row.fen,
+    orientation: row.orientation,
+    mode: normalizeMode(row.mode),
+    category: row.category || DEFAULT_CATEGORY,
+    source: row.source === 'captured' ? 'captured' : 'user',
+  };
+}
+
+// Called once after sign-in (see authModule.js). Reconciles local and cloud
+// state: cloud rows become canonical, any purely-local rows (added before
+// login, or added while offline) get pushed up to the cloud respecting the
+// 20-cap, and anything that doesn't fit stays local-only for next time.
+// No-ops entirely (leaves local storage untouched) if the fetch fails or the
+// caller isn't actually logged in, so logged-out play is never affected.
+export async function syncPracticeOpeningsFromCloud() {
+  const cloudRows = await fetchPracticeOpenings();
+  if (cloudRows === null) return;
+
+  const local = getUserRows();
+  const cloudIds = new Set(cloudRows.map(r => r.id));
+  const localOnly = local.filter(r => !r.id);
+  // Rows that had a cloud id but are no longer on the cloud (deleted from
+  // another device/session) are dropped locally too — the cloud is
+  // canonical once a row has synced at all.
+
+  let cloudCount = cloudRows.length;
+  const stillLocalOnly = [];
+  const newlyInserted = [];
+  for (const row of localOnly) {
+    if (cloudCount >= MAX_OPENINGS) { stillLocalOnly.push(row); continue; }
+    const result = await insertPracticeOpening(row);
+    if (result.success) {
+      newlyInserted.push(fromCloudRow(result.data));
+      cloudCount += 1;
+    } else {
+      stillLocalOnly.push(row);
+    }
+  }
+
+  const merged = [...cloudRows.map(fromCloudRow), ...newlyInserted, ...stillLocalOnly];
+  saveJSON(USER_ROWS_KEY, merged);
+  void cloudIds; // reserved for future conflict handling; unused for now
 }
 
 // --- CSV import/export ----------------------------------------------------
@@ -138,14 +274,18 @@ function parseCsv(text) {
     const fen = String(row.fen || '').trim();
     let orientation = String(row.orientation || '').trim().toLowerCase();
     if (orientation !== 'black') orientation = 'white';
+    // Old exports (from before this feature) won't have a mode column —
+    // defaults to 'club', matching the app's previous hardcoded behavior
+    // of always evaluating practice against the Club/Lichess explorer.
+    const mode = normalizeMode(row.mode);
     const category = String(row.category || '').trim() || DEFAULT_CATEGORY;
     if (!name || !fen) return null;
-    return { name, fen, orientation, category };
+    return { clientId: makeClientId(), name, fen, orientation, mode, category, source: 'user' };
   }).filter(Boolean);
 }
 
 function stringifyCsv(rows) {
-  const header = ['name', 'fen', 'orientation', 'category'];
+  const header = ['name', 'fen', 'orientation', 'mode', 'category'];
   const escape = value => `"${String(value || '').replace(/"/g, '""')}"`;
   const lines = rows.map(row => header.map(key => escape(row[key] ?? '')).join(','));
   return [header.join(','), ...lines].join('\n');
@@ -163,15 +303,33 @@ export function downloadCsv(filename) {
   URL.revokeObjectURL(url);
 }
 
-// Uploading REPLACES the player's own added rows (mirrors legacy behavior)
-// — it does not touch the bundled list, so removed built-ins stay removed
-// and "restore" remains a separate, explicit action.
+// Uploading REPLACES the player's own added rows (mirrors legacy behavior,
+// and — same as before this feature — that includes rows captured from the
+// Analysis screen, not just manually-typed/imported ones; it's one combined
+// "your openings" list). It does not touch the bundled list, so removed
+// built-ins stay removed and "restore" remains a separate, explicit action.
 export async function uploadCsv(file) {
   const text = await file.text();
   const rows = parseCsv(text);
   if (!rows.length) {
     return { ok: false, error: 'No valid rows found. Each row needs at least a name and a FEN.' };
   }
+  if (rows.length > MAX_OPENINGS) {
+    return { ok: false, error: `That file has ${rows.length} rows, which is over the ${MAX_OPENINGS}-opening limit. Trim it down and try again.` };
+  }
+  const oldRows = getUserRows();
   saveJSON(USER_ROWS_KEY, rows);
+  replaceCloudRows(oldRows, rows);
   return { ok: true, count: rows.length };
+}
+
+// Fire-and-forget: mirrors a wholesale CSV replace to the cloud by deleting
+// every previously-synced row, then inserting the new set one at a time
+// (the cap trigger would reject a true bulk insert past 20 anyway, and the
+// upload-time length check above already keeps this under the limit).
+async function replaceCloudRows(oldRows, newRows) {
+  await Promise.all(oldRows.filter(r => r.id).map(r => deletePracticeOpening(r.id)));
+  for (const row of newRows) {
+    await syncRowToCloud(row.clientId);
+  }
 }
