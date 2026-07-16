@@ -60,8 +60,8 @@ export function MenuScreen({ app }) {
         <div className="game-description">
           <p>
             Enter the battlefield where chess mastery meets Roman military glory. Every move you make is judged against
-            the greatest games in history. Will you rise through the ranks from humble <strong>Recruit</strong> to legendary
-            <strong>Legatus</strong>?
+            the games in history. Will you rise through the ranks from humble <strong>Recruit</strong> to legendary
+            <strong> Legatus</strong>?
           </p>
 
           <button
@@ -81,8 +81,8 @@ export function MenuScreen({ app }) {
           <div id="intro-more" className={`game-description__more${introExpanded ? ' is-open' : ''}`}>
             <div className="game-description__more-inner">
               <p>
-                Each battle tests your knowledge of opening theory. Play moves that match the masters, maintain strong positions,
-                and prove your tactical prowess. Earn merit through discipline and excellence, but beware—poor performance leads
+                Each battle tests your knowledge of opening theory. Play moves that match the masters or club players, maintain strong positions,
+                and prove your tactical prowess. Earn merit through discipline and excellence, but beware — poor performance leads
                 to demotion and disgrace.
               </p>
               <p className="tagline-line">
@@ -100,21 +100,21 @@ export function MenuScreen({ app }) {
                     Your ultimate aim is to earn 1,750 Merit and ascend to <strong>Legatus</strong> — the highest rank of the Roman army.
                   </p>
 
-                  <h4>1. THE BATTLE</h4>
+                  <h5>1. THE BATTLE</h5>
                   <ul>
                     <li><strong>Masters Mode:</strong> Elite games. The battle ends if the resulting position has fewer than 5 games in history.</li>
                     <li><strong>Club Mode:</strong> Club games. The battle ends if the resulting position has fewer than 20 games in history.</li>
                     <li>One hint per battle (Top 5 moves)</li>
                   </ul>
 
-                  <h4>2. MERIT SCORING</h4>
+                  <h5>2. MERIT SCORING</h5>
                   <ul>
                     <li>Number of moves played while staying within theory</li>
                     <li>Quality of moves compared to top historical choices</li>
                     <li>Final position evaluation when the battle ends</li>
                   </ul>
 
-                  <h4>3. BATTLE RANKS</h4>
+                 <h5>3. BATTLE RANKS</h5>
                   <p>
                     <span className="battle-rank battle-rank--levy"><BATTLE_RANK_ICONS.Levy className="rank-legend-icon" aria-hidden="true" /> Levy</span> (0–39) ·
                     <span className="battle-rank battle-rank--hastatus"> <BATTLE_RANK_ICONS.Hastatus className="rank-legend-icon" aria-hidden="true" /> Hastatus</span> (40–54) ·
@@ -123,7 +123,7 @@ export function MenuScreen({ app }) {
                     <span className="battle-rank battle-rank--imperator"> <BATTLE_RANK_ICONS.Imperator className="rank-legend-icon" aria-hidden="true" /> Imperator</span> (85–100)
                   </p>
 
-                  <h4>4. LEGION RANKS</h4>
+                 <h5>4. LEGION RANKS</h5>
                   <p className="menu-screen__rank-ladder">
                     <span><LEGION_RANK_ICONS.Recruit className="rank-legend-icon" aria-hidden="true" /> Recruit (0)</span> →
                     <span><LEGION_RANK_ICONS.Legionary className="rank-legend-icon" aria-hidden="true" /> Legionary (200)</span> →
@@ -133,7 +133,16 @@ export function MenuScreen({ app }) {
                     <span><LEGION_RANK_ICONS.Legatus className="rank-legend-icon" aria-hidden="true" /> Legatus (1750)</span>
                   </p>
 
-                  <h4>5. DEMOTION &amp; DISCIPLINE</h4>
+ <h5>5. PROMOTION REQUIREMENTS</h5>
+                  <ul>
+                    <li><strong>Recruit → Legionary:</strong> 200 merit (no other requirements)</li>
+                    <li><strong>Legionary → Optio:</strong> 500 merit (avoid 2 Levy)</li>
+                    <li><strong>Optio → Centurion:</strong> 900 merit (avoid demotion triggers)</li>
+                    <li><strong>Centurion → Tribunus:</strong> 1300 merit + at least 1 Triarius/Imperator</li>
+                    <li><strong>Tribunus → Legatus:</strong> 1750 merit + at least 3 Triarius/Imperator</li>
+                  </ul>
+				  
+                  <h5>6. DEMOTION &amp; DISCIPLINE</h5>
                   <table>
                     <thead>
                       <tr>
@@ -152,16 +161,9 @@ export function MenuScreen({ app }) {
                     </tbody>
                   </table>
 
-                  <h4>6. PROMOTION REQUIREMENTS</h4>
-                  <ul>
-                    <li><strong>Recruit → Legionary:</strong> 200 merit (no other requirements)</li>
-                    <li><strong>Legionary → Optio:</strong> 500 merit (avoid 2 Levy)</li>
-                    <li><strong>Optio → Centurion:</strong> 900 merit (avoid demotion triggers)</li>
-                    <li><strong>Centurion → Tribunus:</strong> 1300 merit + at least 1 Triarius/Imperator</li>
-                    <li><strong>Tribunus → Legatus:</strong> 1750 merit + at least 3 Triarius/Imperator</li>
-                  </ul>
+                
 
-                  <h4>7. SAFETY NET (50% RULE)</h4>
+                  <h5>7. SAFETY NET (50% RULE)</h5>
                   <p>
                     If you reach 50% progress toward your next rank, demotion resets you to the start of your current rank instead of dropping you to the previous rank.<br />
                     <strong>Safety Thresholds:</strong> Legionary (350), Optio (700), Centurion (1100), Tribunus (1525)
