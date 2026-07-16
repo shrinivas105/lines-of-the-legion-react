@@ -16,19 +16,14 @@
   -webkit-backdrop-filter: blur(0.5px);
 }
 
-.menu-title {
-  width: 100%;
-  margin-bottom: var(--space-3);
-  text-align: center;
-  font-family: 'Cinzel', serif;
-  font-size: clamp(1.6rem, 3.6vw, 2.7rem);
-  letter-spacing: 4px;
-  color: #f7e7a8;
-  text-shadow:
-    0 0 12px rgba(216, 182, 107, 0.65),
-    0 0 30px rgba(216, 182, 107, 0.4),
-    0 0 54px rgba(216, 182, 107, 0.18),
-    0 4px 10px rgba(0, 0, 0, 0.55);
+.menu-title-image {
+  display: block;
+  width: min(100%, 620px);
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto var(--space-3);
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(216, 182, 107, 0.35));
 }
 
 .menu-subtitle {
