@@ -12,10 +12,9 @@
   justify-content: space-between;
   gap: 10px;
   padding: 4px 4px;
-  /* Safety net: with the larger badges below, six ranks can get tight on
-     narrow viewports. Rather than let the row clip/overflow past the
-     screen edge, let it scroll horizontally as a last resort — on most
-     screens the row still fits and no scrollbar appears. */
+  /* Safety net: rather than let the row clip/overflow past the screen
+     edge on unusually narrow viewports, let it scroll horizontally as a
+     last resort — on ordinary screens it fits and no scrollbar appears. */
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
@@ -30,11 +29,7 @@
   justify-content: center;
   gap: 4px;
   flex: 1 1 0;
-  /* Floor tied to the badge size below, so a step can still shrink to
-     share space evenly on screens that fit it, but never gets squeezed
-     small enough to clip the circle — the row scrolls instead (see
-     .legion-path__steps overflow-x). */
-  min-width: 52px;
+  min-width: 0;
   position: relative;
   opacity: 0.55;
   transition: opacity var(--duration-base) var(--ease-standard),
@@ -64,7 +59,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 18px;
+  margin-top: 14px;
   font-size: 1.1rem;
   font-weight: 700;
   line-height: 1;
@@ -85,13 +80,13 @@
   justify-content: center;
 }
 
-/* Ladder badges get a bump over the base --md size (40px -> 46px, then a
-   further +30% -> 60px) — RankBadge's size="md" is only used here, so
-   this is scoped locally rather than changing the shared default. */
+/* Ladder badges get a small bump over the base --md size (40px -> 46px)
+   — RankBadge's size="md" is only used here, so this is scoped locally
+   rather than changing the shared default. */
 .legion-path__node .rank-badge--md {
-  width: 60px;
-  height: 60px;
-  font-size: 1.37rem;
+  width: 46px;
+  height: 46px;
+  font-size: 1.05rem;
 }
 
 .legion-path__label {
@@ -179,20 +174,16 @@
     padding: 2px 2px;
   }
 
-  .legion-path__step {
-    min-width: 40px;
-  }
-
   .legion-path__connector {
     flex-basis: 12px;
     font-size: 0.75rem;
-    margin-top: 10px;
+    margin-top: 8px;
   }
 
   .legion-path__node .rank-badge--md {
-    width: 36px;
-    height: 36px;
-    font-size: 0.91rem;
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
   }
 
   .legion-path__label {
@@ -202,20 +193,15 @@
 }
 
 @media (max-width: 360px) {
-  .legion-path__step {
-    min-width: 34px;
-  }
-
   .legion-path__connector {
     flex-basis: 8px;
     font-size: 0.65rem;
-    margin-top: 9px;
   }
 
   .legion-path__node .rank-badge--md {
-    width: 31px;
-    height: 31px;
-    font-size: 0.78rem;
+    width: 24px;
+    height: 24px;
+    font-size: 0.6rem;
   }
 
   .legion-path__label {
