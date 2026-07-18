@@ -38,12 +38,14 @@ export function RankBadge({ title, icon, active = false, size = 'md', tone, prom
     >
       <span className="rank-badge__ring" aria-hidden="true" />
       {portraitSrc ? (
-        <img
-          className="rank-badge__portrait"
-          src={portraitSrc}
-          alt={title}
-          onError={() => setImgFailed(true)}
-        />
+        <span className="rank-badge__portrait-mask">
+          <img
+            className="rank-badge__portrait"
+            src={portraitSrc}
+            alt={title}
+            onError={() => setImgFailed(true)}
+          />
+        </span>
       ) : GlyphIcon ? (
         <GlyphIcon className="rank-badge__icon-svg" />
       ) : (
