@@ -186,6 +186,22 @@
   margin-bottom: 8px;
 }
 
+.end-summary__short-skirmish {
+  font-size: 0.62rem;
+  padding: 6px 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  background: linear-gradient(135deg, rgba(180, 130, 40, 0.25), rgba(120, 80, 20, 0.25));
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  color: var(--marble, #eee);
+}
+.end-summary__short-skirmish-title {
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  color: #d4af37;
+}
+
 .end-summary__donate-btn {
   display: inline-block;
   padding: 8px 14px;

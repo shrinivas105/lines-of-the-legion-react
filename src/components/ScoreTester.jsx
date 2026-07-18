@@ -202,6 +202,12 @@ export function ScoreTester({ onClose }) {
               <div className="score-tester__penalty-note">{result.penaltyReason}</div>
             )}
 
+            {result.shortSkirmishApplied && (
+              <div className="score-tester__short-skirmish-note">
+                <strong>Short Skirmish</strong> — The battle ended before the legion could prove its discipline.
+              </div>
+            )}
+
             <button
               type="button"
               className="score-tester__log-toggle"

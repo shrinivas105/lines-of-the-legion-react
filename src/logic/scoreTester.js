@@ -202,6 +202,7 @@ export async function analyzePgnBattle({ pgn, aiSource, playerColor, onProgress 
     displayEval: formatDisplayEval(result.finalPlayerEval),
     score: result.score,
     penaltyReason: result.penaltyReason,
+    shortSkirmishApplied: result.shortSkirmishApplied,
     battleRank: result.battleRank,
     moveLog,
     finalFEN,

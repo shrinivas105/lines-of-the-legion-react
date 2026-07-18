@@ -11,6 +11,8 @@ import {
   BATTLE_RANK_THRESHOLDS,
   MASTER_TRICKY_MOVE,
   CLUB_TRICKY_MOVE,
+  SHORT_SKIRMISH_THRESHOLD,
+  SHORT_SKIRMISH_MULTIPLIER,
 } from '../config';
 import { BATTLE_RANK_ICONS, LEGION_RANK_ICONS } from '../components/rankColors';
 import { ChessAPI } from '../services/chessApi';
@@ -176,6 +178,29 @@ class Scoring {
     };
   }
   
+  // ──────────────────────────────────────────────────────────────
+  // SHORT SKIRMISH PENALTY — single additional post-processing step,
+  // applied AFTER the normal battle score has already been fully
+  // calculated (base score, evaluation penalties, hidden bonuses,
+  // clamping, and rounding all already happened upstream in
+  // getTotalScore / the checkmate branch of finalizeGameScore).
+  //
+  // If the battle ended in fewer than SHORT_SKIRMISH_THRESHOLD theory
+  // moves, the final merit is reduced by (1 - SHORT_SKIRMISH_MULTIPLIER).
+  // Does not touch Survival, Quality, or Evaluation scoring, penalty
+  // multipliers, hidden bonuses, or battle rank thresholds — it only
+  // scales the already-final score before that score is handed to
+  // getBattleRank().
+  // ──────────────────────────────────────────────────────────────
+  static applyShortSkirmishPenalty(score, theoryMoves) {
+    const applied = theoryMoves < SHORT_SKIRMISH_THRESHOLD;
+    if (!applied) {
+      return { score, applied: false };
+    }
+    const penalized = Math.max(0, Math.min(100, Math.round(score * SHORT_SKIRMISH_MULTIPLIER)));
+    return { score: penalized, applied: true };
+  }
+
   static getBattleRank(s, e, r, source = 'master') {
     const t = BATTLE_RANK_THRESHOLDS;
     let n;
@@ -344,7 +369,10 @@ class Scoring {
   //   evalCache              — optional cache object, same shape ChessAPI.getEvaluation expects
   //
   // Returns { error: 'eval-api-unreachable' } on API failure, otherwise
-  // { finalPlayerEval, score, penaltyReason, battleRank, moveQuality }.
+  // { finalPlayerEval, score, penaltyReason, battleRank, moveQuality,
+  //   shortSkirmishApplied }. shortSkirmishApplied is true when playerMoves
+  // (theory moves) was below SHORT_SKIRMISH_THRESHOLD, in which case `score`
+  // already reflects the Short Skirmish merit penalty.
   // ──────────────────────────────────────────────────────────────
   static async finalizeGameScore({
     fen,
@@ -376,12 +404,19 @@ class Scoring {
       scoreResult = this.getTotalScore(playerMoves, topMoveChoices, finalPlayerEval, aiSource, qualityTrackedMoves);
     }
 
-    const score = scoreResult.score;
+    // Short Skirmish: single additional post-processing step, applied after
+    // the normal battle score above is fully calculated (existing evaluation
+    // penalties + hidden bonuses + clamping + rounding all already done).
+    // Does not run for normal-length battles (theoryMoves >= threshold).
+    const shortSkirmish = this.applyShortSkirmishPenalty(scoreResult.score, playerMoves);
+
+    const score = shortSkirmish.score;
+    const shortSkirmishApplied = shortSkirmish.applied;
     const penaltyReason = scoreResult.penaltyReason;
     const battleRank = this.getBattleRank(score, finalPlayerEval, penaltyReason, aiSource);
     const moveQuality = this.getMoveQuality(topMoveChoices, qualityTrackedMoves);
 
-    return { finalPlayerEval, score, penaltyReason, battleRank, moveQuality };
+    return { finalPlayerEval, score, penaltyReason, battleRank, moveQuality, shortSkirmishApplied };
   }
 
   static getLegionRank(m = 0) {

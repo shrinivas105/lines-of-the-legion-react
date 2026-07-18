@@ -857,6 +857,7 @@ export class ChessTheoryApp {
     const score = result.score;
     const penaltyReason = result.penaltyReason;
     const battleRank = result.battleRank;
+    const shortSkirmishApplied = result.shortSkirmishApplied;
 
     if (this.mode === 'practice') {
       const moveQuality = Scoring.getMoveQuality(this.topMoveChoices, this.qualityTrackedMoves);
@@ -880,7 +881,8 @@ export class ChessTheoryApp {
         moveQuality,
         displayEval,
         gamesToShow: this.recentGames,
-        isPractice: true
+        isPractice: true,
+        shortSkirmishApplied
       };
 
       // Matches original's direct this.ui.renderEndGameSummary(...) call —
@@ -924,7 +926,8 @@ export class ChessTheoryApp {
       moveQuality,
       displayEval,
       gamesToShow,
-      isPractice: false
+      isPractice: false,
+      shortSkirmishApplied
     };
 
     // Matches original's direct this.ui.renderEndGameSummary(...) call.

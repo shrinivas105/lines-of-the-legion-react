@@ -115,6 +115,18 @@
   text-align: center;
 }
 
+.score-tester__short-skirmish-note {
+  font-size: 0.7rem;
+  text-align: center;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(180, 130, 40, 0.25), rgba(120, 80, 20, 0.25));
+  border: 1px solid rgba(212, 175, 55, 0.6);
+}
+.score-tester__short-skirmish-note strong {
+  color: #d4af37;
+}
+
 .score-tester__log-toggle {
   align-self: center;
   background: none;
