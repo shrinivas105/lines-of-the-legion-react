@@ -3,10 +3,11 @@
   max-width: 520px;
   margin: 0 auto;
   text-align: center;
-  background: rgba(20, 10, 5, 0.98);
+  background: var(--color-surface);
   padding: 12px 14px;
   border-radius: 10px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-deep);
+  border: 1px solid var(--color-border);
   font-size: 0.8rem;
   line-height: 1.45;
   animation: end-summary-rise var(--duration-slow) var(--ease-standard) both;
@@ -81,8 +82,8 @@
   margin-bottom: 8px;
 }
 .end-summary__stat {
-  background: var(--ink);
-  border: 1.5px solid #ffffff;
+  background: var(--color-surface-secondary);
+  border: 1.5px solid var(--color-border);
   border-radius: 6px;
   padding: 6px;
   display: flex;

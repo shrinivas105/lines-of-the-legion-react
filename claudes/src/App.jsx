@@ -19,6 +19,7 @@ import { AnalysisScreen } from './components/AnalysisScreen';
 import { HomeButton } from './components/HomeButton';
 import { AuthBar } from './components/AuthBar';
 import { Atmosphere } from './components/Atmosphere';
+import { ThemeToggle } from './components/ThemeToggle';
 
 function App() {
   const app = useChessTheoryApp();
@@ -54,7 +55,10 @@ function App() {
       <Atmosphere />
       <div className="app-shell__topbar">
         {showHome && !app.showingAnalysis && <HomeButton app={app} />}
-        <AuthBar app={app} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <ThemeToggle />
+          <AuthBar app={app} />
+        </div>
       </div>
       {screen}
     </div>

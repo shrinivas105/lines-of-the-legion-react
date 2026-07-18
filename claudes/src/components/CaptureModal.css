@@ -21,7 +21,7 @@
 .capture-modal__backdrop {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.5), rgba(0,0,0,0.75));
+  background: var(--color-overlay);
   backdrop-filter: blur(2px);
 }
 .capture-modal__panel {
@@ -30,19 +30,19 @@
   max-width: 440px;
   max-height: 90vh;
   overflow: auto;
-  background: linear-gradient(180deg, #121012 0%, #1b1510 100%);
-  border: 1px solid var(--legion-accent-dim);
+  background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-secondary) 100%);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 20px;
-  color: var(--marble);
-  box-shadow: 0 10px 50px rgba(0,0,0,0.6);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-deep);
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 .capture-modal__title {
   font-size: 1rem;
-  color: var(--legion-accent);
+  color: var(--color-accent);
   text-align: center;
   margin: 0 0 4px;
 }
@@ -51,14 +51,14 @@
   flex-direction: column;
   gap: 4px;
   font-size: 0.7rem;
-  color: var(--marble-dim);
+  color: var(--color-text-secondary);
 }
 .capture-modal__field input[type="text"] {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--legion-accent-dim);
+  background: var(--color-surface-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: 8px 10px;
-  color: var(--marble);
+  color: var(--color-text-primary);
   font-size: 0.8rem;
   font-family: var(--font-body);
 }
@@ -70,7 +70,7 @@
   display: flex;
   gap: 16px;
   font-size: 0.8rem;
-  color: var(--marble);
+  color: var(--color-text-primary);
 }
 .capture-modal__radio-row label {
   display: flex;

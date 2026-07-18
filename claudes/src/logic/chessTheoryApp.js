@@ -366,6 +366,7 @@ export class ChessTheoryApp {
     this.practiceMoveOffset = 0;
     this.practiceTopMoveOffset = 0;
     this.practiceQualityTrackedOffset = 0;
+    this.topMoveChoices = 0;
     this.qualityTrackedMoves = 0;
     this.hintUsed = false;
     this.lastAIMoveFEN = null;

@@ -12,15 +12,15 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  background: var(--umber);
-  border: 1px solid var(--hairline);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: 5px 10px;
   font-size: 0.7rem;
 }
 
 .auth-bar__email {
-  color: var(--marble-dim);
+  color: var(--color-text-secondary);
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -29,7 +29,7 @@
 .auth-bar__signout {
   background: transparent;
   border: none;
-  color: var(--oxblood-text);
+  color: var(--color-danger);
   font-size: 0.68rem;
   cursor: pointer;
   text-decoration: underline;
@@ -42,9 +42,9 @@
   font-weight: 600;
   padding: 6px 12px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--bronze-dim);
-  background: var(--umber);
-  color: var(--gold);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-accent);
   cursor: pointer;
   transition: filter 0.15s ease;
   display: inline-flex;

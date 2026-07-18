@@ -4,6 +4,15 @@ import './styles/tokens.css'
 import App from './App.jsx'
 import { init as initLichessAuth } from './services/lichessAuth'
 
+function getInitialTheme() {
+  if (typeof window === 'undefined') {
+    return 'night';
+  }
+
+  const stored = window.localStorage.getItem('roman-theme');
+  return stored === 'marble' ? 'marble' : 'night';
+}
+
 // Matches the original main.js entry sequencing exactly:
 //   (async () => { await LichessAuth.init(); LichessAuth.renderButton(); window.app = new ChessTheoryApp(); })()
 // LichessAuth.init() exchanges the ?code=... param from the OAuth redirect
@@ -12,6 +21,10 @@ import { init as initLichessAuth } from './services/lichessAuth'
 // reflects the freshly-completed connection. renderButton() doesn't apply
 // here since React owns rendering (see LichessConnectButton.jsx).
 async function bootstrap() {
+  const theme = getInitialTheme();
+  document.documentElement.setAttribute('data-theme', theme);
+  window.localStorage.setItem('roman-theme', theme);
+
   await initLichessAuth();
 
   createRoot(document.getElementById('root')).render(

@@ -447,6 +447,30 @@ html[data-theme="marble"] .end-summary__quote {
   color: var(--color-accent);
 }
 
+/* Master/Club Legion cards (color-choice screen) — these sub-panels were
+   hardcoded to translucent near-black fills (rgba(8,5,3,...)) tuned for the
+   dark theme's ink background. On marble they rendered as a muddy gray
+   smudge instead of a proper card. Bring them in line with how the results
+   screen (.end-summary__stat) handles this: solid theme-aware surface +
+   border tokens that actually adapt to light mode. */
+html[data-theme="marble"] .color-choice__rank-section,
+html[data-theme="marble"] .color-choice__progression,
+html[data-theme="marble"] .color-choice__battle-history,
+html[data-theme="marble"] .color-choice__rank-info {
+  background: var(--color-surface-secondary);
+  border-color: var(--color-border);
+}
+
+html[data-theme="marble"] .rank-fact {
+  background: var(--color-surface-secondary);
+  border-color: var(--color-border);
+}
+
+html[data-theme="marble"] .color-choice__notice {
+  background: var(--color-surface-secondary);
+  border-color: var(--color-border);
+}
+
 html[data-theme="marble"] .battle-history__tooltip-content {
   background: var(--color-surface);
   border: 1px solid var(--color-border);

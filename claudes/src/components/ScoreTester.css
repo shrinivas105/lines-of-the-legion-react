@@ -11,15 +11,15 @@
   margin: 0;
   font-size: 0.72rem;
   line-height: 1.5;
-  color: var(--marble-dim);
+  color: var(--color-text-secondary);
 }
 
 .score-tester__textarea {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--legion-accent-dim);
+  background: var(--color-surface-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: 8px 10px;
-  color: var(--marble);
+  color: var(--color-text-primary);
   font-size: 0.72rem;
   font-family: var(--font-mono, monospace);
   line-height: 1.4;
@@ -41,14 +41,14 @@
 
 .score-tester__filename {
   font-size: 0.7rem;
-  color: var(--marble-dim);
+  color: var(--color-text-secondary);
   overflow-wrap: anywhere;
 }
 
 .score-tester__result {
   margin-top: 4px;
   padding-top: 14px;
-  border-top: 1px solid var(--legion-accent-dim);
+  border-top: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -80,8 +80,8 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--legion-accent-dim);
+  background: var(--color-surface-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: 6px 4px;
 }
@@ -90,20 +90,20 @@
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--marble-dim);
+  color: var(--color-text-secondary);
 }
 
 .score-tester__stat strong {
   font-size: 0.82rem;
-  color: var(--marble);
+  color: var(--color-text-primary);
 }
 
 .score-tester__stop-note {
   font-size: 0.68rem;
   line-height: 1.5;
-  color: var(--marble-dim);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--legion-accent-dim);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: 8px 10px;
 }
@@ -111,7 +111,7 @@
 .score-tester__penalty-note {
   font-size: 0.7rem;
   font-style: italic;
-  color: var(--marble-dim);
+  color: var(--color-text-secondary);
   text-align: center;
 }
 
@@ -144,10 +144,10 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  border: 1px solid var(--legion-accent-dim);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: 6px 8px;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--color-surface-secondary);
 }
 
 .score-tester__log-row {
@@ -156,11 +156,11 @@
   gap: 8px;
   font-size: 0.66rem;
   padding: 2px 0;
-  color: var(--marble-dim);
+  color: var(--color-text-secondary);
 }
 
 .score-tester__log-row--player {
-  color: var(--marble);
+  color: var(--color-text-primary);
 }
 
 .score-tester__log-row--counted {
