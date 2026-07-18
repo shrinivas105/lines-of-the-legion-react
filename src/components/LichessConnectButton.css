@@ -4,9 +4,9 @@
   font-weight: 600;
   padding: 6px 12px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--hairline);
-  background: var(--umber);
-  color: var(--marble-dim);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease;
 }
@@ -15,7 +15,7 @@
   color: var(--marble);
 }
 .lichess-btn--connected {
-  color: var(--verdigris-text);
+  color: var(--color-success);
   border-color: var(--verdigris-dim);
 }
 .lichess-btn__icon {

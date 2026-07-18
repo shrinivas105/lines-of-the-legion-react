@@ -25,24 +25,24 @@
   --oxblood:    #7a1f1f;   /* crimson — danger / demotion / losses */
   --verdigris:  #4a7268;   /* success / promotion / wins — oxidized bronze-green */
 
-  /* tints derived from the above, for borders/glows/states */
-  --bronze-dim:    rgba(138, 106, 59, 0.45);
-  --bronze-glow:   rgba(216, 182, 107, 0.22);
-  --gold-glow:     rgba(216, 182, 107, 0.4);
-  --silver-glow:   rgba(199, 204, 209, 0.3);
-  --oxblood-dim:   rgba(122, 31, 31, 0.4);
-  --verdigris-dim: rgba(74, 114, 104, 0.35);
-  --ink-veil:      rgba(15, 13, 10, 0.72);
-  --hairline:      rgba(230, 221, 196, 0.12);
-  --iron-dim:      rgba(63, 67, 71, 0.5);
-
-  /* Text-safe variants: the base oxblood/verdigris are correct for
-     backgrounds, borders, and large headings, but fail WCAG AA contrast
-     (under 4.5:1) as small body text on --ink/--umber. These lifted
-     variants stay in the same red/green family while passing contrast,
-     for use anywhere danger/success text needs to be read at normal size. */
-  --oxblood-text:   #d16a6a;
-  --verdigris-text: #6fae9f;
+  /* Semantic theme aliases used throughout the app */
+  --color-background: var(--ink);
+  --color-surface: var(--umber);
+  --color-surface-secondary: rgba(20, 10, 5, 0.74);
+  --color-surface-tertiary: rgba(255, 255, 255, 0.04);
+  --color-border: var(--bronze-dim);
+  --color-text-primary: var(--marble);
+  --color-text-secondary: var(--marble-dim);
+  --color-accent: var(--gold);
+  --color-accent-hover: #d4b27c;
+  --color-success: var(--verdigris-text);
+  --color-warning: #e67e22;
+  --color-danger: var(--oxblood-text);
+  --color-gold: var(--roman-gold);
+  --color-bronze: var(--bronze);
+  --shadow: var(--elev-md);
+  --color-overlay: var(--ink-veil);
+  --color-panel-border: var(--bronze-dim);
 
   /* ── Campaign accent: the border/frame color used throughout a screen
      that belongs to a specific campaign — gold for Master, silver for
@@ -98,6 +98,76 @@
   --duration-slow: 300ms;
 }
 
+html[data-theme="marble"] {
+  /* Light background: warm marble with soft texture */
+  --ink: #FAFAF8;
+  /* Pure white for card surfaces — maximum clarity */
+  --umber: #FFFFFF;
+  /* Warm beige for secondary surfaces and hover states */
+  --iron: #F5F0E8;
+  /* Dark brown text — premium, readable, Roman */
+  --marble: #1A130F;
+  /* Medium brown for secondary text and muted elements */
+  --marble-dim: #6B5D51;
+  /* Keep bronze for consistency — used sparingly */
+  --bronze: #8a6a3b;
+  /* Roman gold — primary accent throughout */
+  --gold: #d8b66b;
+  /* Dark text on light backgrounds */
+  --text-on-light: #1A130F;
+  /* Warm reds for danger/demotion */
+  --oxblood: #A52E2E;
+  /* Green for success/promotion */
+  --verdigris: #4a7268;
+  /* Subtle bronze tint for borders and dividers */
+  --bronze-dim: rgba(138, 106, 59, 0.16);
+  /* Soft gold glow for hovers and highlights */
+  --bronze-glow: rgba(216, 182, 107, 0.12);
+  --gold-glow: rgba(216, 182, 107, 0.2);
+  /* Pale blue glow for secondary metals */
+  --silver-glow: rgba(199, 204, 209, 0.12);
+  /* Faint red overlay for error states */
+  --oxblood-dim: rgba(165, 46, 46, 0.12);
+  /* Faint green overlay for success states */
+  --verdigris-dim: rgba(74, 114, 104, 0.12);
+  /* Very light overlay for dialogs/modals */
+  --ink-veil: rgba(26, 19, 15, 0.08);
+  /* Subtle warm border — almost invisible unless focused */
+  --hairline: rgba(216, 204, 184, 0.35);
+  /* Muted brown for structural elements */
+  --iron-dim: rgba(107, 93, 81, 0.15);
+  /* Semantic aliases for the light marble theme */
+  --color-background: #FAFAF8;
+  --color-surface: #FFFFFF;
+  --color-surface-secondary: #F5F0E8;
+  --color-surface-tertiary: #FFFAF6;
+  --color-border: rgba(216, 204, 184, 0.5);
+  --color-text-primary: #1A130F;
+  --color-text-secondary: #6B5D51;
+  /* Gold is the star accent in marble — all headings, important UI */
+  --color-accent: #d8b66b;
+  --color-accent-hover: #e6c080;
+  /* Success state — brighter green for visibility */
+  --color-success: #5faa8e;
+  /* Warning state — amber/orange */
+  --color-warning: #e67e22;
+  /* Danger state — warm red for demotion/loss */
+  --color-danger: #c85555;
+  /* Keep gold constant across themes */
+  --color-gold: #d4af37;
+  --color-bronze: #8a6a3b;
+  /* Light theme shadows — very soft, minimal depth */
+  --shadow: 0 4px 12px rgba(26, 19, 15, 0.08), 0 1px 3px rgba(26, 19, 15, 0.04);
+  --shadow-panel: 0 2px 8px rgba(26, 19, 15, 0.06), 0 1px 2px rgba(26, 19, 15, 0.03);
+  --shadow-deep: 0 12px 32px rgba(26, 19, 15, 0.12), 0 2px 6px rgba(26, 19, 15, 0.06);
+  /* Subtle light overlay instead of dark vignette */
+  --color-overlay: rgba(26, 19, 15, 0.06);
+  /* Warm taupe borders for cards and panels */
+  --color-panel-border: rgba(216, 204, 184, 0.4);
+  /* Light page gradient — barely visible, warmth only */
+  --page-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(250, 245, 240, 0.92));
+}
+
 * { box-sizing: border-box; }
 
 /* min-height (not height) so the page grows with content instead of being
@@ -117,8 +187,10 @@ html, body, #root {
 
 body {
   margin: 0;
-  background: url('/roman.png') center/cover no-repeat fixed;
-  color: var(--marble);
+  background:
+    var(--page-overlay, linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.1))),
+    url('/roman.png') center/cover no-repeat fixed;
+  color: var(--color-text-primary);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -145,6 +217,10 @@ body {
   background: radial-gradient(ellipse at 50% 40%, transparent 35%, rgba(15,13,10,0.55) 100%);
 }
 
+html[data-theme="marble"] .atmosphere__vignette {
+  background: radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(250,245,240,0.4) 100%);
+}
+
 .atmosphere__fog {
   position: absolute;
   inset: -10%;
@@ -152,6 +228,12 @@ body {
     radial-gradient(ellipse 60% 40% at 20% 30%, rgba(138,106,59,0.05), transparent 60%),
     radial-gradient(ellipse 50% 35% at 80% 70%, rgba(216,182,107,0.04), transparent 65%);
   animation: atmosphere-fog-drift 90s ease-in-out infinite alternate;
+}
+
+html[data-theme="marble"] .atmosphere__fog {
+  background-image:
+    radial-gradient(ellipse 60% 40% at 20% 30%, rgba(216, 204, 184, 0.03), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 80% 70%, rgba(216, 182, 107, 0.02), transparent 65%);
 }
 
 @keyframes atmosphere-fog-drift {
@@ -176,6 +258,19 @@ body {
   opacity: 0.6;
 }
 
+html[data-theme="marble"] .atmosphere__motes {
+  background-image:
+    radial-gradient(1px 1px at 12% 22%, rgba(216, 182, 107, 0.12), transparent),
+    radial-gradient(1px 1px at 28% 68%, rgba(216, 182, 107, 0.1), transparent),
+    radial-gradient(1px 1px at 47% 38%, rgba(216, 182, 107, 0.08), transparent),
+    radial-gradient(1px 1px at 63% 81%, rgba(216, 182, 107, 0.1), transparent),
+    radial-gradient(1px 1px at 74% 15%, rgba(216, 182, 107, 0.1), transparent),
+    radial-gradient(1px 1px at 88% 55%, rgba(216, 182, 107, 0.08), transparent),
+    radial-gradient(1px 1px at 35% 92%, rgba(216, 182, 107, 0.06), transparent),
+    radial-gradient(1px 1px at 92% 30%, rgba(216, 182, 107, 0.08), transparent);
+  opacity: 0.4;
+}
+
 @keyframes atmosphere-motes-drift {
   from { transform: translateY(0); }
   to   { transform: translateY(-6%); }
@@ -197,12 +292,12 @@ h1, h2, h3, h4 {
   margin: 0;
 }
 
-a { color: var(--bronze); }
-a:hover { color: #d4b27c; }
+a { color: var(--color-bronze); }
+a:hover { color: var(--color-accent-hover); }
 
 ::selection {
   background: var(--bronze-dim);
-  color: var(--marble);
+  color: var(--color-text-primary);
 }
 
 /* visible keyboard focus everywhere */
@@ -217,6 +312,164 @@ a:hover { color: #d4b27c; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Marble theme overrides for hardcoded dark colors */
+html[data-theme="marble"] {
+  /* All color tokens defined above */
+}
+
+html[data-theme="marble"] .promotion-screen__backdrop {
+  background: radial-gradient(ellipse at center, rgba(26, 19, 15, 0.12), rgba(26, 19, 15, 0.18));
+}
+
+html[data-theme="marble"] .promotion-screen__panel {
+  background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-secondary) 100%);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-deep);
+}
+
+html[data-theme="marble"] .promotion-screen__title {
+  color: var(--color-accent);
+  text-shadow: none;
+}
+
+html[data-theme="marble"] .promotion-screen__commander-name {
+  color: var(--color-text-primary);
+}
+
+html[data-theme="marble"] .promotion-screen__speech {
+  background: var(--color-surface-secondary);
+  color: var(--color-text-primary);
+}
+
+html[data-theme="marble"] .promotion-screen__rewards {
+  background: var(--color-surface-secondary);
+}
+
+html[data-theme="marble"] .promotion-screen__rewards h2 {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .promotion-screen__reward-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  color: var(--color-text-primary);
+}
+
+html[data-theme="marble"] .promotion-screen__reward-name {
+  color: var(--color-text-primary);
+}
+
+html[data-theme="marble"] .promotion-screen__reward-card p {
+  color: var(--color-text-secondary);
+}
+
+html[data-theme="marble"] .promotion-screen__duties {
+  background: var(--color-surface-secondary);
+}
+
+html[data-theme="marble"] .promotion-screen__duties h2 {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .promotion-screen__duty-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+html[data-theme="marble"] .promotion-screen__duty-number {
+  background: rgba(216, 182, 107, 0.1);
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .promotion-screen__duty-card p {
+  color: var(--color-text-secondary);
+}
+
+html[data-theme="marble"] .capture-modal__panel {
+  color: var(--color-text-primary);
+}
+
+html[data-theme="marble"] .capture-modal__title {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .capture-modal__field input[type="text"] {
+  color: var(--color-text-primary);
+}
+
+html[data-theme="marble"] .capture-modal__radio-row label {
+  color: var(--color-text-primary);
+}
+
+html[data-theme="marble"] .analysis-screen__compare-panel,
+html[data-theme="marble"] .analysis-screen__movelist-panel,
+html[data-theme="marble"] .analysis-screen__legend {
+  background: var(--color-surface-secondary);
+  border: 1px solid var(--color-border);
+}
+
+html[data-theme="marble"] .analysis-movelist__item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+html[data-theme="marble"] .analysis-movelist__item.active {
+  background: var(--color-accent);
+  color: #1A130F;
+}
+
+html[data-theme="marble"] .capture-modal__backdrop {
+  background: var(--color-overlay);
+}
+
+html[data-theme="marble"] .end-summary {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+html[data-theme="marble"] .end-summary__stat {
+  background: var(--color-surface-secondary);
+  border: 1.5px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+html[data-theme="marble"] .end-summary__stat strong {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .end-summary__quote {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .battle-history__tooltip-content {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+html[data-theme="marble"] .battle-history__tooltip-title {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .demotion-table th,
+html[data-theme="marble"] .demotion-table td {
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+html[data-theme="marble"] .demotion-table th {
+  color: var(--color-text-primary);
+}
+
+html[data-theme="marble"] .rank-badge {
+  background: radial-gradient(circle at 50% 50%, var(--color-surface-secondary), var(--color-surface));
+  border: 1.5px solid var(--color-border);
 }
 
 .app-shell {

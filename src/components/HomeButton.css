@@ -13,9 +13,9 @@
   font-weight: 700;
   padding: 8px 14px;
   border-radius: var(--radius-md);
-  border: 1px solid var(--hairline);
-  background: var(--umber);
-  color: var(--marble);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
   cursor: pointer;
   box-shadow: 0 3px 10px rgba(0,0,0,0.4);
   transition: border-color 0.15s ease, transform 0.12s ease;

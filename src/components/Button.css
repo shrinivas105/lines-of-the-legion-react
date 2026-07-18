@@ -5,7 +5,7 @@
   text-transform: uppercase;
   border-radius: 8px;
   cursor: pointer;
-  border: 2px solid rgba(255,255,255,0.2);
+  border: 2px solid var(--color-border);
   transition: transform 0.15s ease, filter 0.15s ease;
   display: inline-flex;
   align-items: center;
@@ -60,12 +60,12 @@
 
 .btn--ghost {
   background: transparent;
-  color: var(--marble-dim);
-  border: 1.5px dashed var(--hairline);
+  color: var(--color-text-secondary);
+  border: 1.5px dashed var(--color-border);
   box-shadow: none;
 }
 .btn--ghost:hover:not(:disabled) {
-  color: var(--marble);
+  color: var(--color-text-primary);
   border-color: var(--bronze-dim);
 }
 

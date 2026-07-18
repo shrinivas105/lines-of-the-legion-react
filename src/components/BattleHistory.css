@@ -97,7 +97,7 @@
   max-width: 100%;
   max-height: min(70vh, 480px);
   overflow-y: auto;
-  background: var(--ink);
+  background: var(--color-surface);
   border: 1px solid var(--bronze-dim);
   border-radius: var(--radius-md);
   padding: 10px 12px;
