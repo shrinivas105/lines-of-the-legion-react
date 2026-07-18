@@ -144,9 +144,14 @@ html[data-theme="marble"] {
   --color-border: rgba(216, 204, 184, 0.5);
   --color-text-primary: #1A130F;
   --color-text-secondary: #6B5D51;
-  /* Gold is the star accent in marble — all headings, important UI */
-  --color-accent: #d8b66b;
-  --color-accent-hover: #e6c080;
+  /* Gold reads fine as text on the dark theme's ink background, but as a
+     light, low-saturation color it's nearly invisible on marble's white/
+     cream surfaces (Sync button, promotion screen, capture modal, analysis
+     screen, results screen). This one token drives all of those, so a
+     deep brown here fixes text legibility across every screen at once
+     without touching dark mode. */
+  --color-accent: #5c4014;
+  --color-accent-hover: #7a541c;
   /* Success state — brighter green for visibility */
   --color-success: #5faa8e;
   /* Warning state — amber/orange */
@@ -420,7 +425,7 @@ html[data-theme="marble"] .analysis-movelist__item {
 
 html[data-theme="marble"] .analysis-movelist__item.active {
   background: var(--color-accent);
-  color: #1A130F;
+  color: #f5ecd8;
 }
 
 html[data-theme="marble"] .capture-modal__backdrop {
@@ -483,6 +488,24 @@ html[data-theme="marble"] .color-choice--master {
 
 html[data-theme="marble"] .color-choice--club {
   --legion-accent-text: #2e363c;
+}
+
+/* Commander's-message box (game screen hint) — this plaque is deliberately
+   kept dark in both themes (like the war-table), but its plain body text
+   used var(--marble), which flips to near-black in light mode — invisible
+   against the box's own hardcoded near-black background. Pin the text back
+   to the light parchment shade regardless of theme. */
+html[data-theme="marble"] .theory-message,
+html[data-theme="marble"] .game-screen__theory-message {
+  color: #e6ddc4;
+}
+
+/* "Position reached N times" — hardcoded white text meant to sit on a dark
+   backdrop; on the light page background it's now invisible. */
+html[data-theme="marble"] .game-screen__info-line,
+html[data-theme="marble"] .info-line {
+  color: var(--color-text-primary);
+  text-shadow: none;
 }
 
 html[data-theme="marble"] .battle-history__tooltip-content {
