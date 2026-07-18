@@ -96,11 +96,22 @@ function normalizeMoveNumber(moveNumber) {
   return Number.isFinite(n) && n > 0 ? n : 0;
 }
 
+// Same non-negative-integer clamp as moveNumber, reused for the two
+// captured quality-tracking counters (topMoveChoices/qualityTrackedMoves).
+// Unlike moveNumber these can legitimately be 0 even for a genuine capture
+// (e.g. captured right at move 1, before SKIP_QUALITY_MOVES even kicks in
+// isn't possible — but a 0/0 capture is still valid data, not "missing"),
+// so this only guards against NaN/negative garbage, not zero itself.
+function normalizeQualityStat(value) {
+  const n = Math.floor(Number(value));
+  return Number.isFinite(n) && n >= 0 ? n : 0;
+}
+
 // `source` here distinguishes how the row was created for display/analytics
 // purposes ('user' = manual entry or CSV import, 'captured' = the Analysis
 // screen's "Add to Practice" button) — both count identically toward the
 // 20-cap and both sync to the cloud the same way.
-export function addOpening({ name, fen, orientation, mode, category, source, moveNumber }) {
+export function addOpening({ name, fen, orientation, mode, category, source, moveNumber, topMoveChoices, qualityTrackedMoves }) {
   const row = {
     clientId: makeClientId(),
     name: formatName(name),
@@ -112,9 +123,12 @@ export function addOpening({ name, fen, orientation, mode, category, source, mov
     // Implicit — never shown/edited in any UI form. Only ever set by
     // ChessTheoryApp.addAnalysisPositionToPractice (captured rows); manual
     // entries, CSV imports, and bundled base openings default to 0 (i.e.
-    // "starts from move one"). See scoring.js / chessTheoryApp.js
-    // startPracticeOpening for how this feeds the scoring assessment.
+    // "starts from move one" with a clean quality slate). See scoring.js /
+    // chessTheoryApp.js startPracticeOpening for how these feed the
+    // scoring assessment.
     moveNumber: normalizeMoveNumber(moveNumber),
+    topMoveChoices: normalizeQualityStat(topMoveChoices),
+    qualityTrackedMoves: normalizeQualityStat(qualityTrackedMoves),
   };
   if (!row.name || !row.fen) {
     return { ok: false, error: 'Name and FEN are both required.' };
@@ -206,9 +220,12 @@ function fromCloudRow(row) {
     mode: normalizeMode(row.mode),
     category: row.category || DEFAULT_CATEGORY,
     source: row.source === 'captured' ? 'captured' : 'user',
-    // move_number is a nullable column so pre-existing cloud rows (synced
-    // before this field existed) still map cleanly to 0.
+    // move_number/top_move_choices/quality_tracked_moves are nullable
+    // columns so pre-existing cloud rows (synced before these fields
+    // existed) still map cleanly to 0.
     moveNumber: normalizeMoveNumber(row.move_number),
+    topMoveChoices: normalizeQualityStat(row.top_move_choices),
+    qualityTrackedMoves: normalizeQualityStat(row.quality_tracked_moves),
   };
 }
 
@@ -293,19 +310,26 @@ function parseCsv(text) {
     // of always evaluating practice against the Club/Lichess explorer.
     const mode = normalizeMode(row.mode);
     const category = String(row.category || '').trim() || DEFAULT_CATEGORY;
-    // Older exports won't have a movenumber column either — defaults to 0,
-    // same as any other manually-entered/imported row (only rows captured
-    // via "Add to Practice" ever have a non-zero value to begin with).
+    // Older exports won't have a movenumber/topmovechoices/qualitytrackedmoves
+    // column either — all default to 0, same as any other manually-entered/
+    // imported row (only rows captured via "Add to Practice" ever have
+    // non-zero values to begin with).
     const moveNumber = normalizeMoveNumber(row.movenumber);
+    const topMoveChoices = normalizeQualityStat(row.topmovechoices);
+    const qualityTrackedMoves = normalizeQualityStat(row.qualitytrackedmoves);
     if (!name || !fen) return null;
-    return { clientId: makeClientId(), name, fen, orientation, mode, category, source: 'user', moveNumber };
+    return {
+      clientId: makeClientId(), name, fen, orientation, mode, category, source: 'user',
+      moveNumber, topMoveChoices, qualityTrackedMoves,
+    };
   }).filter(Boolean);
 }
 
 function stringifyCsv(rows) {
-  const header = ['name', 'fen', 'orientation', 'mode', 'category', 'movenumber'];
-  const escape = value => `"${String(value || '').replace(/"/g, '""')}"`;
-  const lines = rows.map(row => header.map(key => escape(key === 'movenumber' ? row.moveNumber : row[key] ?? '')).join(','));
+  const header = ['name', 'fen', 'orientation', 'mode', 'category', 'movenumber', 'topmovechoices', 'qualitytrackedmoves'];
+  const fieldMap = { movenumber: 'moveNumber', topmovechoices: 'topMoveChoices', qualitytrackedmoves: 'qualityTrackedMoves' };
+  const escape = value => `"${String(value ?? '').replace(/"/g, '""')}"`;
+  const lines = rows.map(row => header.map(key => escape(row[fieldMap[key] || key])).join(','));
   return [header.join(','), ...lines].join('\n');
 }
 

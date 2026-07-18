@@ -52,6 +52,13 @@ export class ChessTheoryApp {
     // practice line resuming from move 12 isn't scored as if it were a
     // fresh, from-scratch opening. Never affects move-quality tracking.
     this.practiceMoveOffset = 0;
+    // Companion offsets: the quality-tracking tallies (top-3/tricky book
+    // moves out of moves actually judged) that already existed at capture
+    // time, so a practice session's move-quality score/percentage reflects
+    // the real record for this line, not a fresh 0/0 slate that ignores
+    // how well the moves before the captured position were actually played.
+    this.practiceTopMoveOffset = 0;
+    this.practiceQualityTrackedOffset = 0;
     this.topMoveChoices = 0;
     this.qualityTrackedMoves = 0;
     this.hintUsed = false;
@@ -295,6 +302,11 @@ export class ChessTheoryApp {
     // added/imported/bundled openings don't carry one, so this is 0 for
     // them, same as before this feature existed.
     this.practiceMoveOffset = Number.isFinite(opening.moveNumber) ? Math.max(0, Math.floor(opening.moveNumber)) : 0;
+    // opening.topMoveChoices / opening.qualityTrackedMoves (same capture,
+    // see AnalysisBoard.getCapturedQualityStats) — the move-quality record
+    // already earned before this FEN.
+    this.practiceTopMoveOffset = Number.isFinite(opening.topMoveChoices) ? Math.max(0, Math.floor(opening.topMoveChoices)) : 0;
+    this.practiceQualityTrackedOffset = Number.isFinite(opening.qualityTrackedMoves) ? Math.max(0, Math.floor(opening.qualityTrackedMoves)) : 0;
     this.topMoveChoices = 0;
     this.qualityTrackedMoves = 0;
     this.hintUsed = false;
@@ -352,6 +364,8 @@ export class ChessTheoryApp {
     this.lastMove = { from: null, to: null };
     this.playerMoves = 0;
     this.practiceMoveOffset = 0;
+    this.practiceTopMoveOffset = 0;
+    this.practiceQualityTrackedOffset = 0;
     this.qualityTrackedMoves = 0;
     this.hintUsed = false;
     this.lastAIMoveFEN = null;
@@ -845,18 +859,23 @@ export class ChessTheoryApp {
     const isCheckmate = this.game.isCheckmate();
     const playerDeliveredCheckmate = isCheckmate && this.game.turn() !== this.playerColor;
 
+    // Includes practice*Offset (always 0 outside practice, or when
+    // practicing a manually-added/base opening) so a practice line resumed
+    // from a captured mid-opening FEN is assessed at its true theory depth
+    // AND true move-quality record, instead of being scored as if play —
+    // and quality tracking — began from scratch at move 0.
+    const combinedPlayerMoves = this.playerMoves + (this.practiceMoveOffset || 0);
+    const combinedTopMoveChoices = this.topMoveChoices + (this.practiceTopMoveOffset || 0);
+    const combinedQualityTrackedMoves = this.qualityTrackedMoves + (this.practiceQualityTrackedOffset || 0);
+
     const result = await Scoring.finalizeGameScore({
       fen: this.game.fen(),
       isCheckmate,
       playerDeliveredCheckmate,
       playerColor: this.playerColor,
-      // Includes practiceMoveOffset (always 0 outside practice, or when
-      // practicing a manually-added/base opening) so a practice line
-      // resumed from a captured mid-opening FEN is assessed at its true
-      // theory depth instead of being scored as if play began at move 0.
-      playerMoves: this.playerMoves + (this.practiceMoveOffset || 0),
-      topMoveChoices: this.topMoveChoices,
-      qualityTrackedMoves: this.qualityTrackedMoves,
+      playerMoves: combinedPlayerMoves,
+      topMoveChoices: combinedTopMoveChoices,
+      qualityTrackedMoves: combinedQualityTrackedMoves,
       aiSource: this.aiSource,
       evalCache: this.evalCache,
     });
@@ -874,9 +893,14 @@ export class ChessTheoryApp {
     const penaltyReason = result.penaltyReason;
     const battleRank = result.battleRank;
     const shortSkirmishApplied = result.shortSkirmishApplied;
+    // Same combined depth (session moves + captured-position offset) that
+    // was just fed into scoring above — shown as the "Moves" stat so what
+    // the player sees matches what they were actually scored on, instead
+    // of only showing moves played in this particular sitting.
+    const totalTheoryMoves = combinedPlayerMoves;
 
     if (this.mode === 'practice') {
-      const moveQuality = Scoring.getMoveQuality(this.topMoveChoices, this.qualityTrackedMoves);
+      const moveQuality = Scoring.getMoveQuality(combinedTopMoveChoices, combinedQualityTrackedMoves);
       const displayEval = this.finalPlayerEval > 0
         ? '+' + this.finalPlayerEval.toFixed(1)
         : this.finalPlayerEval.toFixed(1);
@@ -898,7 +922,8 @@ export class ChessTheoryApp {
         displayEval,
         gamesToShow: this.recentGames,
         isPractice: true,
-        shortSkirmishApplied
+        shortSkirmishApplied,
+        totalTheoryMoves
       };
 
       // Matches original's direct this.ui.renderEndGameSummary(...) call —
@@ -920,7 +945,7 @@ export class ChessTheoryApp {
       await this.saveAllProgress();
     }
 
-    const moveQuality = Scoring.getMoveQuality(this.topMoveChoices, this.qualityTrackedMoves);
+    const moveQuality = Scoring.getMoveQuality(combinedTopMoveChoices, combinedQualityTrackedMoves);
     this.currentPGN = PGNExporter.generatePGN(
       this.game,
       this.playerColor,
@@ -943,7 +968,8 @@ export class ChessTheoryApp {
       displayEval,
       gamesToShow,
       isPractice: false,
-      shortSkirmishApplied
+      shortSkirmishApplied,
+      totalTheoryMoves
     };
 
     // Matches original's direct this.ui.renderEndGameSummary(...) call.
@@ -976,13 +1002,19 @@ export class ChessTheoryApp {
     const fen = this.analysisBoard.analysisGame.fen();
     const orientation = this.playerColor === 'w' ? 'white' : 'black';
     const mode = this.aiSource === 'master' ? 'master' : 'club';
-    // Implicit column, not shown in the capture modal: how many of the
-    // player's own moves were already made to reach this position. Lets a
+    // Implicit columns, not shown in the capture modal: how many of the
+    // player's own moves were already made to reach this position, and
+    // how many of those were "quality" (top-3/tricky) book moves. Lets a
     // later practice session's scoring assessment (see startPracticeOpening
-    // / stopGameDueToThinTheory) know the true theory depth this line
-    // resumes from, rather than assuming it starts from move zero.
+    // / stopGameDueToThinTheory) know the true theory depth AND the true
+    // move-quality record this line resumes from, rather than assuming it
+    // starts from move zero with a clean 0/0 quality slate.
     const moveNumber = this.analysisBoard.getCapturedMoveNumber();
-    return addOpening({ name, fen, orientation, mode, source: 'captured', moveNumber });
+    const { topMoveChoices, qualityTrackedMoves } = this.analysisBoard.getCapturedQualityStats();
+    return addOpening({
+      name, fen, orientation, mode, source: 'captured',
+      moveNumber, topMoveChoices, qualityTrackedMoves,
+    });
   }
 
   async showAnalysis() {
