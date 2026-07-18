@@ -478,11 +478,11 @@ html[data-theme="marble"] .color-choice__notice {
    (light theme only) fixes all of them at once without touching the
    borders/glow/progress-bar, which still use --legion-accent unchanged. */
 html[data-theme="marble"] .color-choice--master {
-  --legion-accent-text: #8a6a2f;
+  --legion-accent-text: #5c4014;
 }
 
 html[data-theme="marble"] .color-choice--club {
-  --legion-accent-text: #4f5b66;
+  --legion-accent-text: #2e363c;
 }
 
 html[data-theme="marble"] .battle-history__tooltip-content {
