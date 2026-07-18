@@ -190,6 +190,7 @@ export async function insertPracticeOpening(row) {
         mode: row.mode,
         category: row.category,
         source: row.source || 'user',
+        move_number: row.moveNumber || 0,
       })
       .select()
       .single();

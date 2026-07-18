@@ -91,11 +91,16 @@ export function getUserOpeningsCount() {
   return getUserRows().length;
 }
 
+function normalizeMoveNumber(moveNumber) {
+  const n = Math.floor(Number(moveNumber));
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
 // `source` here distinguishes how the row was created for display/analytics
 // purposes ('user' = manual entry or CSV import, 'captured' = the Analysis
 // screen's "Add to Practice" button) — both count identically toward the
 // 20-cap and both sync to the cloud the same way.
-export function addOpening({ name, fen, orientation, mode, category, source }) {
+export function addOpening({ name, fen, orientation, mode, category, source, moveNumber }) {
   const row = {
     clientId: makeClientId(),
     name: formatName(name),
@@ -104,6 +109,12 @@ export function addOpening({ name, fen, orientation, mode, category, source }) {
     mode: normalizeMode(mode),
     category: String(category || '').trim() || DEFAULT_CATEGORY,
     source: source === 'captured' ? 'captured' : 'user',
+    // Implicit — never shown/edited in any UI form. Only ever set by
+    // ChessTheoryApp.addAnalysisPositionToPractice (captured rows); manual
+    // entries, CSV imports, and bundled base openings default to 0 (i.e.
+    // "starts from move one"). See scoring.js / chessTheoryApp.js
+    // startPracticeOpening for how this feeds the scoring assessment.
+    moveNumber: normalizeMoveNumber(moveNumber),
   };
   if (!row.name || !row.fen) {
     return { ok: false, error: 'Name and FEN are both required.' };
@@ -195,6 +206,9 @@ function fromCloudRow(row) {
     mode: normalizeMode(row.mode),
     category: row.category || DEFAULT_CATEGORY,
     source: row.source === 'captured' ? 'captured' : 'user',
+    // move_number is a nullable column so pre-existing cloud rows (synced
+    // before this field existed) still map cleanly to 0.
+    moveNumber: normalizeMoveNumber(row.move_number),
   };
 }
 
@@ -279,15 +293,19 @@ function parseCsv(text) {
     // of always evaluating practice against the Club/Lichess explorer.
     const mode = normalizeMode(row.mode);
     const category = String(row.category || '').trim() || DEFAULT_CATEGORY;
+    // Older exports won't have a movenumber column either — defaults to 0,
+    // same as any other manually-entered/imported row (only rows captured
+    // via "Add to Practice" ever have a non-zero value to begin with).
+    const moveNumber = normalizeMoveNumber(row.movenumber);
     if (!name || !fen) return null;
-    return { clientId: makeClientId(), name, fen, orientation, mode, category, source: 'user' };
+    return { clientId: makeClientId(), name, fen, orientation, mode, category, source: 'user', moveNumber };
   }).filter(Boolean);
 }
 
 function stringifyCsv(rows) {
-  const header = ['name', 'fen', 'orientation', 'mode', 'category'];
+  const header = ['name', 'fen', 'orientation', 'mode', 'category', 'movenumber'];
   const escape = value => `"${String(value || '').replace(/"/g, '""')}"`;
-  const lines = rows.map(row => header.map(key => escape(row[key] ?? '')).join(','));
+  const lines = rows.map(row => header.map(key => escape(key === 'movenumber' ? row.moveNumber : row[key] ?? '')).join(','));
   return [header.join(','), ...lines].join('\n');
 }
 

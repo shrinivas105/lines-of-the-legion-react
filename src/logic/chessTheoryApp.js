@@ -45,6 +45,13 @@ export class ChessTheoryApp {
     // stopGameDueToThinTheory().
     this.pendingQualityCheck = null;
     this.playerMoves = 0;
+    // How many player moves already existed before this session's play
+    // began — non-zero only when practicing a captured mid-opening
+    // position (see startPracticeOpening). Added to playerMoves only when
+    // feeding the scoring assessment (Scoring.finalizeGameScore), so a
+    // practice line resuming from move 12 isn't scored as if it were a
+    // fresh, from-scratch opening. Never affects move-quality tracking.
+    this.practiceMoveOffset = 0;
     this.topMoveChoices = 0;
     this.qualityTrackedMoves = 0;
     this.hintUsed = false;
@@ -282,6 +289,12 @@ export class ChessTheoryApp {
     this.gameCount = 0;
     this.lastAIMoveFEN = null;
     this.playerMoves = 0;
+    // opening.moveNumber ('Add to Practice' captures only — see
+    // practiceOpeningsStore.js / AnalysisBoard.getCapturedMoveNumber) is
+    // how many player moves already existed before this FEN. Manually
+    // added/imported/bundled openings don't carry one, so this is 0 for
+    // them, same as before this feature existed.
+    this.practiceMoveOffset = Number.isFinite(opening.moveNumber) ? Math.max(0, Math.floor(opening.moveNumber)) : 0;
     this.topMoveChoices = 0;
     this.qualityTrackedMoves = 0;
     this.hintUsed = false;
@@ -337,9 +350,8 @@ export class ChessTheoryApp {
     this.selected = null;
     this.dragSource = null;
     this.lastMove = { from: null, to: null };
-    this.gameCount = 0;
     this.playerMoves = 0;
-    this.topMoveChoices = 0;
+    this.practiceMoveOffset = 0;
     this.qualityTrackedMoves = 0;
     this.hintUsed = false;
     this.lastAIMoveFEN = null;
@@ -838,7 +850,11 @@ export class ChessTheoryApp {
       isCheckmate,
       playerDeliveredCheckmate,
       playerColor: this.playerColor,
-      playerMoves: this.playerMoves,
+      // Includes practiceMoveOffset (always 0 outside practice, or when
+      // practicing a manually-added/base opening) so a practice line
+      // resumed from a captured mid-opening FEN is assessed at its true
+      // theory depth instead of being scored as if play began at move 0.
+      playerMoves: this.playerMoves + (this.practiceMoveOffset || 0),
       topMoveChoices: this.topMoveChoices,
       qualityTrackedMoves: this.qualityTrackedMoves,
       aiSource: this.aiSource,
@@ -960,7 +976,13 @@ export class ChessTheoryApp {
     const fen = this.analysisBoard.analysisGame.fen();
     const orientation = this.playerColor === 'w' ? 'white' : 'black';
     const mode = this.aiSource === 'master' ? 'master' : 'club';
-    return addOpening({ name, fen, orientation, mode, source: 'captured' });
+    // Implicit column, not shown in the capture modal: how many of the
+    // player's own moves were already made to reach this position. Lets a
+    // later practice session's scoring assessment (see startPracticeOpening
+    // / stopGameDueToThinTheory) know the true theory depth this line
+    // resumes from, rather than assuming it starts from move zero.
+    const moveNumber = this.analysisBoard.getCapturedMoveNumber();
+    return addOpening({ name, fen, orientation, mode, source: 'captured', moveNumber });
   }
 
   async showAnalysis() {

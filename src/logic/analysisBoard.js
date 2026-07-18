@@ -190,6 +190,28 @@ export class AnalysisBoard {
     }
   }
 
+  // How many of the player's own moves had already been made to reach the
+  // position currently on screen (currentMoveIndex). Uses the same
+  // even-index-is-white / isPlayerMove logic as preloadAllData() above, so
+  // it always agrees with what "Move N (side)" already shows in
+  // positionText. This is what "Add to Practice" (AnalysisScreen.jsx →
+  // ChessTheoryApp.addAnalysisPositionToPractice) captures as the opening
+  // row's implicit `moveNumber` column — see practiceOpeningsStore.js —
+  // so a later practice session resuming from this FEN can tell the
+  // scoring assessment how much theory depth already existed before play
+  // resumes here, instead of always assuming a from-scratch opening.
+  getCapturedMoveNumber() {
+    if (this.currentMoveIndex < 0) return 0;
+    const playerColor = this.app.playerColor;
+    let count = 0;
+    for (let i = 0; i <= this.currentMoveIndex; i++) {
+      const isWhiteMove = i % 2 === 0;
+      const isPlayerMove = (playerColor === 'w' && isWhiteMove) || (playerColor === 'b' && !isWhiteMove);
+      if (isPlayerMove) count++;
+    }
+    return count;
+  }
+
   goToMove(moveIndex) {
     if (this.analysisStartFen) {
       this.analysisGame = new Chess(this.analysisStartFen);
