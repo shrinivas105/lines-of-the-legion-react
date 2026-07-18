@@ -11,7 +11,12 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
-  padding: 4px 4px;
+  /* Generous vertical padding: the current-rank badge scales up to 1.12x
+     and pulses with a glowing box-shadow (blur up to ~26px). Since this
+     row clips vertically (see overflow-y below), the padding has to be
+     big enough to contain that glow/scale, or it gets cropped at the
+     top/bottom instead of the row just looking cramped. */
+  padding: 22px 4px 10px;
   /* Safety net: rather than let the row clip/overflow past the screen
      edge on unusually narrow viewports, let it scroll horizontally as a
      last resort — on ordinary screens it fits and no scrollbar appears. */
