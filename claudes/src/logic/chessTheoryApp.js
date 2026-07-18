@@ -23,8 +23,6 @@ import { addOpening } from '../services/practiceOpeningsStore';
 import {
   SKIP_QUALITY_MOVES,
   PRACTICE_MODE,
-  MASTER_TRICKY_MOVE,
-  CLUB_TRICKY_MOVE,
 } from '../config';
 
 export class ChessTheoryApp {
@@ -47,6 +45,20 @@ export class ChessTheoryApp {
     // stopGameDueToThinTheory().
     this.pendingQualityCheck = null;
     this.playerMoves = 0;
+    // How many player moves already existed before this session's play
+    // began — non-zero only when practicing a captured mid-opening
+    // position (see startPracticeOpening). Added to playerMoves only when
+    // feeding the scoring assessment (Scoring.finalizeGameScore), so a
+    // practice line resuming from move 12 isn't scored as if it were a
+    // fresh, from-scratch opening. Never affects move-quality tracking.
+    this.practiceMoveOffset = 0;
+    // Companion offsets: the quality-tracking tallies (top-3/tricky book
+    // moves out of moves actually judged) that already existed at capture
+    // time, so a practice session's move-quality score/percentage reflects
+    // the real record for this line, not a fresh 0/0 slate that ignores
+    // how well the moves before the captured position were actually played.
+    this.practiceTopMoveOffset = 0;
+    this.practiceQualityTrackedOffset = 0;
     this.topMoveChoices = 0;
     this.qualityTrackedMoves = 0;
     this.hintUsed = false;
@@ -284,6 +296,17 @@ export class ChessTheoryApp {
     this.gameCount = 0;
     this.lastAIMoveFEN = null;
     this.playerMoves = 0;
+    // opening.moveNumber ('Add to Practice' captures only — see
+    // practiceOpeningsStore.js / AnalysisBoard.getCapturedMoveNumber) is
+    // how many player moves already existed before this FEN. Manually
+    // added/imported/bundled openings don't carry one, so this is 0 for
+    // them, same as before this feature existed.
+    this.practiceMoveOffset = Number.isFinite(opening.moveNumber) ? Math.max(0, Math.floor(opening.moveNumber)) : 0;
+    // opening.topMoveChoices / opening.qualityTrackedMoves (same capture,
+    // see AnalysisBoard.getCapturedQualityStats) — the move-quality record
+    // already earned before this FEN.
+    this.practiceTopMoveOffset = Number.isFinite(opening.topMoveChoices) ? Math.max(0, Math.floor(opening.topMoveChoices)) : 0;
+    this.practiceQualityTrackedOffset = Number.isFinite(opening.qualityTrackedMoves) ? Math.max(0, Math.floor(opening.qualityTrackedMoves)) : 0;
     this.topMoveChoices = 0;
     this.qualityTrackedMoves = 0;
     this.hintUsed = false;
@@ -339,9 +362,10 @@ export class ChessTheoryApp {
     this.selected = null;
     this.dragSource = null;
     this.lastMove = { from: null, to: null };
-    this.gameCount = 0;
     this.playerMoves = 0;
-    this.topMoveChoices = 0;
+    this.practiceMoveOffset = 0;
+    this.practiceTopMoveOffset = 0;
+    this.practiceQualityTrackedOffset = 0;
     this.qualityTrackedMoves = 0;
     this.hintUsed = false;
     this.lastAIMoveFEN = null;
@@ -532,117 +556,22 @@ export class ChessTheoryApp {
         return;
       }
 
-      const moveIndex = data.moves.findIndex(m =>
-        m.uci === playerUCI || m.san === (
-          playerUCI === 'e1g1' || playerUCI === 'e8g8' ? 'O-O' :
-          playerUCI === 'e1c1' || playerUCI === 'e8c8' ? 'O-O-O' : ''
-        )
-      );
+      // Delegate the actual "was this a quality move?" decision to Scoring,
+      // so the live game and the PGN score tester always run identical
+      // analysis (see scoring.js for the full rules).
+      const result = Scoring.assessMoveQuality(data, playerUCI, this.playerColor, this.aiSource);
 
-      if (moveIndex === -1) {
+      if (result.moveIndex === -1) {
         console.log(`❌ Move not found in explorer data (${this.topMoveChoices}/${this.qualityTrackedMoves})`);
         return;
       }
 
-      const isTop3 = moveIndex < 3;
-
-      if (isTop3) {
-        const playerMove = data.moves[moveIndex];
-        const playerTotalGames = playerMove.white + playerMove.draws + playerMove.black;
-
-        let playerWinPct, opponentWinPct;
-        if (this.playerColor === 'w') {
-          playerWinPct = (playerMove.white / playerTotalGames) * 100;
-          opponentWinPct = (playerMove.black / playerTotalGames) * 100;
-        } else {
-          playerWinPct = (playerMove.black / playerTotalGames) * 100;
-          opponentWinPct = (playerMove.white / playerTotalGames) * 100;
-        }
-
-        const playerWinRatio = opponentWinPct > 0 ? playerWinPct / opponentWinPct : 999;
-
-        const otherTopMoves = data.moves.slice(0, 3).filter((_, idx) => idx !== moveIndex);
-
-        if (otherTopMoves.length >= 2) {
-          const otherWinPercentages = otherTopMoves.map(move => {
-            const total = move.white + move.draws + move.black;
-            if (this.playerColor === 'w') {
-              return (move.white / total) * 100;
-            } else {
-              return (move.black / total) * 100;
-            }
-          });
-
-          const otherWinRatios = otherTopMoves.map(move => {
-            const total = move.white + move.draws + move.black;
-            let winPct, losePct;
-            if (this.playerColor === 'w') {
-              winPct = (move.white / total) * 100;
-              losePct = (move.black / total) * 100;
-            } else {
-              winPct = (move.black / total) * 100;
-              losePct = (move.white / total) * 100;
-            }
-            return losePct > 0 ? winPct / losePct : 999;
-          });
-
-          const lowestOtherWinPct = Math.min(...otherWinPercentages);
-          const winPctGap = lowestOtherWinPct - playerWinPct;
-          const condition1 = winPctGap > 20;
-
-          const condition2 = playerWinRatio < 1.0 && otherWinRatios.every(ratio => ratio > 1.0);
-
-          if (condition1 && condition2) {
-            console.log(`⚠️ Bad top move detected! Rank: ${moveIndex + 1}, Player win: ${playerWinPct.toFixed(1)}%, Opponent win: ${opponentWinPct.toFixed(1)}%, Ratio: ${playerWinRatio.toFixed(2)}, Gap: ${winPctGap.toFixed(1)}%, Other ratios: [${otherWinRatios.map(r => r.toFixed(2)).join(', ')}] - NOT counting as quality move (${this.topMoveChoices}/${this.qualityTrackedMoves})`);
-            return;
-          }
-        }
-
+      if (result.counted) {
         this.topMoveChoices++;
-        console.log(`✅ Top 3 move! Rank: ${moveIndex + 1} (${this.topMoveChoices}/${this.qualityTrackedMoves})`);
-        return;
+        console.log(`✅ Quality move! Rank: ${result.moveIndex + 1} (${result.reason}) (${this.topMoveChoices}/${this.qualityTrackedMoves})`);
+      } else {
+        console.log(`❌ Not a quality move, rank: ${result.moveIndex + 1} (${result.reason || 'not-top'}) (${this.topMoveChoices}/${this.qualityTrackedMoves})`);
       }
-
-      // NEW TIERED TRICKY MOVE SYSTEM (Ranks 5-20)
-      const trickyConfig = this.aiSource === 'master' ? MASTER_TRICKY_MOVE : CLUB_TRICKY_MOVE;
-
-      if (trickyConfig && trickyConfig.enabled && moveIndex >= (trickyConfig.minRank - 1) && moveIndex <= (trickyConfig.maxRank - 1)) {
-        const move = data.moves[moveIndex];
-        const totalGames = move.white + move.draws + move.black;
-
-        let playerWinPct, opponentWinPct;
-        if (this.playerColor === 'w') {
-          playerWinPct = (move.white / totalGames) * 100;
-          opponentWinPct = (move.black / totalGames) * 100;
-        } else {
-          playerWinPct = (move.black / totalGames) * 100;
-          opponentWinPct = (move.white / totalGames) * 100;
-        }
-
-        const winAdvantage = playerWinPct - opponentWinPct;
-
-        let applicableTier = null;
-        for (const tier of trickyConfig.tiers) {
-          if (totalGames >= tier.minGames && totalGames <= tier.maxGames) {
-            applicableTier = tier;
-            break;
-          }
-        }
-
-        if (applicableTier) {
-          const meetsWinAdvantage = winAdvantage >= applicableTier.minWinAdvantage;
-
-          if (meetsWinAdvantage) {
-            this.topMoveChoices++;
-            console.log(`🎯 Tricky move qualified! Rank: ${moveIndex + 1}, Win advantage: +${winAdvantage.toFixed(1)}%, Games: ${totalGames}, Tier: ${applicableTier.minGames}-${applicableTier.maxGames === Infinity ? '+' : applicableTier.maxGames} games (requires +${applicableTier.minWinAdvantage}%) (${this.topMoveChoices}/${this.qualityTrackedMoves})`);
-            return;
-          } else {
-            console.log(`📊 Tricky move check: Rank ${moveIndex + 1}, Win advantage: +${winAdvantage.toFixed(1)}% (needs +${applicableTier.minWinAdvantage}%), Games: ${totalGames}`);
-          }
-        }
-      }
-
-      console.log(`❌ Not top 3, rank: ${moveIndex + 1} (${this.topMoveChoices}/${this.qualityTrackedMoves})`);
     } catch (e) {
       console.error('Quality check error:', e);
     }
@@ -919,49 +848,59 @@ export class ChessTheoryApp {
     }
 
     this.clearActiveGameState();
-    let scoreResult;
 
     // A checkmate is a decisive game result, not an engine-evaluation case.
     // chess.js leaves the losing side to move after mate, so this tells us
-    // whether the player delivered it or was checkmated. Apply this before
-    // either campaign's normal scoring formula and avoid relying on a remote
-    // evaluation API, which may report a terminal position as 0.0.
-    if (this.game.isCheckmate()) {
-      const playerDeliveredCheckmate = this.game.turn() !== this.playerColor;
-      this.finalPlayerEval = playerDeliveredCheckmate ? 99 : -99;
-      scoreResult = {
-        score: playerDeliveredCheckmate ? 100 : 0,
-        penaltyReason: playerDeliveredCheckmate
-          ? 'Checkmate delivered! The enemy king has fallen.'
-          : 'Checkmate suffered! The king has fallen.'
-      };
-    } else {
-      const fen = this.game.fen();
-      const rawEval = await ChessAPI.getEvaluation(fen, this.evalCache);
-      if (rawEval === null) {
-        // Passed the start-of-game health check but died before scoring —
-        // rare, but still must not save a result built on a fabricated 0.0.
-        console.error('❌ Evaluation API failed at game end.');
-        this.endGameApiError('eval');
-        return;
-      }
-      this.finalPlayerEval = Scoring.getPlayerEval(rawEval, this.playerColor);
-      scoreResult = Scoring.getTotalScore(
-        this.playerMoves,
-        this.topMoveChoices,
-        this.finalPlayerEval,
-        this.aiSource,
-        this.qualityTrackedMoves
-      );
+    // whether the player delivered it or was checkmated. Scoring.finalizeGameScore
+    // applies this before either campaign's normal scoring formula and avoids
+    // relying on a remote evaluation API, which may report a terminal position
+    // as 0.0. This is the same finalizer the PGN score tester uses, so a live
+    // battle and a re-tested PGN always score identically.
+    const isCheckmate = this.game.isCheckmate();
+    const playerDeliveredCheckmate = isCheckmate && this.game.turn() !== this.playerColor;
+
+    // Includes practice*Offset (always 0 outside practice, or when
+    // practicing a manually-added/base opening) so a practice line resumed
+    // from a captured mid-opening FEN is assessed at its true theory depth
+    // AND true move-quality record, instead of being scored as if play —
+    // and quality tracking — began from scratch at move 0.
+    const combinedPlayerMoves = this.playerMoves + (this.practiceMoveOffset || 0);
+    const combinedTopMoveChoices = this.topMoveChoices + (this.practiceTopMoveOffset || 0);
+    const combinedQualityTrackedMoves = this.qualityTrackedMoves + (this.practiceQualityTrackedOffset || 0);
+
+    const result = await Scoring.finalizeGameScore({
+      fen: this.game.fen(),
+      isCheckmate,
+      playerDeliveredCheckmate,
+      playerColor: this.playerColor,
+      playerMoves: combinedPlayerMoves,
+      topMoveChoices: combinedTopMoveChoices,
+      qualityTrackedMoves: combinedQualityTrackedMoves,
+      aiSource: this.aiSource,
+      evalCache: this.evalCache,
+    });
+
+    if (result.error) {
+      // Passed the start-of-game health check but died before scoring —
+      // rare, but still must not save a result built on a fabricated 0.0.
+      console.error('❌ Evaluation API failed at game end.');
+      this.endGameApiError('eval');
+      return;
     }
 
-    const score = scoreResult.score;
-    const penaltyReason = scoreResult.penaltyReason;
-
-    const battleRank = Scoring.getBattleRank(score, this.finalPlayerEval, penaltyReason, this.aiSource);
+    this.finalPlayerEval = result.finalPlayerEval;
+    const score = result.score;
+    const penaltyReason = result.penaltyReason;
+    const battleRank = result.battleRank;
+    const shortSkirmishApplied = result.shortSkirmishApplied;
+    // Same combined depth (session moves + captured-position offset) that
+    // was just fed into scoring above — shown as the "Moves" stat so what
+    // the player sees matches what they were actually scored on, instead
+    // of only showing moves played in this particular sitting.
+    const totalTheoryMoves = combinedPlayerMoves;
 
     if (this.mode === 'practice') {
-      const moveQuality = Scoring.getMoveQuality(this.topMoveChoices, this.qualityTrackedMoves);
+      const moveQuality = Scoring.getMoveQuality(combinedTopMoveChoices, combinedQualityTrackedMoves);
       const displayEval = this.finalPlayerEval > 0
         ? '+' + this.finalPlayerEval.toFixed(1)
         : this.finalPlayerEval.toFixed(1);
@@ -982,7 +921,9 @@ export class ChessTheoryApp {
         moveQuality,
         displayEval,
         gamesToShow: this.recentGames,
-        isPractice: true
+        isPractice: true,
+        shortSkirmishApplied,
+        totalTheoryMoves
       };
 
       // Matches original's direct this.ui.renderEndGameSummary(...) call —
@@ -1004,7 +945,7 @@ export class ChessTheoryApp {
       await this.saveAllProgress();
     }
 
-    const moveQuality = Scoring.getMoveQuality(this.topMoveChoices, this.qualityTrackedMoves);
+    const moveQuality = Scoring.getMoveQuality(combinedTopMoveChoices, combinedQualityTrackedMoves);
     this.currentPGN = PGNExporter.generatePGN(
       this.game,
       this.playerColor,
@@ -1026,7 +967,9 @@ export class ChessTheoryApp {
       moveQuality,
       displayEval,
       gamesToShow,
-      isPractice: false
+      isPractice: false,
+      shortSkirmishApplied,
+      totalTheoryMoves
     };
 
     // Matches original's direct this.ui.renderEndGameSummary(...) call.
@@ -1059,7 +1002,19 @@ export class ChessTheoryApp {
     const fen = this.analysisBoard.analysisGame.fen();
     const orientation = this.playerColor === 'w' ? 'white' : 'black';
     const mode = this.aiSource === 'master' ? 'master' : 'club';
-    return addOpening({ name, fen, orientation, mode, source: 'captured' });
+    // Implicit columns, not shown in the capture modal: how many of the
+    // player's own moves were already made to reach this position, and
+    // how many of those were "quality" (top-3/tricky) book moves. Lets a
+    // later practice session's scoring assessment (see startPracticeOpening
+    // / stopGameDueToThinTheory) know the true theory depth AND the true
+    // move-quality record this line resumes from, rather than assuming it
+    // starts from move zero with a clean 0/0 quality slate.
+    const moveNumber = this.analysisBoard.getCapturedMoveNumber();
+    const { topMoveChoices, qualityTrackedMoves } = this.analysisBoard.getCapturedQualityStats();
+    return addOpening({
+      name, fen, orientation, mode, source: 'captured',
+      moveNumber, topMoveChoices, qualityTrackedMoves,
+    });
   }
 
   async showAnalysis() {

@@ -11,6 +11,8 @@
 
 import { Chess } from 'chess.js';
 import { ChessAPI } from '../services/chessApi';
+import { Scoring } from './scoring';
+import { SKIP_QUALITY_MOVES } from '../config';
 
 // Standard chess UCI writes castling as king-to-destination (e1g1), while
 // some Explorer-compatible sources use king-to-rook-square (e1h1). Normalize
@@ -188,6 +190,76 @@ export class AnalysisBoard {
     } else {
       await this.updatePositionInfo();
     }
+  }
+
+  // How many of the player's own moves had already been made to reach the
+  // position currently on screen (currentMoveIndex). Uses the same
+  // even-index-is-white / isPlayerMove logic as preloadAllData() above, so
+  // it always agrees with what "Move N (side)" already shows in
+  // positionText. This is what "Add to Practice" (AnalysisScreen.jsx →
+  // ChessTheoryApp.addAnalysisPositionToPractice) captures as the opening
+  // row's implicit `moveNumber` column — see practiceOpeningsStore.js —
+  // so a later practice session resuming from this FEN can tell the
+  // scoring assessment how much theory depth already existed before play
+  // resumes here, instead of always assuming a from-scratch opening.
+  getCapturedMoveNumber() {
+    if (this.currentMoveIndex < 0) return 0;
+    const playerColor = this.app.playerColor;
+    let count = 0;
+    for (let i = 0; i <= this.currentMoveIndex; i++) {
+      const isWhiteMove = i % 2 === 0;
+      const isPlayerMove = (playerColor === 'w' && isWhiteMove) || (playerColor === 'b' && !isWhiteMove);
+      if (isPlayerMove) count++;
+    }
+    return count;
+  }
+
+  // Companion to getCapturedMoveNumber(): replays the player's own moves
+  // from the start of this analysis up to (and including) currentMoveIndex,
+  // re-running the exact same move-quality assessment the live battle used
+  // (Scoring.assessMoveQuality, plus the same SKIP_QUALITY_MOVES opening
+  // grace period) so the topMoveChoices/qualityTrackedMoves captured for a
+  // practice row match what the original battle actually credited — not a
+  // fresh 0/0 that ignores how well those first N moves were really played.
+  // Uses topMovesData already gathered by preloadAllData(), so this is a
+  // synchronous replay with no extra network calls.
+  getCapturedQualityStats() {
+    if (this.currentMoveIndex < 0) return { topMoveChoices: 0, qualityTrackedMoves: 0 };
+
+    const playerColor = this.app.playerColor;
+    const aiSource = this.app.aiSource;
+    let topMoveChoices = 0;
+    let qualityTrackedMoves = 0;
+    let playerMoveCounter = 0;
+
+    const tempGame = this.analysisStartFen ? new Chess(this.analysisStartFen) : new Chess();
+
+    for (let i = 0; i <= this.currentMoveIndex; i++) {
+      const move = this.moveHistory[i];
+      const isWhiteMove = i % 2 === 0;
+      const isPlayerMove = (playerColor === 'w' && isWhiteMove) || (playerColor === 'b' && !isWhiteMove);
+
+      if (isPlayerMove) {
+        playerMoveCounter++;
+        qualityTrackedMoves++;
+
+        if (playerMoveCounter <= SKIP_QUALITY_MOVES) {
+          topMoveChoices++;
+        } else {
+          const positionFen = tempGame.fen();
+          const movesForPosition = this.topMovesData[positionFen] || [];
+          if (movesForPosition.length > 0) {
+            const moveUci = move.from + move.to + (move.promotion || '');
+            const result = Scoring.assessMoveQuality({ moves: movesForPosition }, moveUci, playerColor, aiSource);
+            if (result.counted) topMoveChoices++;
+          }
+        }
+      }
+
+      tempGame.move({ from: move.from, to: move.to, promotion: move.promotion });
+    }
+
+    return { topMoveChoices, qualityTrackedMoves };
   }
 
   goToMove(moveIndex) {

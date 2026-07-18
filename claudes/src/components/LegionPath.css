@@ -12,6 +12,14 @@
   justify-content: space-between;
   gap: 10px;
   padding: 4px 4px;
+  /* Safety net: rather than let the row clip/overflow past the screen
+     edge on unusually narrow viewports, let it scroll horizontally as a
+     last resort — on ordinary screens it fits and no scrollbar appears. */
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
 .legion-path__step {

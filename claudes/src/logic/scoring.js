@@ -9,8 +9,13 @@ import {
   CLUB_PENALTY_MULTIPLIERS,
   CLUB_EVAL_THRESHOLDS,
   BATTLE_RANK_THRESHOLDS,
+  MASTER_TRICKY_MOVE,
+  CLUB_TRICKY_MOVE,
+  SHORT_SKIRMISH_THRESHOLD,
+  SHORT_SKIRMISH_MULTIPLIER,
 } from '../config';
 import { BATTLE_RANK_ICONS, LEGION_RANK_ICONS } from '../components/rankColors';
+import { ChessAPI } from '../services/chessApi';
 
 class Scoring {
   static getPlayerEval(e, c) { 
@@ -173,6 +178,29 @@ class Scoring {
     };
   }
   
+  // ──────────────────────────────────────────────────────────────
+  // SHORT SKIRMISH PENALTY — single additional post-processing step,
+  // applied AFTER the normal battle score has already been fully
+  // calculated (base score, evaluation penalties, hidden bonuses,
+  // clamping, and rounding all already happened upstream in
+  // getTotalScore / the checkmate branch of finalizeGameScore).
+  //
+  // If the battle ended in fewer than SHORT_SKIRMISH_THRESHOLD theory
+  // moves, the final merit is reduced by (1 - SHORT_SKIRMISH_MULTIPLIER).
+  // Does not touch Survival, Quality, or Evaluation scoring, penalty
+  // multipliers, hidden bonuses, or battle rank thresholds — it only
+  // scales the already-final score before that score is handed to
+  // getBattleRank().
+  // ──────────────────────────────────────────────────────────────
+  static applyShortSkirmishPenalty(score, theoryMoves) {
+    const applied = theoryMoves < SHORT_SKIRMISH_THRESHOLD;
+    if (!applied) {
+      return { score, applied: false };
+    }
+    const penalized = Math.max(0, Math.min(100, Math.round(score * SHORT_SKIRMISH_MULTIPLIER)));
+    return { score: penalized, applied: true };
+  }
+
   static getBattleRank(s, e, r, source = 'master') {
     const t = BATTLE_RANK_THRESHOLDS;
     let n;
@@ -210,6 +238,187 @@ class Scoring {
     return { ...rks[n], score: s, penaltyReason: r };
   }
   
+  // ──────────────────────────────────────────────────────────────
+  // Single source of truth for "was this player move a quality move?" —
+  // used both live, during a battle (see chessTheoryApp.checkMoveQuality),
+  // and by the PGN score tester (scoreTester.js) so both paths always run
+  // the exact same analysis. `data` is the Explorer response for the
+  // position BEFORE the move; `playerUCI` is the move actually played.
+  //
+  // Returns:
+  //   tracked  — true unless the position had no explorer data at all
+  //              (an untracked move doesn't count toward either the
+  //              quality numerator or denominator)
+  //   counted  — true if the move counts as a "quality" move (top-3, or a
+  //              qualifying tricky move ranked 5-20)
+  //   moveIndex — the move's rank in the explorer list (0-based), or -1
+  //              if it wasn't found there at all
+  // ──────────────────────────────────────────────────────────────
+  static assessMoveQuality(data, playerUCI, playerColor, aiSource) {
+    if (!data.moves || data.moves.length === 0) {
+      return { tracked: false, counted: false, moveIndex: -1 };
+    }
+
+    const moveIndex = data.moves.findIndex(m =>
+      m.uci === playerUCI || m.san === (
+        playerUCI === 'e1g1' || playerUCI === 'e8g8' ? 'O-O' :
+        playerUCI === 'e1c1' || playerUCI === 'e8c8' ? 'O-O-O' : ''
+      )
+    );
+
+    if (moveIndex === -1) {
+      return { tracked: true, counted: false, moveIndex: -1 };
+    }
+
+    const isTop3 = moveIndex < 3;
+
+    if (isTop3) {
+      const playerMove = data.moves[moveIndex];
+      const playerTotalGames = playerMove.white + playerMove.draws + playerMove.black;
+
+      let playerWinPct, opponentWinPct;
+      if (playerColor === 'w') {
+        playerWinPct = (playerMove.white / playerTotalGames) * 100;
+        opponentWinPct = (playerMove.black / playerTotalGames) * 100;
+      } else {
+        playerWinPct = (playerMove.black / playerTotalGames) * 100;
+        opponentWinPct = (playerMove.white / playerTotalGames) * 100;
+      }
+
+      const playerWinRatio = opponentWinPct > 0 ? playerWinPct / opponentWinPct : 999;
+      const otherTopMoves = data.moves.slice(0, 3).filter((_, idx) => idx !== moveIndex);
+
+      if (otherTopMoves.length >= 2) {
+        const otherWinPercentages = otherTopMoves.map(move => {
+          const total = move.white + move.draws + move.black;
+          return playerColor === 'w' ? (move.white / total) * 100 : (move.black / total) * 100;
+        });
+
+        const otherWinRatios = otherTopMoves.map(move => {
+          const total = move.white + move.draws + move.black;
+          let winPct, losePct;
+          if (playerColor === 'w') {
+            winPct = (move.white / total) * 100;
+            losePct = (move.black / total) * 100;
+          } else {
+            winPct = (move.black / total) * 100;
+            losePct = (move.white / total) * 100;
+          }
+          return losePct > 0 ? winPct / losePct : 999;
+        });
+
+        const lowestOtherWinPct = Math.min(...otherWinPercentages);
+        const winPctGap = lowestOtherWinPct - playerWinPct;
+        const condition1 = winPctGap > 20;
+        const condition2 = playerWinRatio < 1.0 && otherWinRatios.every(ratio => ratio > 1.0);
+
+        if (condition1 && condition2) {
+          return { tracked: true, counted: false, moveIndex, reason: 'bad-top-move' };
+        }
+      }
+
+      return { tracked: true, counted: true, moveIndex, reason: 'top3' };
+    }
+
+    // Tiered tricky-move system (ranks 5-20)
+    const trickyConfig = aiSource === 'master' ? MASTER_TRICKY_MOVE : CLUB_TRICKY_MOVE;
+
+    if (trickyConfig && trickyConfig.enabled && moveIndex >= (trickyConfig.minRank - 1) && moveIndex <= (trickyConfig.maxRank - 1)) {
+      const move = data.moves[moveIndex];
+      const totalGames = move.white + move.draws + move.black;
+
+      let playerWinPct, opponentWinPct;
+      if (playerColor === 'w') {
+        playerWinPct = (move.white / totalGames) * 100;
+        opponentWinPct = (move.black / totalGames) * 100;
+      } else {
+        playerWinPct = (move.black / totalGames) * 100;
+        opponentWinPct = (move.white / totalGames) * 100;
+      }
+
+      const winAdvantage = playerWinPct - opponentWinPct;
+
+      let applicableTier = null;
+      for (const tier of trickyConfig.tiers) {
+        if (totalGames >= tier.minGames && totalGames <= tier.maxGames) {
+          applicableTier = tier;
+          break;
+        }
+      }
+
+      if (applicableTier && winAdvantage >= applicableTier.minWinAdvantage) {
+        return { tracked: true, counted: true, moveIndex, reason: 'tricky' };
+      }
+    }
+
+    return { tracked: true, counted: false, moveIndex, reason: 'not-top' };
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  // Single source of truth for turning a stopped-game position into a
+  // final result — used both live (chessTheoryApp.stopGameDueToThinTheory)
+  // and by the PGN score tester, so both always score identically.
+  //
+  //   fen                    — final position to evaluate (ignored if isCheckmate)
+  //   isCheckmate            — true if the game ended in checkmate
+  //   playerDeliveredCheckmate — only read when isCheckmate is true
+  //   playerMoves            — total player moves made (theory depth for Master)
+  //   topMoveChoices         — quality-move numerator
+  //   qualityTrackedMoves    — quality-move denominator
+  //   aiSource               — 'master' | 'lichess'
+  //   evalCache              — optional cache object, same shape ChessAPI.getEvaluation expects
+  //
+  // Returns { error: 'eval-api-unreachable' } on API failure, otherwise
+  // { finalPlayerEval, score, penaltyReason, battleRank, moveQuality,
+  //   shortSkirmishApplied }. shortSkirmishApplied is true when playerMoves
+  // (theory moves) was below SHORT_SKIRMISH_THRESHOLD, in which case `score`
+  // already reflects the Short Skirmish merit penalty.
+  // ──────────────────────────────────────────────────────────────
+  static async finalizeGameScore({
+    fen,
+    isCheckmate = false,
+    playerDeliveredCheckmate = false,
+    playerColor,
+    playerMoves,
+    topMoveChoices,
+    qualityTrackedMoves,
+    aiSource,
+    evalCache = {},
+  }) {
+    let finalPlayerEval, scoreResult;
+
+    if (isCheckmate) {
+      finalPlayerEval = playerDeliveredCheckmate ? 99 : -99;
+      scoreResult = {
+        score: playerDeliveredCheckmate ? 100 : 0,
+        penaltyReason: playerDeliveredCheckmate
+          ? 'Checkmate delivered! The enemy king has fallen.'
+          : 'Checkmate suffered! The king has fallen.'
+      };
+    } else {
+      const rawEval = await ChessAPI.getEvaluation(fen, evalCache);
+      if (rawEval === null) {
+        return { error: 'eval-api-unreachable' };
+      }
+      finalPlayerEval = this.getPlayerEval(rawEval, playerColor);
+      scoreResult = this.getTotalScore(playerMoves, topMoveChoices, finalPlayerEval, aiSource, qualityTrackedMoves);
+    }
+
+    // Short Skirmish: single additional post-processing step, applied after
+    // the normal battle score above is fully calculated (existing evaluation
+    // penalties + hidden bonuses + clamping + rounding all already done).
+    // Does not run for normal-length battles (theoryMoves >= threshold).
+    const shortSkirmish = this.applyShortSkirmishPenalty(scoreResult.score, playerMoves);
+
+    const score = shortSkirmish.score;
+    const shortSkirmishApplied = shortSkirmish.applied;
+    const penaltyReason = scoreResult.penaltyReason;
+    const battleRank = this.getBattleRank(score, finalPlayerEval, penaltyReason, aiSource);
+    const moveQuality = this.getMoveQuality(topMoveChoices, qualityTrackedMoves);
+
+    return { finalPlayerEval, score, penaltyReason, battleRank, moveQuality, shortSkirmishApplied };
+  }
+
   static getLegionRank(m = 0) {
     const thresholds = [0, 200, 500, 900, 1300, 1750];
     const rankOrder = ['Recruit', 'Legionary', 'Optio', 'Centurion', 'Tribunus', 'Legatus'];
@@ -238,98 +447,96 @@ class Scoring {
     return safetyNets[rankTitle] || null;
   }
   
+  // Builds the plain-language box text: "WARNING: <condition>, or <consequence>."
+  // No "Commander:" voice, no SVG icon markup -- BattleHistory renders this
+  // as plain text inside its own orange warning box (see .battle-history__warning).
+  static _buildWarning(condition, consequence) {
+    return `WARNING: ${condition}, or ${consequence}.`;
+  }
+
   static getDemotionWarning(rankTitle, recentRanks, currentMerit = 0) {
     if (rankTitle === 'Recruit' || recentRanks.length === 0) return null;
-    
+
     const levy = recentRanks.filter(r => r === 'Levy').length;
     const hastatus = recentRanks.filter(r => r === 'Hastatus').length;
     const triarius = recentRanks.filter(r => r === 'Triarius').length;
     const imperator = recentRanks.filter(r => r === 'Imperator').length;
     const eliteCount = triarius + imperator;
     const battlesPlayed = recentRanks.length;
-    const battlesLeft = 5 - battlesPlayed;
-    
+
     // Check if player is in safety net zone
     const safetyThreshold = this.getSafetyNetThreshold(rankTitle);
     const inSafetyNet = safetyThreshold && currentMerit >= safetyThreshold;
-    
+
+    const demoteTarget = {
+      Legionary: 'Recruit',
+      Optio: 'Legionary',
+      Centurion: 'Optio',
+      Tribunus: 'Centurion',
+    }[rankTitle];
+    const consequence = inSafetyNet
+      ? `your ${rankTitle} merit will reset`
+      : `you will be demoted to ${demoteTarget}`;
+
     // Legionary: Warning after 1 Levy
     if (rankTitle === 'Legionary' && levy === 1) {
-      return inSafetyNet 
-        ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Legionary, one Levy failure stains your record. One more = <span style="color:#e74c3c">lose all your gained Legionary merits!</span>'
-        : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Legionary, one Levy failure stains your record. One more = <span style="color:#e74c3c">stripped to Recruit!</span>';
+      return this._buildWarning('one more Levy result', consequence);
     }
-    
+
     // Optio: Warning after 1 Levy OR 1 Hastatus
     if (rankTitle === 'Optio' && (levy === 1 || hastatus === 1)) {
-      return inSafetyNet
-        ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Optio, one weak battle marks your failure. One more Levy or Hastatus = <span style="color:#e74c3c">lose all your gained Optio merits!</span>'
-        : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Optio, one weak battle marks your failure. One more Levy or Hastatus = <span style="color:#e74c3c">broken to Legionary!</span>';
+      return this._buildWarning('one more Levy or Hastatus result', consequence);
     }
-    
+
     // Centurion: Need at least 1 Triarius/Imperator in last 5
     if (rankTitle === 'Centurion') {
       if (battlesPlayed >= 4 && eliteCount === 0) {
-        return inSafetyNet
-          ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Centurion, you have shown no excellence! Score Triarius or Imperator in the last battle or <span style="color:#e74c3c">lose all your gained Centurion merits!</span>'
-          : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Centurion, you have shown no excellence! Score Triarius or Imperator in the last battle or be <span style="color:#e74c3c">demoted to Optio!</span>';
+        return this._buildWarning('score Triarius or Imperator in your last battle', consequence);
       }
     }
-    
+
     // Tribunus: Need at least 3 Triarius/Imperator in last 5
     if (rankTitle === 'Tribunus') {
       const neededElite = 3 - eliteCount;
-      
+
       // Progressive warnings based on how many battles played
       if (neededElite > 0) {
         // After 1 battle with no elite
         if (battlesPlayed === 1 && eliteCount === 0) {
-          return inSafetyNet
-            ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">3 Triarius or Imperator</span> in your next 4 battles or lose all your gained Tribunus merits!'
-            : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">3 Triarius or Imperator</span> in your next 4 battles or face demotion to Centurion!';
+          return this._buildWarning('you need 3 Triarius or Imperator in your next 4 battles', consequence);
         }
-        
+
         // After 2 battles - check if still achievable
         if (battlesPlayed === 2) {
           if (neededElite === 3) {
             // Need all 3 remaining (still possible but tight)
-            return inSafetyNet
-              ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator in ALL remaining battles</span> or lose all your gained Tribunus merits!'
-              : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator in ALL remaining battles</span> or face demotion to Centurion!';
+            return this._buildWarning('you need Triarius or Imperator in all 3 remaining battles', consequence);
           } else if (neededElite === 2) {
-            return inSafetyNet
-              ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">2 more Triarius or Imperator</span> in 3 battles or lose all your gained Tribunus merits!'
-              : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">2 more Triarius or Imperator</span> in 3 battles or face demotion to Centurion!';
+            return this._buildWarning('you need 2 more Triarius or Imperator in your next 3 battles', consequence);
           }
         }
-        
+
         // After 3 battles
         if (battlesPlayed === 3) {
           if (neededElite === 2) {
             // Need both remaining (still possible)
-            return inSafetyNet
-              ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator in BOTH remaining battles</span> or lose all your gained Tribunus merits!'
-              : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator in BOTH remaining battles</span> or face demotion to Centurion!';
+            return this._buildWarning('you need Triarius or Imperator in both remaining battles', consequence);
           } else if (neededElite === 1) {
-            return inSafetyNet
-              ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">1 more Triarius or Imperator</span> in 2 battles or lose all your gained Tribunus merits!'
-              : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">1 more Triarius or Imperator</span> in 2 battles or face demotion to Centurion!';
+            return this._buildWarning('you need 1 more Triarius or Imperator in your next 2 battles', consequence);
           }
         }
-        
+
         // After 4 battles - final warning (only if still achievable)
         if (battlesPlayed === 4) {
           if (neededElite === 1) {
             // Need exactly 1 more (still possible)
-            return inSafetyNet
-              ? '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator</span> in the last battle or lose all your gained Tribunus merits!'
-              : '<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;margin-right:2px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(12,12) rotate(-40)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g><g transform="translate(12,12) rotate(40) scale(-1,1)"><path d="M-1 -9 L1 -9 L1 5 L2.6 6.6 L1.6 7.6 L0 6 L-1.6 7.6 L-2.6 6.6 L-1 5 Z"/><rect x="-3.2" y="3.6" width="6.4" height="1.5" rx="0.5"/><rect x="-0.65" y="4.8" width="1.3" height="4" rx="0.4"/></g></svg> Commander: Tribunus, you need <span style="color:#e74c3c">Triarius or Imperator</span> in the last battle or face demotion to Centurion!';
+            return this._buildWarning('you need Triarius or Imperator in your last battle', consequence);
           }
           // Don't show warning for neededElite >= 2 (impossible - immediate demotion)
         }
       }
     }
-    
+
     return null;
   }
   

@@ -119,6 +119,11 @@
 .game-screen__actions .btn {
   padding: 7px 13px;
   font-size: clamp(0.78rem, 0.9vw, 0.95rem);
+  /* Buttons keep their natural content width and stay centered via the
+     row's justify-content:center — they should never stretch to fill
+     the sticky action bar the way it can happen on a lone flex child. */
+  flex: 0 0 auto;
+  width: auto;
 }
 
 @media (min-width: 900px) {

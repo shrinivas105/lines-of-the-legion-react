@@ -91,10 +91,7 @@ export function BattleHistory({ app, source }) {
         </div>
       </div>
       {warning && (
-        <div
-          className="battle-history__warning"
-          dangerouslySetInnerHTML={{ __html: warning }}
-        />
+        <div className="battle-history__warning">{warning}</div>
       )}
     </div>
   );

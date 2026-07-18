@@ -41,7 +41,7 @@ export function EndGameSummary({ app }) {
     }
   }, []);
 
-  const { battleRank, moveQuality, displayEval, isPractice, gamesToShow } = app.endGameData;
+  const { battleRank, moveQuality, displayEval, isPractice, gamesToShow, shortSkirmishApplied } = app.endGameData;
   const rankColor = RANK_COLORS[battleRank.title] || '#d4af37';
   const campaignVariant = legionVariant(app);
 
@@ -83,6 +83,13 @@ export function EndGameSummary({ app }) {
       {!isPractice && <h3 className="end-summary__heading" style={{ color: rankColor, textShadow: `0 0 20px ${rankColor}` }}>
         <battleRank.icon className="end-summary__rank-icon" aria-hidden="true" /> {battleRank.title} • Score: {battleRank.score}/100
       </h3>}
+
+      {shortSkirmishApplied && (
+        <div className="end-summary__short-skirmish">
+          <div className="end-summary__short-skirmish-title">Short Skirmish</div>
+          <div>The battle ended before the legion could prove its discipline.</div>
+        </div>
+      )}
 
       <div className="end-summary__stats">
         <div className="end-summary__stat">

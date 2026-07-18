@@ -16,6 +16,7 @@ import { createPortal } from 'react-dom';
 import { Panel } from './Panel';
 import { Button } from './Button';
 import { LichessConnectButton } from './LichessConnectButton';
+import { ScoreTester } from './ScoreTester';
 import { isConnected } from '../services/lichessAuth';
 import {
   getEffectiveOpenings,
@@ -151,6 +152,7 @@ export function PracticePickerScreen({ app }) {
   const [openings, setOpenings] = useState(() => getEffectiveOpenings());
   const [userOpeningsCount, setUserOpeningsCount] = useState(() => getUserOpeningsCount());
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showScoreTester, setShowScoreTester] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const fileInputRef = useRef(null);
   const atCap = userOpeningsCount >= MAX_OPENINGS;
@@ -247,6 +249,7 @@ export function PracticePickerScreen({ app }) {
         <Button variant="bronze" size="sm" disabled={atCap} onClick={() => setShowAddModal(true)}>+ Add Flashcard</Button>
         <Button variant="bronze" size="sm" disabled={atCap} onClick={handleUploadClick}>Upload CSV</Button>
         <Button variant="bronze" size="sm" onClick={() => downloadCsv()}>Download CSV</Button>
+        <Button variant="bronze" size="sm" onClick={() => setShowScoreTester(true)}>Test PGN Score</Button>
         <input
           ref={fileInputRef}
           type="file"
@@ -266,6 +269,10 @@ export function PracticePickerScreen({ app }) {
           onClose={() => setShowAddModal(false)}
           onSaved={() => { setShowAddModal(false); refresh(); }}
         />
+      )}
+
+      {showScoreTester && (
+        <ScoreTester onClose={() => setShowScoreTester(false)} />
       )}
     </div>
   );

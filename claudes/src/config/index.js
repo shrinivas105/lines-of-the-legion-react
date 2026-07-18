@@ -177,6 +177,18 @@ export const BATTLE_RANK_THRESHOLDS = {
 };
 
 // ========================================
+// SHORT SKIRMISH PENALTY
+// Applied as a final post-processing step, after the normal battle score
+// (both campaigns) has already been fully calculated. Prevents inflated
+// merit from battles that end before the legion has shown any real
+// opening discipline.
+//
+//   theoryMoves < SHORT_SKIRMISH_THRESHOLD → finalMerit *= SHORT_SKIRMISH_MULTIPLIER
+// ========================================
+export const SHORT_SKIRMISH_THRESHOLD = 5;    // fewer than this many theory moves triggers the penalty
+export const SHORT_SKIRMISH_MULTIPLIER = 0.60; // 40% merit reduction
+
+// ========================================
 // MASTER CAMPAIGN - TRICKY MOVE CONFIGURATION
 // Rewards finding strong moves ranked 5-20 with positive win advantages
 // ========================================
