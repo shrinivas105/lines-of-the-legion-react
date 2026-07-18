@@ -31,15 +31,16 @@
   flex: 1 1 0;
   min-width: 0;
   position: relative;
-  opacity: 0.55;
-  transition: opacity var(--duration-base) var(--ease-standard),
-              transform var(--duration-base) var(--ease-standard),
-              filter var(--duration-base) var(--ease-standard);
+  transition: transform var(--duration-base) var(--ease-standard);
 }
 
-/* future ranks: visible but slightly desaturated, on top of dimmed opacity */
-.legion-path__step:not(.legion-path__step--reached) {
+/* future ranks: only the badge dims/desaturates — the label stays at full
+   opacity so the rank name is always legible, in both themes */
+.legion-path__step:not(.legion-path__step--reached) .legion-path__node {
+  opacity: 0.55;
   filter: saturate(0.55) brightness(0.9);
+  transition: opacity var(--duration-base) var(--ease-standard),
+              filter var(--duration-base) var(--ease-standard);
 }
 
 /* gentle hover lift across the whole ladder, including future ranks */
@@ -47,7 +48,7 @@
   transform: translateY(-2px);
 }
 
-.legion-path__step:not(.legion-path__step--reached):hover {
+.legion-path__step:not(.legion-path__step--reached):hover .legion-path__node {
   opacity: 0.75;
   filter: saturate(0.75) brightness(0.98);
 }

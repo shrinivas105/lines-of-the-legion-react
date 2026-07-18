@@ -35,6 +35,7 @@
   --color-text-secondary: var(--marble-dim);
   --color-accent: var(--gold);
   --color-accent-hover: #d4b27c;
+  --color-accent-silver: var(--silver);
   --color-success: var(--verdigris-text);
   --color-warning: #e67e22;
   --color-danger: var(--oxblood-text);
@@ -152,6 +153,7 @@ html[data-theme="marble"] {
      without touching dark mode. */
   --color-accent: #5c4014;
   --color-accent-hover: #7a541c;
+  --color-accent-silver: #2e363c;
   /* Success state — brighter green for visibility */
   --color-success: #5faa8e;
   /* Warning state — amber/orange */
@@ -600,7 +602,131 @@ html[data-theme="marble"] .rank-badge {
   }
 }
 
-/* ── Campaign accent classes — see --legion-accent above. ── */
+/* ── Home screen intro/rules block (MenuScreen) — this whole section was
+   only ever styled for the dark theme: #bbb body text, near-white
+   "Hastatus" rank color, and raw gold links/emphasis all read fine on
+   dark ink but wash out on marble's white/cream card. ── */
+html[data-theme="marble"] .game-description {
+  color: var(--color-text-primary);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.6), transparent 55%),
+    radial-gradient(ellipse at 50% 0%, rgba(216, 182, 107, 0.16), transparent 70%),
+    var(--color-surface);
+}
+
+html[data-theme="marble"] .game-description strong {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .game-description em {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .read-more-toggle__text {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .read-more-toggle:hover .read-more-toggle__text,
+html[data-theme="marble"] .read-more-toggle:focus-visible .read-more-toggle__text {
+  color: var(--color-accent-hover);
+  text-shadow: none;
+}
+
+html[data-theme="marble"] .rules-link {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .rules-link:hover {
+  color: var(--color-accent-hover);
+}
+
+html[data-theme="marble"] .game-description .rules-content {
+  color: var(--color-text-secondary);
+}
+
+html[data-theme="marble"] .rules-content h4,
+html[data-theme="marble"] .rules-content h5 {
+  color: var(--color-accent);
+}
+
+/* near-white "Ivory/Parchment" identity color for Hastatus — invisible on
+   a light page, so give it a legible warm taupe in light mode instead */
+html[data-theme="marble"] .battle-rank--hastatus {
+  color: #7a6a52;
+}
+
+html[data-theme="marble"] .rules-content table {
+  background: var(--color-surface-secondary);
+}
+
+html[data-theme="marble"] .rules-content th,
+html[data-theme="marble"] .rules-content td {
+  border-color: var(--color-border);
+}
+
+html[data-theme="marble"] .rules-content th {
+  color: var(--color-accent);
+  background: rgba(216, 182, 107, 0.15);
+}
 .campaign-gold   { --legion-accent: var(--gold);   --legion-accent-dim: var(--gold-glow); }
 .campaign-silver { --legion-accent: var(--silver); --legion-accent-dim: var(--silver-glow); }
 .campaign-bronze { --legion-accent: var(--bronze); --legion-accent-dim: var(--bronze-glow); }
+
+/* ── Analysis screen (post-battle move comparison) ── */
+html[data-theme="marble"] .analysis-screen__title,
+html[data-theme="marble"] .analysis-compare__head-label,
+html[data-theme="marble"] .analysis-compare__table .draw,
+html[data-theme="marble"] .analysis-screen__legend-label,
+html[data-theme="marble"] .analysis-loading__title {
+  color: var(--color-accent);
+}
+
+/* ── Battle history tooltip "?" hover state ── */
+html[data-theme="marble"] .battle-history__tooltip-icon:hover {
+  color: var(--color-accent);
+}
+
+/* ── Results screen (end-summary) — battle history list ── */
+html[data-theme="marble"] .end-summary__history {
+  border-top-color: var(--color-border);
+}
+
+html[data-theme="marble"] .end-summary__history-title,
+html[data-theme="marble"] .end-summary__history-item a {
+  color: var(--color-accent);
+}
+
+/* ── Home screen: campaign section heading, quick-action bar, About panel ── */
+html[data-theme="marble"] .menu-campaigns__title,
+html[data-theme="marble"] .quick-action-icon,
+html[data-theme="marble"] .quick-action-label {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .about-content {
+  background: var(--color-surface-secondary);
+}
+
+html[data-theme="marble"] .about-content .footer-note {
+  color: var(--color-text-secondary);
+}
+
+html[data-theme="marble"] .about-content .footer-note a {
+  color: var(--color-accent);
+}
+
+/* ── Practice picker screen ── */
+html[data-theme="marble"] .practice-picker__status,
+html[data-theme="marble"] .practice-picker__category-title,
+html[data-theme="marble"] .practice-picker__row-badge--master {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .practice-picker__row-badge--club {
+  color: var(--color-accent-silver);
+}
+
+/* ── Score tester modal ── */
+html[data-theme="marble"] .score-tester__short-skirmish-note strong {
+  color: var(--color-accent);
+}
