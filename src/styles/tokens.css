@@ -471,6 +471,20 @@ html[data-theme="marble"] .color-choice__notice {
   border-color: var(--color-border);
 }
 
+/* Raw gold (#d8b66b) and silver (#c7ccd1) are light, low-saturation colors —
+   fine as text on the dark ink background, but nearly invisible on marble's
+   cream/white cards. Titles, section headings, and the current-rank label
+   on the Master/Club cards all read off this token, so overriding it here
+   (light theme only) fixes all of them at once without touching the
+   borders/glow/progress-bar, which still use --legion-accent unchanged. */
+html[data-theme="marble"] .color-choice--master {
+  --legion-accent-text: #8a6a2f;
+}
+
+html[data-theme="marble"] .color-choice--club {
+  --legion-accent-text: #4f5b66;
+}
+
 html[data-theme="marble"] .battle-history__tooltip-content {
   background: var(--color-surface);
   border: 1px solid var(--color-border);

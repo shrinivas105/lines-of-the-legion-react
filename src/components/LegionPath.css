@@ -106,7 +106,7 @@
 }
 
 .legion-path__step--current .legion-path__label {
-  color: var(--legion-accent, var(--gold));
+  color: var(--legion-accent-text, var(--legion-accent, var(--gold)));
   font-weight: 700;
 }
 
