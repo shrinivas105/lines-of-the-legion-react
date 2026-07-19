@@ -1,44 +1,70 @@
 // services/chessApi.js - Chess API service (converted from chess-api.js)
 import { authHeader } from './lichessAuth';
 
-export const pieces = {
-	
-
-wp: "/svg/wp.svg",
-wr: "/svg/wr.svg",
-wn: "/svg/wn.svg",
-wb: "/svg/wb.svg",
-wq: "/svg/wq.svg",
-wk: "/svg/wk.svg",
-bp: "/svg/bp.svg",
-br: "/svg/br.svg",
-bn: "/svg/bn.svg",
-bb: "/svg/bb.svg",
-bq: "/svg/bq.svg",
-bk: "/svg/bk.svg"
-  
-  
-  
-  
-   
- //   wp: "https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg",
-//  wr: "https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg",
- // wn: "https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg",
- // wb: "https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg",
-//  wq: "https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg",
-//  wk: "https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg",
-//  bp: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg",
-  
- // br: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg",
-//  bn: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg",
-//  bb: "https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg",
-//  bq: "https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.svg",
-//  bk: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg"
-  
-  
-  
-
+// Custom Roman-themed piece set (the ones added on top of the classic set).
+export const romanPieces = {
+  wp: "/svg/wp.svg",
+  wr: "/svg/wr.svg",
+  wn: "/svg/wn.svg",
+  wb: "/svg/wb.svg",
+  wq: "/svg/wq.svg",
+  wk: "/svg/wk.svg",
+  bp: "/svg/bp.svg",
+  br: "/svg/br.svg",
+  bn: "/svg/bn.svg",
+  bb: "/svg/bb.svg",
+  bq: "/svg/bq.svg",
+  bk: "/svg/bk.svg",
 };
+
+// Original classic Wikimedia Commons piece set — kept around as a
+// selectable alternative instead of being deleted.
+export const classicPieces = {
+  wp: "https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg",
+  wr: "https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg",
+  wn: "https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg",
+  wb: "https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg",
+  wq: "https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg",
+  wk: "https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg",
+  bp: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg",
+  br: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg",
+  bn: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg",
+  bb: "https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg",
+  bq: "https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.svg",
+  bk: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg",
+};
+
+export const PIECE_STYLES = {
+  roman: { label: 'Roman', pieces: romanPieces },
+  classic: { label: 'Classic', pieces: classicPieces },
+};
+
+const PIECE_STYLE_STORAGE_KEY = 'chessTheoryPieceStyle';
+const DEFAULT_PIECE_STYLE = 'roman';
+
+export function getStoredPieceStyle() {
+  try {
+    const stored = localStorage.getItem(PIECE_STYLE_STORAGE_KEY);
+    return PIECE_STYLES[stored] ? stored : DEFAULT_PIECE_STYLE;
+  } catch {
+    return DEFAULT_PIECE_STYLE;
+  }
+}
+
+export function setStoredPieceStyle(style) {
+  try {
+    localStorage.setItem(PIECE_STYLE_STORAGE_KEY, style);
+  } catch {
+    // ignore write failures (e.g. private browsing)
+  }
+}
+
+export function getPieceSet(style) {
+  return (PIECE_STYLES[style] || PIECE_STYLES[DEFAULT_PIECE_STYLE]).pieces;
+}
+
+// Backwards-compatible default export: whichever set is currently active.
+export const pieces = getPieceSet(getStoredPieceStyle());
 
 export class ChessAPI {
   static cache = {};

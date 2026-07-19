@@ -13,7 +13,12 @@
 // to trigger aiMove, etc.) is preserved exactly.
 
 import { Chess } from 'chess.js';
-import { ChessAPI, pieces } from '../services/chessApi';
+import {
+  ChessAPI,
+  getPieceSet,
+  getStoredPieceStyle,
+  setStoredPieceStyle,
+} from '../services/chessApi';
 import { Scoring } from './scoring';
 import { PGNExporter } from './pgnExporter';
 import { RomanBattleEffects } from './romanBattleEffects';
@@ -64,7 +69,8 @@ export class ChessTheoryApp {
     this.hintUsed = false;
     this.topGames = [];
     this.recentGames = [];
-    this.pieceImages = pieces;
+    this.pieceStyle = getStoredPieceStyle();
+    this.pieceImages = getPieceSet(this.pieceStyle);
     this.rankChangeMessage = null;
     this.rankChangeType = null;
     this.currentPGN = null;
@@ -443,6 +449,18 @@ export class ChessTheoryApp {
     }
 
     this.render();
+  }
+
+  // Switches the active piece image set ('roman' or 'classic') and persists
+  // the choice. Only touches this.pieceImages/this.pieceStyle, so it just
+  // signals React to repaint rather than re-running render()'s side effects
+  // (same rationale as queryExplorer() below).
+  setPieceStyle(style) {
+    if (!style || style === this.pieceStyle) return;
+    this.pieceStyle = style;
+    this.pieceImages = getPieceSet(style);
+    setStoredPieceStyle(style);
+    if (this._notify) this._notify();
   }
 
   // Chess API methods

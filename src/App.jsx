@@ -18,6 +18,7 @@ import { GameScreen } from './components/GameScreen';
 import { AnalysisScreen } from './components/AnalysisScreen';
 import { HomeButton } from './components/HomeButton';
 import { AuthBar } from './components/AuthBar';
+import { PieceStyleToggle } from './components/PieceStyleToggle';
 import { Atmosphere } from './components/Atmosphere';
 // Light/dark mode toggle is temporarily hidden — dark mode is the only
 // mode for now. Re-enable by uncommenting this import and the <ThemeToggle />
@@ -60,6 +61,7 @@ function App() {
         {showHome && !app.showingAnalysis && <HomeButton app={app} />}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {/* <ThemeToggle /> — hidden for now, see import comment above */}
+          <PieceStyleToggle app={app} />
           <AuthBar app={app} />
         </div>
       </div>
