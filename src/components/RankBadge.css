@@ -99,8 +99,19 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  /* Slightly above center — coin portraits are framed with the face in
+     the upper-middle third, so this keeps the eyes/helmet in frame once
+     zoomed in below. */
+  object-position: center 38%;
+  /* The coin's ornate border ring and engraved rank name are only ever
+     a couple of pixels wide at badge size — too thin to read as a border
+     no matter the fit mode, so it just looked like a botched crop. Zoom
+     past that ring entirely for a clean, intentional face/helmet close-up
+     instead. Scale lives on the image itself (not the badge), so hover/
+     active/current transforms on the badge still work normally. */
+  transform: scale(1.45);
+  transform-origin: center;
 }
 
 /* promotion pulse — a single ~1s gold flare, opt-in via the `promoted`
