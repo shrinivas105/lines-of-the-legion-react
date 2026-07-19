@@ -23,12 +23,19 @@ import './AnalysisScreen.css';
 function CapturePositionModal({ defaultName, variant, onClose, onSave }) {
   const [name, setName] = useState(defaultName);
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSave = () => {
+    // Guards against a double-click firing addAnalysisPositionToPractice
+    // twice (it fires-and-forgets a cloud insert, so there's no other
+    // natural point where a second click would be rejected) and adding the
+    // same position to the practice list twice.
+    if (submitting) return;
+    setSubmitting(true);
     const result = onSave(name);
     if (!result.ok) {
       setError(result.error);
-      return;
+      setSubmitting(false);
     }
   };
 
@@ -49,7 +56,7 @@ function CapturePositionModal({ defaultName, variant, onClose, onSave }) {
         </label>
         {error && <div className="capture-modal__error">{error}</div>}
         <div className="capture-modal__actions">
-          <Button variant={variant} size="md" onClick={handleSave}>Save</Button>
+          <Button variant={variant} size="md" disabled={submitting} onClick={handleSave}>Save</Button>
           <Button variant="ghost" size="md" onClick={onClose}>Cancel</Button>
         </div>
       </div>

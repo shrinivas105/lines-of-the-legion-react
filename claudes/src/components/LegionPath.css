@@ -10,8 +10,12 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
-  padding: 4px 4px;
+  gap: 6px;
+  /* Even padding on all sides: the status ring (green/orange/red) extends
+     ~4px beyond each badge's own box via box-shadow. The previous 4px
+     horizontal padding left almost no margin for that ring on the
+     leftmost badge, so it clipped against the row's own edge. */
+  padding: 14px 12px 12px;
   /* Safety net: rather than let the row clip/overflow past the screen
      edge on unusually narrow viewports, let it scroll horizontally as a
      last resort — on ordinary screens it fits and no scrollbar appears. */
@@ -31,15 +35,23 @@
   flex: 1 1 0;
   min-width: 0;
   position: relative;
-  opacity: 0.55;
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+/* future ranks: dimmed + a red ring, reading clearly as "not yet reached" */
+.legion-path__step:not(.legion-path__step--reached) .legion-path__node {
+  opacity: 0.65;
+  filter: saturate(0.6) brightness(0.92);
   transition: opacity var(--duration-base) var(--ease-standard),
-              transform var(--duration-base) var(--ease-standard),
               filter var(--duration-base) var(--ease-standard);
 }
 
-/* future ranks: visible but slightly desaturated, on top of dimmed opacity */
-.legion-path__step:not(.legion-path__step--reached) {
-  filter: saturate(0.55) brightness(0.9);
+.legion-path__step:not(.legion-path__step--reached) .rank-badge {
+  box-shadow:
+    0 0 0 3px rgba(15,13,10,0.6),
+    0 0 0 4px var(--color-danger),
+    0 2px 6px rgba(0,0,0,0.45),
+    0 1px 0 rgba(255,255,255,0.12) inset;
 }
 
 /* gentle hover lift across the whole ladder, including future ranks */
@@ -47,15 +59,15 @@
   transform: translateY(-2px);
 }
 
-.legion-path__step:not(.legion-path__step--reached):hover {
-  opacity: 0.75;
-  filter: saturate(0.75) brightness(0.98);
+.legion-path__step:not(.legion-path__step--reached):hover .legion-path__node {
+  opacity: 0.85;
+  filter: saturate(0.8) brightness(1);
 }
 
 /* thicker, more confident connecting line between ranks, tinted by the
    active campaign accent once the line has been "conquered" */
 .legion-path__connector {
-  flex: 0 0 26px;
+  flex: 0 0 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,13 +92,17 @@
   justify-content: center;
 }
 
-/* Ladder badges get a small bump over the base --md size (40px -> 46px)
-   — RankBadge's size="md" is only used here, so this is scoped locally
-   rather than changing the shared default. */
+/* Ladder badges get a real size bump over the base --md size (40px -> 60px,
+   up from an earlier 46px). At 46px the coin artwork's decorative border
+   and engraved rank name were too few pixels to render at all — they just
+   blurred into the background, which *looked* like a hard crop even
+   though nothing was actually being cut off. Sizing up is the fix, not
+   further padding/object-fit tweaks. RankBadge's size="md" is only used
+   here, so this is scoped locally rather than changing the shared default. */
 .legion-path__node .rank-badge--md {
-  width: 46px;
-  height: 46px;
-  font-size: 1.05rem;
+  width: 42px;
+  height: 42px;
+  font-size: 0.95rem;
 }
 
 .legion-path__label {
@@ -106,18 +122,16 @@
 }
 
 .legion-path__step--current .legion-path__label {
-  color: var(--legion-accent, var(--gold));
+  color: var(--legion-accent-text, var(--legion-accent, var(--gold)));
   font-weight: 700;
 }
 
-/* completed ranks: a soft, steady ring in the campaign accent instead of
-   the plain resting badge border, so "conquered" territory reads at a
-   glance */
+/* completed ranks: a steady green ring, so "conquered" territory reads at
+   a glance */
 .legion-path__step--reached:not(.legion-path__step--current) .rank-badge {
   box-shadow:
     0 0 0 3px rgba(15,13,10,0.6),
-    0 0 0 4px color-mix(in srgb, var(--legion-accent, var(--gold)) 30%, transparent),
-    0 0 10px color-mix(in srgb, var(--legion-glow, var(--gold-glow)) 80%, transparent),
+    0 0 0 4px var(--color-success),
     0 2px 6px rgba(0,0,0,0.45),
     0 1px 0 rgba(255,255,255,0.12) inset;
 }
@@ -126,15 +140,11 @@
   opacity: 1;
 }
 
-/* current rank: the strongest glow on the ladder, with a slow, gentle
-   pulse in the campaign accent — the eye should land here first */
+/* current rank: same size as every other badge — no scale-up — but the
+   strongest glow on the ladder, with a slow, gentle orange pulse so the
+   eye still lands here first */
 .legion-path__step--current {
   opacity: 1;
-  transform: scale(1.12);
-}
-
-.legion-path__step--current:hover {
-  transform: scale(1.12) translateY(-2px);
 }
 
 .legion-path__step--current .rank-badge--active {
@@ -145,16 +155,15 @@
   0%, 100% {
     box-shadow:
       0 0 0 3px rgba(15,13,10,0.6),
-      0 0 0 4px color-mix(in srgb, var(--legion-accent, var(--gold)) 22%, transparent),
-      0 0 16px var(--legion-glow, var(--bronze-glow)),
+      0 0 0 4px var(--color-warning),
       0 2px 6px rgba(0,0,0,0.45),
       0 1px 0 rgba(255,255,255,0.14) inset;
   }
   50% {
     box-shadow:
       0 0 0 3px rgba(15,13,10,0.6),
-      0 0 0 5px color-mix(in srgb, var(--legion-accent, var(--gold)) 42%, transparent),
-      0 0 26px var(--legion-glow, var(--gold-glow)),
+      0 0 0 4px var(--color-warning),
+      0 0 4px color-mix(in srgb, var(--color-warning) 60%, transparent),
       0 2px 6px rgba(0,0,0,0.45),
       0 1px 0 rgba(255,255,255,0.18) inset;
   }
@@ -171,19 +180,19 @@
 @media (max-width: 480px) {
   .legion-path__steps {
     gap: 4px;
-    padding: 2px 2px;
+    padding: 12px 10px 10px;
   }
 
   .legion-path__connector {
-    flex-basis: 12px;
+    flex-basis: 10px;
     font-size: 0.75rem;
     margin-top: 8px;
   }
 
   .legion-path__node .rank-badge--md {
-    width: 28px;
-    height: 28px;
-    font-size: 0.7rem;
+    width: 42px;
+    height: 42px;
+    font-size: 0.9rem;
   }
 
   .legion-path__label {
@@ -199,9 +208,9 @@
   }
 
   .legion-path__node .rank-badge--md {
-    width: 24px;
-    height: 24px;
-    font-size: 0.6rem;
+    width: 26px;
+    height: 26px;
+    font-size: 0.65rem;
   }
 
   .legion-path__label {

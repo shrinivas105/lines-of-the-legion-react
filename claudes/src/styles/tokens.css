@@ -33,11 +33,13 @@
   --color-border: var(--bronze-dim);
   --color-text-primary: var(--marble);
   --color-text-secondary: var(--marble-dim);
+  --color-text-muted: var(--marble-dim);
   --color-accent: var(--gold);
   --color-accent-hover: #d4b27c;
-  --color-success: var(--verdigris-text);
+  --color-accent-silver: var(--silver);
+  --color-success: var(--verdigris);
   --color-warning: #e67e22;
-  --color-danger: var(--oxblood-text);
+  --color-danger: var(--oxblood);
   --color-gold: var(--roman-gold);
   --color-bronze: var(--bronze);
   --shadow: var(--elev-md);
@@ -106,15 +108,15 @@ html[data-theme="marble"] {
   /* Warm beige for secondary surfaces and hover states */
   --iron: #F5F0E8;
   /* Dark brown text — premium, readable, Roman */
-  --marble: #1A130F;
-  /* Medium brown for secondary text and muted elements */
-  --marble-dim: #6B5D51;
+  --marble: #2B2116;
+  /* Muted brown for de-emphasized/dim elements (captions, locked states) */
+  --marble-dim: #6A5A48;
   /* Keep bronze for consistency — used sparingly */
   --bronze: #8a6a3b;
   /* Roman gold — primary accent throughout */
   --gold: #d8b66b;
   /* Dark text on light backgrounds */
-  --text-on-light: #1A130F;
+  --text-on-light: #2B2116;
   /* Warm reds for danger/demotion */
   --oxblood: #A52E2E;
   /* Green for success/promotion */
@@ -142,11 +144,18 @@ html[data-theme="marble"] {
   --color-surface-secondary: #F5F0E8;
   --color-surface-tertiary: #FFFAF6;
   --color-border: rgba(216, 204, 184, 0.5);
-  --color-text-primary: #1A130F;
-  --color-text-secondary: #6B5D51;
-  /* Gold is the star accent in marble — all headings, important UI */
-  --color-accent: #d8b66b;
-  --color-accent-hover: #e6c080;
+  --color-text-primary: #2B2116;
+  --color-text-secondary: #4A3B2A;
+  --color-text-muted: #6A5A48;
+  /* Gold reads fine as text on the dark theme's ink background, but as a
+     light, low-saturation color it's nearly invisible on marble's white/
+     cream surfaces (Sync button, promotion screen, capture modal, analysis
+     screen, results screen). This one token drives all of those, so a
+     deep brown here fixes text legibility across every screen at once
+     without touching dark mode. */
+  --color-accent: #5c4014;
+  --color-accent-hover: #7a541c;
+  --color-accent-silver: #2e363c;
   /* Success state — brighter green for visibility */
   --color-success: #5faa8e;
   /* Warning state — amber/orange */
@@ -420,7 +429,7 @@ html[data-theme="marble"] .analysis-movelist__item {
 
 html[data-theme="marble"] .analysis-movelist__item.active {
   background: var(--color-accent);
-  color: #1A130F;
+  color: #f5ecd8;
 }
 
 html[data-theme="marble"] .capture-modal__backdrop {
@@ -445,6 +454,62 @@ html[data-theme="marble"] .end-summary__stat strong {
 
 html[data-theme="marble"] .end-summary__quote {
   color: var(--color-accent);
+}
+
+/* Master/Club Legion cards (color-choice screen) — these sub-panels were
+   hardcoded to translucent near-black fills (rgba(8,5,3,...)) tuned for the
+   dark theme's ink background. On marble they rendered as a muddy gray
+   smudge instead of a proper card. Bring them in line with how the results
+   screen (.end-summary__stat) handles this: solid theme-aware surface +
+   border tokens that actually adapt to light mode. */
+html[data-theme="marble"] .color-choice__rank-section,
+html[data-theme="marble"] .color-choice__progression,
+html[data-theme="marble"] .color-choice__battle-history,
+html[data-theme="marble"] .color-choice__rank-info {
+  background: var(--color-surface-secondary);
+  border-color: var(--color-border);
+}
+
+html[data-theme="marble"] .rank-fact {
+  background: var(--color-surface-secondary);
+  border-color: var(--color-border);
+}
+
+html[data-theme="marble"] .color-choice__notice {
+  background: var(--color-surface-secondary);
+  border-color: var(--color-border);
+}
+
+/* Raw gold (#d8b66b) and silver (#c7ccd1) are light, low-saturation colors —
+   fine as text on the dark ink background, but nearly invisible on marble's
+   cream/white cards. Titles, section headings, and the current-rank label
+   on the Master/Club cards all read off this token, so overriding it here
+   (light theme only) fixes all of them at once without touching the
+   borders/glow/progress-bar, which still use --legion-accent unchanged. */
+html[data-theme="marble"] .color-choice--master {
+  --legion-accent-text: #5c4014;
+}
+
+html[data-theme="marble"] .color-choice--club {
+  --legion-accent-text: #2e363c;
+}
+
+/* Commander's-message box (game screen hint) — this plaque is deliberately
+   kept dark in both themes (like the war-table), but its plain body text
+   used var(--marble), which flips to near-black in light mode — invisible
+   against the box's own hardcoded near-black background. Pin the text back
+   to the light parchment shade regardless of theme. */
+html[data-theme="marble"] .theory-message,
+html[data-theme="marble"] .game-screen__theory-message {
+  color: #e6ddc4;
+}
+
+/* "Position reached N times" — hardcoded white text meant to sit on a dark
+   backdrop; on the light page background it's now invisible. */
+html[data-theme="marble"] .game-screen__info-line,
+html[data-theme="marble"] .info-line {
+  color: var(--color-text-primary);
+  text-shadow: none;
 }
 
 html[data-theme="marble"] .battle-history__tooltip-content {
@@ -539,7 +604,131 @@ html[data-theme="marble"] .rank-badge {
   }
 }
 
-/* ── Campaign accent classes — see --legion-accent above. ── */
+/* ── Home screen intro/rules block (MenuScreen) — this whole section was
+   only ever styled for the dark theme: #bbb body text, near-white
+   "Hastatus" rank color, and raw gold links/emphasis all read fine on
+   dark ink but wash out on marble's white/cream card. ── */
+html[data-theme="marble"] .game-description {
+  color: var(--color-text-primary);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.6), transparent 55%),
+    radial-gradient(ellipse at 50% 0%, rgba(216, 182, 107, 0.16), transparent 70%),
+    var(--color-surface);
+}
+
+html[data-theme="marble"] .game-description strong {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .game-description em {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .read-more-toggle__text {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .read-more-toggle:hover .read-more-toggle__text,
+html[data-theme="marble"] .read-more-toggle:focus-visible .read-more-toggle__text {
+  color: var(--color-accent-hover);
+  text-shadow: none;
+}
+
+html[data-theme="marble"] .rules-link {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .rules-link:hover {
+  color: var(--color-accent-hover);
+}
+
+html[data-theme="marble"] .game-description .rules-content {
+  color: var(--color-text-secondary);
+}
+
+html[data-theme="marble"] .rules-content h4,
+html[data-theme="marble"] .rules-content h5 {
+  color: var(--color-accent);
+}
+
+/* near-white "Ivory/Parchment" identity color for Hastatus — invisible on
+   a light page, so give it a legible warm taupe in light mode instead */
+html[data-theme="marble"] .battle-rank--hastatus {
+  color: #7a6a52;
+}
+
+html[data-theme="marble"] .rules-content table {
+  background: var(--color-surface-secondary);
+}
+
+html[data-theme="marble"] .rules-content th,
+html[data-theme="marble"] .rules-content td {
+  border-color: var(--color-border);
+}
+
+html[data-theme="marble"] .rules-content th {
+  color: var(--color-accent);
+  background: rgba(216, 182, 107, 0.15);
+}
 .campaign-gold   { --legion-accent: var(--gold);   --legion-accent-dim: var(--gold-glow); }
 .campaign-silver { --legion-accent: var(--silver); --legion-accent-dim: var(--silver-glow); }
 .campaign-bronze { --legion-accent: var(--bronze); --legion-accent-dim: var(--bronze-glow); }
+
+/* ── Analysis screen (post-battle move comparison) ── */
+html[data-theme="marble"] .analysis-screen__title,
+html[data-theme="marble"] .analysis-compare__head-label,
+html[data-theme="marble"] .analysis-compare__table .draw,
+html[data-theme="marble"] .analysis-screen__legend-label,
+html[data-theme="marble"] .analysis-loading__title {
+  color: var(--color-accent);
+}
+
+/* ── Battle history tooltip "?" hover state ── */
+html[data-theme="marble"] .battle-history__tooltip-icon:hover {
+  color: var(--color-accent);
+}
+
+/* ── Results screen (end-summary) — battle history list ── */
+html[data-theme="marble"] .end-summary__history {
+  border-top-color: var(--color-border);
+}
+
+html[data-theme="marble"] .end-summary__history-title,
+html[data-theme="marble"] .end-summary__history-item a {
+  color: var(--color-accent);
+}
+
+/* ── Home screen: campaign section heading, quick-action bar, About panel ── */
+html[data-theme="marble"] .menu-campaigns__title,
+html[data-theme="marble"] .quick-action-icon,
+html[data-theme="marble"] .quick-action-label {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .about-content {
+  background: var(--color-surface-secondary);
+}
+
+html[data-theme="marble"] .about-content .footer-note {
+  color: var(--color-text-secondary);
+}
+
+html[data-theme="marble"] .about-content .footer-note a {
+  color: var(--color-accent);
+}
+
+/* ── Practice picker screen ── */
+html[data-theme="marble"] .practice-picker__status,
+html[data-theme="marble"] .practice-picker__category-title,
+html[data-theme="marble"] .practice-picker__row-badge--master {
+  color: var(--color-accent);
+}
+
+html[data-theme="marble"] .practice-picker__row-badge--club {
+  color: var(--color-accent-silver);
+}
+
+/* ── Score tester modal ── */
+html[data-theme="marble"] .score-tester__short-skirmish-note strong {
+  color: var(--color-accent);
+}

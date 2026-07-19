@@ -46,7 +46,6 @@
   border: 2px solid var(--bronze);
   border-radius: 10px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.78), transparent 55%),
     radial-gradient(ellipse at 50% 0%, rgba(216, 182, 107, 0.16), transparent 70%),
     var(--color-surface);
   box-shadow: var(--shadow-panel);
@@ -177,7 +176,8 @@
 .rules-content ul,
 .rules-content table { margin: 8px 0; }
 
-.rules-content h4 {
+.rules-content h4,
+.rules-content h5 {
   position: relative;
   margin-top: 22px;
   margin-bottom: 10px;
@@ -188,7 +188,8 @@
   letter-spacing: 0.8px;
 }
 
-.rules-content h4::before {
+.rules-content h4::before,
+.rules-content h5::before {
   content: '';
   position: absolute;
   top: 0;
@@ -198,12 +199,14 @@
   background: linear-gradient(90deg, rgba(216, 182, 107, 0.5), rgba(216, 182, 107, 0.08) 60%, transparent);
 }
 
-.rules-content h4:first-of-type {
+.rules-content h4:first-of-type,
+.rules-content h5:first-of-type {
   margin-top: 10px;
   padding-top: 0;
 }
 
-.rules-content h4:first-of-type::before {
+.rules-content h4:first-of-type::before,
+.rules-content h5:first-of-type::before {
   content: none;
 }
 
@@ -235,7 +238,8 @@
     line-height: 1.7;
   }
 
-  .rules-content h4 {
+  .rules-content h4,
+.rules-content h5 {
     font-size: 0.92rem;
   }
 }

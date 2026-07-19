@@ -5,12 +5,19 @@ import App from './App.jsx'
 import { init as initLichessAuth } from './services/lichessAuth'
 
 function getInitialTheme() {
-  if (typeof window === 'undefined') {
-    return 'night';
-  }
+  // Light/dark toggle is temporarily hidden — dark mode is the only mode
+  // for now, regardless of what a user previously had stored (otherwise
+  // anyone who'd switched to light mode would be stuck in it with no way
+  // back, since the toggle button is no longer rendered). Restore the
+  // localStorage-based logic below when the toggle comes back.
+  return 'night';
 
-  const stored = window.localStorage.getItem('roman-theme');
-  return stored === 'marble' ? 'marble' : 'night';
+  // if (typeof window === 'undefined') {
+  //   return 'night';
+  // }
+  //
+  // const stored = window.localStorage.getItem('roman-theme');
+  // return stored === 'marble' ? 'marble' : 'night';
 }
 
 // Matches the original main.js entry sequencing exactly:

@@ -101,6 +101,17 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+  /* Zoom origin biased well above the box's vertical center: these coin
+     portraits are square with the face/helmet sitting in the upper
+     third, so scaling from dead-center (the previous attempt) crops
+     proportionally more off the top and cuts into the helmet. Anchoring
+     the origin near the top instead keeps the head in frame. Kept the
+     zoom itself modest (not aggressive) so a small margin of error in
+     that framing still doesn't crop real content — a faint sliver of
+     the coin's border ring is an acceptable trade for never cutting off
+     a head again. */
+  transform: scale(1.18);
+  transform-origin: center 26%;
 }
 
 /* promotion pulse — a single ~1s gold flare, opt-in via the `promoted`

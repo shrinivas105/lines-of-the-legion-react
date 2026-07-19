@@ -101,9 +101,22 @@ export class ChessTheoryApp {
   }
 
   async init() {
-    await this.auth.initialize();
-    await this.checkForAbandonedBattle();
-    this.render();
+    // Guard against double-invocation — React 18 StrictMode (see main.jsx)
+    // deliberately mounts/unmounts/remounts once in development, which runs
+    // useChessTheoryApp's effect (and therefore this method) twice on the
+    // SAME persistent `app` instance. Without this guard, auth.initialize()
+    // ran twice: syncPracticeOpeningsFromCloud() raced itself and inserted
+    // every not-yet-synced practice opening into Supabase twice, and
+    // setupAuthListener() registered a second onAuthStateChange subscription
+    // that kept double-firing (and double-inserting) on every later sign-in
+    // for the rest of the session. init() must stay idempotent.
+    if (this._initPromise) return this._initPromise;
+    this._initPromise = (async () => {
+      await this.auth.initialize();
+      await this.checkForAbandonedBattle();
+      this.render();
+    })();
+    return this._initPromise;
   }
 
   saveActiveGameState() {

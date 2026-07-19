@@ -15,6 +15,12 @@
   --legion-secondary: var(--bronze);
   --legion-secondary-dim: var(--bronze-dim);
   --legion-highlight: var(--oxblood-text);
+  /* Separate token for TEXT specifically (titles/headings/labels). Defaults
+     to the same gold used everywhere else so dark mode is unaffected —
+     tokens.css overrides this to a darker, higher-contrast shade only for
+     the marble (light) theme, since raw gold/silver read fine on dark ink
+     but nearly disappear on a light card. */
+  --legion-accent-text: var(--gold);
 }
 
 .color-choice--club {
@@ -24,6 +30,7 @@
   --legion-secondary: var(--iron);
   --legion-secondary-dim: var(--iron-dim);
   --legion-highlight: #8fb4c2;
+  --legion-accent-text: var(--silver);
 }
 
 .color-choice {
@@ -154,12 +161,12 @@
 }
 
 .color-choice__panel-title--master {
-  color: var(--gold);
+  color: var(--legion-accent-text);
   text-shadow: 0 0 18px rgba(216, 182, 107, 0.3);
 }
 
 .color-choice__panel-title--club {
-  color: var(--silver);
+  color: var(--legion-accent-text);
   text-shadow: 0 0 18px rgba(199, 204, 209, 0.25);
 }
 
@@ -222,7 +229,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--legion-accent);
+  color: var(--legion-accent-text);
   text-shadow: 0 0 18px var(--legion-glow), 0 1px 0 rgba(0, 0, 0, 0.4);
 }
 
@@ -268,7 +275,7 @@
   font-size: 0.95rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--legion-accent);
+  color: var(--legion-accent-text);
   opacity: 0.9;
 }
 
@@ -438,10 +445,9 @@
    tall, premium gradient in the campaign's accent, matching border,
    soft ambient glow, and a confident hover lift / active depress. */
 .color-choice__start-btn.color-choice__start-btn {
-  width: 100%;
-  max-width: 252px;
+  width: auto;
   min-width: 0;
-  padding: 13px 21px;
+  padding: 13px 32px;
   font-size: 0.74rem;
   letter-spacing: 0.08em;
   gap: 8px;
@@ -552,7 +558,7 @@
 
 .color-choice__rank-info-title {
   margin-bottom: 0;
-  color: var(--legion-accent);
+  color: var(--legion-accent-text);
   font-family: var(--font-title);
   font-size: 1.1rem;
   font-weight: 700;
@@ -622,7 +628,7 @@
   font-size: 0.65rem;
   font-weight: 700;
   font-family: var(--font-title);
-  color: var(--legion-accent);
+  color: var(--legion-accent-text);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   text-shadow: 0 0 10px var(--legion-glow);
@@ -790,9 +796,8 @@
   }
 
   .color-choice__start-btn.color-choice__start-btn {
-    width: 100%;
-    max-width: none;
-    padding: 8px 14px;
+    width: auto;
+    padding: 10px 24px;
     font-size: 0.63rem;
   }
 }
