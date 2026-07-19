@@ -71,26 +71,14 @@
   pointer-events: none;
 }
 
-.gold .imageShell {
-  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.35), 0 0 20px rgba(212, 175, 55, 0.16);
-}
-
 .gold:hover,
 .gold:focus-visible {
   box-shadow: 0 32px 100px rgba(0, 0, 0, 0.62), 0 0 38px rgba(212, 175, 55, 0.28);
 }
 
-.silver .imageShell {
-  box-shadow: 0 0 0 1px rgba(197, 206, 214, 0.35), 0 0 20px rgba(197, 206, 214, 0.14);
-}
-
 .silver:hover,
 .silver:focus-visible {
   box-shadow: 0 32px 100px rgba(0, 0, 0, 0.62), 0 0 38px rgba(197, 206, 214, 0.26);
-}
-
-.bronze .imageShell {
-  box-shadow: 0 0 0 1px rgba(164, 109, 61, 0.35), 0 0 20px rgba(164, 109, 61, 0.16);
 }
 
 .bronze:hover,
