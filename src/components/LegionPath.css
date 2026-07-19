@@ -49,7 +49,7 @@
 .legion-path__step:not(.legion-path__step--reached) .rank-badge {
   box-shadow:
     0 0 0 3px rgba(15,13,10,0.6),
-    0 0 0 4px color-mix(in srgb, var(--color-danger) 55%, transparent),
+    0 0 0 4px var(--color-danger),
     0 2px 6px rgba(0,0,0,0.45),
     0 1px 0 rgba(255,255,255,0.12) inset;
 }
@@ -131,8 +131,7 @@
 .legion-path__step--reached:not(.legion-path__step--current) .rank-badge {
   box-shadow:
     0 0 0 3px rgba(15,13,10,0.6),
-    0 0 0 4px color-mix(in srgb, var(--color-success) 55%, transparent),
-    0 0 10px color-mix(in srgb, var(--color-success) 45%, transparent),
+    0 0 0 4px var(--color-success),
     0 2px 6px rgba(0,0,0,0.45),
     0 1px 0 rgba(255,255,255,0.12) inset;
 }
@@ -156,16 +155,15 @@
   0%, 100% {
     box-shadow:
       0 0 0 3px rgba(15,13,10,0.6),
-      0 0 0 4px color-mix(in srgb, var(--color-warning) 45%, transparent),
-      0 0 12px color-mix(in srgb, var(--color-warning) 70%, transparent),
+      0 0 0 4px var(--color-warning),
       0 2px 6px rgba(0,0,0,0.45),
       0 1px 0 rgba(255,255,255,0.14) inset;
   }
   50% {
     box-shadow:
       0 0 0 3px rgba(15,13,10,0.6),
-      0 0 0 5px color-mix(in srgb, var(--color-warning) 65%, transparent),
-      0 0 18px color-mix(in srgb, var(--color-warning) 90%, transparent),
+      0 0 0 4px var(--color-warning),
+      0 0 4px color-mix(in srgb, var(--color-warning) 60%, transparent),
       0 2px 6px rgba(0,0,0,0.45),
       0 1px 0 rgba(255,255,255,0.18) inset;
   }

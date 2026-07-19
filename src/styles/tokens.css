@@ -37,9 +37,9 @@
   --color-accent: var(--gold);
   --color-accent-hover: #d4b27c;
   --color-accent-silver: var(--silver);
-  --color-success: var(--verdigris-text);
+  --color-success: var(--verdigris);
   --color-warning: #e67e22;
-  --color-danger: var(--oxblood-text);
+  --color-danger: var(--oxblood);
   --color-gold: var(--roman-gold);
   --color-bronze: var(--bronze);
   --shadow: var(--elev-md);
