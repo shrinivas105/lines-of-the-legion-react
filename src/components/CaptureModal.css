@@ -66,6 +66,13 @@
   outline: none;
   border-color: var(--legion-accent);
 }
+.capture-modal__message {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
 .capture-modal__radio-row {
   display: flex;
   gap: 16px;
