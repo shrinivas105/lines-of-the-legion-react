@@ -33,6 +33,7 @@
   --color-border: var(--bronze-dim);
   --color-text-primary: var(--marble);
   --color-text-secondary: var(--marble-dim);
+  --color-text-muted: var(--marble-dim);
   --color-accent: var(--gold);
   --color-accent-hover: #d4b27c;
   --color-accent-silver: var(--silver);
@@ -107,15 +108,15 @@ html[data-theme="marble"] {
   /* Warm beige for secondary surfaces and hover states */
   --iron: #F5F0E8;
   /* Dark brown text — premium, readable, Roman */
-  --marble: #1A130F;
-  /* Medium brown for secondary text and muted elements */
-  --marble-dim: #6B5D51;
+  --marble: #2B2116;
+  /* Muted brown for de-emphasized/dim elements (captions, locked states) */
+  --marble-dim: #6A5A48;
   /* Keep bronze for consistency — used sparingly */
   --bronze: #8a6a3b;
   /* Roman gold — primary accent throughout */
   --gold: #d8b66b;
   /* Dark text on light backgrounds */
-  --text-on-light: #1A130F;
+  --text-on-light: #2B2116;
   /* Warm reds for danger/demotion */
   --oxblood: #A52E2E;
   /* Green for success/promotion */
@@ -143,8 +144,9 @@ html[data-theme="marble"] {
   --color-surface-secondary: #F5F0E8;
   --color-surface-tertiary: #FFFAF6;
   --color-border: rgba(216, 204, 184, 0.5);
-  --color-text-primary: #1A130F;
-  --color-text-secondary: #6B5D51;
+  --color-text-primary: #2B2116;
+  --color-text-secondary: #4A3B2A;
+  --color-text-muted: #6A5A48;
   /* Gold reads fine as text on the dark theme's ink background, but as a
      light, low-saturation color it's nearly invisible on marble's white/
      cream surfaces (Sync button, promotion screen, capture modal, analysis
