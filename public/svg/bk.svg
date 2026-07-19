@@ -1,29 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="100%" height="100%">
-  <g fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Top King Ornament: Globus Cruciger (Orb & Cross, Bright Polished Gold) -->
-    <circle cx="22" cy="3.2" r="1.7" fill="#D4AF37" stroke="#000000" stroke-width="0.75" />
-    <path d="M 22 4.9 L 22 9.5 M 18.5 6.8 L 25.5 6.8" stroke="#D4AF37" stroke-width="2.75" />
-    
-    <!-- Heavy Imperial Crown / Wreath Hybrid Base (Widened) -->
-    <path d="M 12 11 L 16 7 L 22 9 L 28 7 L 32 11 Z" fill="#D4AF37" />
-    
-    <!-- Emperor Head & Hair (Broadened) -->
-    <path d="M 14 15 C 14 10, 30 10, 30 15 Z" fill="#111111" />
-    <path d="M 15 15 C 15 18.5, 29 18.5, 29 15" fill="#212121" />
-
-    <!-- Imperial Toga / Cape (Thick layers hanging off broad shoulders) -->
-    <path d="M 10 21 Q 6 28 8 35 L 14 35 Q 12 26 15 21 Z" fill="#4A148C" />
-    <path d="M 29 21 Q 32 26 36 35 L 34 35 Q 38 28 34 21 Z" fill="#4A148C" />
-
-    <!-- Main Cuirass / Torso (Wide, stocky, and heavily built muscle armor) -->
-    <path d="M 15 21 Q 22 23 29 21 L 31 35 L 13 35 Z" fill="#212121" />
-    
-    <!-- Heavy Sculpted Muscle & Belly Plate Lines -->
-    <path d="M 18 25 Q 22 27.5 26 25" stroke="#000000" stroke-width="1.5" />
-    <path d="M 17 30 Q 22 33 27 30" stroke="#000000" stroke-width="1.5" />
-
-    <!-- Pedestal Base -->
-    <path d="M 12 35 L 32 35 L 34 39 L 10 39 Z" fill="#212121" />
-    <rect x="8" y="39" width="28" height="3" rx="1" fill="#424242" />
+  <g fill="none" stroke="#000000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Globus Cruciger topper -->
+    <circle cx="22" cy="3.3" r="1.7" fill="#D4AF37" stroke="#000000" stroke-width="0.75" />
+    <path d="M 22 5 L 22 9.3 M 18.6 6.9 L 25.4 6.9" stroke="#D4AF37" stroke-width="2.6" />
+    <!-- Laurel diadem (4-peak scalloped crown) -->
+    <path d="M 12 12 L 14.5 7 L 17 10 L 19.6 6.4 L 22 9.6 L 24.4 6.4 L 27 10 L 29.5 7 L 32 12 Z" fill="#D4AF37" />
+    <!-- Hair & face -->
+    <path d="M 14 16 C 14 11, 30 11, 30 16 Z" fill="#101010" />
+    <path d="M 15 16 C 15 19.3, 29 19.3, 29 16" fill="#242424" />
+    <!-- Paludamentum (imperial cloak) -->
+    <path d="M 10 22 Q 6 29 8 36 L 14 36 Q 12 27 15 22 Z" fill="#5B1A8C" />
+    <path d="M 29 22 Q 32 27 36 36 L 34 36 Q 38 29 34 22 Z" fill="#5B1A8C" />
+    <!-- Cuirass -->
+    <path d="M 15 22 Q 22 24 29 22 L 31 36 L 13 36 Z" fill="#242424" />
+    <path d="M 18 26 Q 22 28.5 26 26" stroke="#000000" stroke-width="1.5" />
+    <path d="M 17 31 Q 22 34 27 31" stroke="#000000" stroke-width="1.5" />
+    <path d="M 12 35 Q 11.2 37.2 10 39 L 34 39 Q 32.8 37.2 32 35 Z" fill="#1C1C1C" />
+    <rect x="8" y="39" width="28" height="3" rx="1.5" fill="#333333" />
   </g>
 </svg>

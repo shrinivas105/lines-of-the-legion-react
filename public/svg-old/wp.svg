@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="100%" height="100%">
+  <g fill="none" stroke="#111111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Helmet Crest (Bright Crimson Plume) -->
+    <path d="M 15 14 C 15 9, 29 9, 29 14" fill="#D32F2F" />
+    <path d="M 18 11 C 20 8, 24 8, 26 11" stroke="#111111" stroke-width="1" />
+    
+    <!-- Roman Galea (Helmet) - Stark White/Silver -->
+    <path d="M 16 18 C 16 13, 28 13, 28 18 Z" fill="#FFFFFF" />
+    
+    <!-- Cheek Guards -->
+    <path d="M 16 18 L 17 22 L 19 21 Z" fill="#F5F5F5" />
+    <path d="M 28 18 L 27 22 L 25 21 Z" fill="#F5F5F5" />
+    <path d="M 16 18 Q 22 16 28 18" />
+
+    <!-- Tunic Underlayer (Bright Red) -->
+    <path d="M 19 22 L 16.5 26 L 27.5 26 L 25 22 Z" fill="#E53935" />
+
+    <!-- Torso / Lorica (Polished White Armor - Centered) -->
+    <path d="M 19 22 Q 22 24 25 22 L 26.5 26 Q 22 27.5 17.5 26 Z" fill="#E0E0E0" />
+    <path d="M 17.5 26 L 16.5 35 L 27.5 35 L 26.5 26 Z" fill="#FFFFFF" />
+    
+    <!-- Pteruges -->
+    <path d="M 18.5 32 L 18.5 35 M 21 32 L 21 35 M 23 32 L 23 35 M 25.5 32 L 25.5 35" stroke="#111111" stroke-width="1" />
+    
+    <!-- Pedestal Base -->
+    <path d="M 14 35 L 30 35 L 32 39 L 12 39 Z" fill="#E0E0E0" />
+    <rect x="11" y="39" width="22" height="3" rx="1" fill="#FFFFFF" />
+  </g>
+</svg>

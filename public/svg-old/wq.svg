@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="100%" height="100%">
+  <g fill="none" stroke="#111111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Stephane (Empress Crown - Bright Polished Gold) -->
+    <path d="M 14 13 L 17 6 L 22 4 L 27 6 L 30 13 Z" fill="#D4AF37" />
+    <circle cx="22" cy="8" r="1" fill="#FFFFFF" stroke="#111111" stroke-width="0.5" />
+    
+    <!-- Royal Hair & Head -->
+    <path d="M 16 13 C 16 10, 28 10, 28 13 Z" fill="#5C4033" />
+    <path d="M 17 13 C 17 16, 27 16, 27 13" fill="#FFFFFF" />
+
+    <!-- Draped Palla / Royal Veil (Bright Crimson) -->
+    <path d="M 15 13 C 12 20, 11 26, 12 35 L 32 35 C 33 26, 32 20, 29 13 Z" fill="#D32F2F" />
+
+    <!-- Stola Gown Bodice (Elegant White Silk) -->
+    <path d="M 18 16 Q 22 19 26 16 L 28 35 L 16 35 Z" fill="#FFFFFF" />
+    
+    <!-- Draping Folds on Gown -->
+    <path d="M 20 20 Q 22 24 24 20" stroke="#111111" stroke-width="1" />
+    <path d="M 19 25 Q 22 29 25 25" stroke="#111111" stroke-width="1" />
+    <path d="M 18 30 Q 22 34 26 30" stroke="#111111" stroke-width="1" />
+    
+    <!-- Pedestal Base (Light Marble) -->
+    <path d="M 12 35 L 32 35 L 34 39 L 10 39 Z" fill="#E0E0E0" />
+    <rect x="8" y="39" width="28" height="3" rx="1" fill="#FFFFFF" />
+  </g>
+</svg>

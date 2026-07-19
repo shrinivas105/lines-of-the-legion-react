@@ -1,19 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="100%" height="100%">
-  <g fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Watchtower Battlement / Crenellations -->
-    <path d="M 12 10 L 12 15 L 32 15 L 32 10 L 29 10 L 29 12 L 25 12 L 25 10 L 19 10 L 19 12 L 15 12 L 15 10 Z" fill="#212121" />
-    
-    <!-- Arrow Slit / Window -->
-    <rect x="20" y="17" width="4" height="6" rx="1" fill="#D4AF37" />
-    
-    <!-- Main Tower Body -->
-    <path d="M 14 15 L 12 35 L 32 35 L 30 15 Z" fill="#303030" />
-    
-    <!-- Roman Eagle (Aquila) Shield Emblem -->
-    <path d="M 18 27 L 22 25 L 26 27 L 24 31 L 20 31 Z" fill="#AA8010" />
-    
-    <!-- Pedestal Base -->
-    <path d="M 9 35 L 35 35 L 37 39 L 7 39 Z" fill="#212121" />
-    <rect x="5" y="39" width="34" height="3" rx="1" fill="#424242" />
+  <g fill="none" stroke="#000000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Battlement crenellations -->
+    <path d="M 12 10 L 12 15 L 32 15 L 32 10 L 29 10 L 29 12.2 L 25 12.2 L 25 10 L 19 10 L 19 12.2 L 15 12.2 L 15 10 Z" fill="#242424" />
+    <!-- Roman archway window -->
+    <path d="M 19.5 24 L 19.5 19.5 Q 22 16.5 24.5 19.5 L 24.5 24 Z" fill="#000000" />
+    <!-- Tower body -->
+    <path d="M 13.5 15 L 11.5 36 L 32.5 36 L 30.5 15 Z" fill="#1C1C1C" />
+    <!-- Aquila shield -->
+    <path d="M 18 28 L 22 26 L 26 28 L 24 32 L 20 32 Z" fill="#5B1A8C" />
+    <path d="M 16.5 27 L 18.5 28.5 M 27.5 27 L 25.5 28.5" stroke="#D4AF37" stroke-width="1.2" />
+    <path d="M 9 35 Q 8.2 37.2 7 39 L 37 39 Q 35.8 37.2 35 35 Z" fill="#1C1C1C" />
+    <rect x="5" y="39" width="34" height="3" rx="1.5" fill="#333333" />
   </g>
 </svg>
