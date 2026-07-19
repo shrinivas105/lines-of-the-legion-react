@@ -19,7 +19,10 @@ import { AnalysisScreen } from './components/AnalysisScreen';
 import { HomeButton } from './components/HomeButton';
 import { AuthBar } from './components/AuthBar';
 import { Atmosphere } from './components/Atmosphere';
-import { ThemeToggle } from './components/ThemeToggle';
+// Light/dark mode toggle is temporarily hidden — dark mode is the only
+// mode for now. Re-enable by uncommenting this import and the <ThemeToggle />
+// usage below.
+// import { ThemeToggle } from './components/ThemeToggle';
 
 function App() {
   const app = useChessTheoryApp();
@@ -56,7 +59,7 @@ function App() {
       <div className="app-shell__topbar">
         {showHome && !app.showingAnalysis && <HomeButton app={app} />}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <ThemeToggle />
+          {/* <ThemeToggle /> — hidden for now, see import comment above */}
           <AuthBar app={app} />
         </div>
       </div>
