@@ -15,12 +15,12 @@
     <!-- Tunic Underlayer (Dark Gold/Bronze) -->
     <path d="M 20 24 L 17 28 L 27 28 L 24 24 Z" fill="#AA8010" />
 
-    <!-- Torso / Lorica (Dark Obsidian Armor - Narrower) -->
+    <!-- Torso / Lorica (Dark Obsidian Armor - Centered on Base) -->
     <path d="M 20 24 Q 22 25.5 24 24 L 25.5 28 Q 22 29.5 18.5 28 Z" fill="#212121" />
-    <path d="M 18.5 28 L 16.5 35 L 27.5 35 L 25.5 28 Z" fill="#303030" />
+    <path d="M 18.5 28 L 17.5 35 L 26.5 35 L 25.5 28 Z" fill="#303030" />
     
     <!-- Pteruges -->
-    <path d="M 19 32 L 19 35 M 21 32 L 21 35 M 23 32 L 23 35 M 25 32 L 25 35" stroke="#000000" stroke-width="1" />
+    <path d="M 19.5 32 L 19.5 35 M 21 32 L 21 35 M 23 32 L 23 35 M 24.5 32 L 24.5 35" stroke="#000000" stroke-width="1" />
     
     <!-- Mini Pedestal Base -->
     <path d="M 15 35 L 29 35 L 31 39 L 13 39 Z" fill="#212121" />

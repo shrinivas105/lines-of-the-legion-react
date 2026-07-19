@@ -15,12 +15,12 @@
     <!-- Tunic Underlayer (Bright Red) -->
     <path d="M 20 24 L 17 28 L 27 28 L 24 24 Z" fill="#E53935" />
 
-    <!-- Torso / Lorica (Polished White Armor - Narrower) -->
+    <!-- Torso / Lorica (Polished White Armor - Centered on Base) -->
     <path d="M 20 24 Q 22 25.5 24 24 L 25.5 28 Q 22 29.5 18.5 28 Z" fill="#E0E0E0" />
-    <path d="M 18.5 28 L 16.5 35 L 27.5 35 L 25.5 28 Z" fill="#FFFFFF" />
+    <path d="M 18.5 28 L 17.5 35 L 26.5 35 L 25.5 28 Z" fill="#FFFFFF" />
     
     <!-- Pteruges -->
-    <path d="M 19 32 L 19 35 M 21 32 L 21 35 M 23 32 L 23 35 M 25 32 L 25 35" stroke="#111111" stroke-width="1" />
+    <path d="M 19.5 32 L 19.5 35 M 21 32 L 21 35 M 23 32 L 23 35 M 24.5 32 L 24.5 35" stroke="#111111" stroke-width="1" />
     
     <!-- Mini Pedestal Base -->
     <path d="M 15 35 L 29 35 L 31 39 L 13 39 Z" fill="#E0E0E0" />
