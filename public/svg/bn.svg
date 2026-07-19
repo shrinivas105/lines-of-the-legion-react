@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="100%" height="100%">
+  <g fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Helmet/Head Crest (Deep Gold/Bronze Plume) -->
+    <path d="M 26 6 C 26 2, 14 4, 12 10" stroke="#D4AF37" stroke-width="2.5" />
+    <path d="M 28 7 C 28 3, 16 5, 14 11" stroke="#000000" stroke-width="0.75" />
+    
+    <!-- Horse Head & Roman Cavalry Chamfron (Dark Armor) -->
+    <path d="M 16 11 C 18 11, 24 13, 26 17 C 28 21, 27 26, 25 28 C 22 30, 18 29, 16 26 C 14 22, 13 14, 16 11 Z" fill="#212121" />
+    
+    <!-- Muzzle / Snout Plate -->
+    <path d="M 26 17 L 31 21 L 29 24 L 25 21 Z" fill="#424242" />
+    
+    <!-- Eye Armor Guard / Cutout -->
+    <circle cx="21" cy="17" r="1.5" fill="#D4AF37" />
+    <path d="M 19 15 Q 21 13 23 16" stroke="#000000" stroke-width="1" />
+    
+    <!-- Neck Armor Plates -->
+    <path d="M 16 26 C 15 29, 14 32, 14 35 L 28 35 C 28 32, 27 29, 25 28" fill="#303030" />
+    <path d="M 15 30 Q 20 31 26 29" stroke="#000000" stroke-width="1" />
+    <path d="M 14 33 Q 20 34 27 32" stroke="#000000" stroke-width="1" />
+
+    <!-- Pedestal Base (Dark Onyx) -->
+    <path d="M 12 35 L 32 35 L 34 39 L 10 39 Z" fill="#212121" />
+    <rect x="8" y="39" width="28" height="3" rx="1" fill="#424242" />
+  </g>
+</svg>

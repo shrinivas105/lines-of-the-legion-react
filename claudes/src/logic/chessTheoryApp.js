@@ -101,9 +101,22 @@ export class ChessTheoryApp {
   }
 
   async init() {
-    await this.auth.initialize();
-    await this.checkForAbandonedBattle();
-    this.render();
+    // Guard against double-invocation — React 18 StrictMode (see main.jsx)
+    // deliberately mounts/unmounts/remounts once in development, which runs
+    // useChessTheoryApp's effect (and therefore this method) twice on the
+    // SAME persistent `app` instance. Without this guard, auth.initialize()
+    // ran twice: syncPracticeOpeningsFromCloud() raced itself and inserted
+    // every not-yet-synced practice opening into Supabase twice, and
+    // setupAuthListener() registered a second onAuthStateChange subscription
+    // that kept double-firing (and double-inserting) on every later sign-in
+    // for the rest of the session. init() must stay idempotent.
+    if (this._initPromise) return this._initPromise;
+    this._initPromise = (async () => {
+      await this.auth.initialize();
+      await this.checkForAbandonedBattle();
+      this.render();
+    })();
+    return this._initPromise;
   }
 
   saveActiveGameState() {
@@ -181,6 +194,30 @@ export class ChessTheoryApp {
     this.showingAnalysis = false;
     this.resetGameState();
     this.render();
+  }
+
+  // Whether there's a real (non-practice), unresolved battle whose result
+  // would be lost — rather than scored — if the player left right now via
+  // the Home button. Practice never affects merit, so it never needs this;
+  // a battle that's already gameEnded has already been scored normally.
+  hasUnresolvedBattle() {
+    return this.mode !== 'practice' && !!this.aiSource && !!this.playerColor && !this.gameEnded;
+  }
+
+  // Called once the player confirms the "Leaving now counts as a loss"
+  // dialog (see HomeButton.jsx). Scores the abandoned battle as a forfeit
+  // at the position it was left in — the exact same path
+  // checkForAbandonedBattle() uses to catch a closed tab/reload — but does
+  // it immediately, in this session, instead of only on the next app boot.
+  // That immediacy also closes the gap where a player could otherwise
+  // click Home and start a fresh battle before ever reloading: the new
+  // battle's own saveActiveGameState() calls would silently overwrite the
+  // abandoned one in localStorage, and the forfeit would never resolve.
+  async leaveBattleAsForfeit() {
+    if (this.hasUnresolvedBattle()) {
+      await this.stopGameDueToThinTheory();
+    }
+    this.goHome();
   }
 
   // Storage methods

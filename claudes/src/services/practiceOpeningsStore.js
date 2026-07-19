@@ -81,7 +81,7 @@ function getDeletedBaseIndexes() {
 export function getEffectiveOpenings() {
   const deleted = getDeletedBaseIndexes();
   const base = BASE_OPENINGS
-    .map((row, index) => ({ ...row, source: 'base', originalIndex: index }))
+    .map((row, index) => ({ ...row, mode: normalizeMode(row.mode), source: 'base', originalIndex: index }))
     .filter(row => !deleted.includes(row.originalIndex));
   const user = getUserRows().map((row, index) => ({ ...row, source: row.source || 'user', originalIndex: index }));
   return [...base, ...user];
@@ -235,7 +235,23 @@ function fromCloudRow(row) {
 // 20-cap, and anything that doesn't fit stays local-only for next time.
 // No-ops entirely (leaves local storage untouched) if the fetch fails or the
 // caller isn't actually logged in, so logged-out play is never affected.
-export async function syncPracticeOpeningsFromCloud() {
+// Defense-in-depth: if this ever gets called twice concurrently (e.g. two
+// overlapping SIGNED_IN events), a second call would read the same
+// not-yet-synced "local-only" rows the first call is still inserting and
+// push each of them to the cloud a second time. Callers should already be
+// idempotent (see ChessTheoryApp.init()), but this guard makes the
+// function itself safe to call concurrently regardless.
+let syncInFlight = null;
+
+export function syncPracticeOpeningsFromCloud() {
+  if (syncInFlight) return syncInFlight;
+  syncInFlight = doSyncPracticeOpeningsFromCloud().finally(() => {
+    syncInFlight = null;
+  });
+  return syncInFlight;
+}
+
+async function doSyncPracticeOpeningsFromCloud() {
   const cloudRows = await fetchPracticeOpenings();
   if (cloudRows === null) return;
 

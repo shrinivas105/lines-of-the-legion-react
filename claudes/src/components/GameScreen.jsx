@@ -7,14 +7,16 @@ import { ChessBoard } from './ChessBoard';
 import { Panel } from './Panel';
 import { Button } from './Button';
 import { EndGameSummary } from './EndGameSummary';
-import { IconBrokenStandard, IconRomanTemple, IconReset, IconCircularLaurel, IconVexillum } from './RomanIcons';
+import { IconBrokenStandard, IconRomanTemple, IconReset, IconCircularLaurel, IconVexillum, IconFortress } from './RomanIcons';
 import { legionVariant } from '../utils/legionVariant';
+import { useLeaveBattleConfirm, LeaveBattleDialog } from './LeaveBattleDialog';
 import './GameScreen.css';
 
 export function GameScreen({ app }) {
   const isPlayerTurn = app.game.turn() === app.playerColor;
   const campaignVariant = legionVariant(app);
   const hintEnabled = app.mode === 'practice' ? !app.hintUsed : (isPlayerTurn && !app.hintUsed);
+  const { showConfirm, leaving, handleTriggerClick, handleConfirmLeave, cancel } = useLeaveBattleConfirm(app);
 
   const gameCountText = app.gameCount > 0
     ? `Position reached ${app.gameCount.toLocaleString()} times`
@@ -68,9 +70,28 @@ export function GameScreen({ app }) {
 
       {!app.gameEnded && (
         <div className="game-screen__actions">
-          <Button variant={campaignVariant} size="sm" onClick={() => window.location.reload()}>
-            <IconReset className="game-screen__btn-icon" aria-hidden="true" /> New Battle
-          </Button>
+          {app.mode === 'practice' ? (
+            <>
+              <Button
+                variant={campaignVariant}
+                size="sm"
+                onClick={() => app.startPracticeOpening(app.practiceOpening)}
+              >
+                <IconReset className="game-screen__btn-icon" aria-hidden="true" /> Retry
+              </Button>
+              <Button
+                variant={campaignVariant}
+                size="sm"
+                onClick={() => app.startPracticePicker()}
+              >
+                <IconFortress className="game-screen__btn-icon" aria-hidden="true" /> Exit
+              </Button>
+            </>
+          ) : (
+            <Button variant={campaignVariant} size="sm" onClick={handleTriggerClick}>
+              <IconBrokenStandard className="game-screen__btn-icon" aria-hidden="true" /> Quit Game
+            </Button>
+          )}
           <Button
             variant={campaignVariant}
             size="sm"
@@ -83,6 +104,13 @@ export function GameScreen({ app }) {
           </Button>
         </div>
       )}
+      <LeaveBattleDialog
+        app={app}
+        showConfirm={showConfirm}
+        leaving={leaving}
+        onConfirm={handleConfirmLeave}
+        onCancel={cancel}
+      />
     </div>
   );
 }

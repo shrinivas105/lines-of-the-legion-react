@@ -37,11 +37,18 @@ function AddFlashcardModal({ onClose, onSaved }) {
   const [mode, setMode] = useState('club');
   const [category, setCategory] = useState('');
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSave = () => {
+    // Guards against a double-click calling addOpening twice — addOpening's
+    // cloud sync is fire-and-forget, so nothing else here would reject a
+    // second call before it adds a second, identical row.
+    if (submitting) return;
+    setSubmitting(true);
     const result = addOpening({ name, fen, orientation, mode, category });
     if (!result.ok) {
       setError(result.error);
+      setSubmitting(false);
       return;
     }
     onSaved();
@@ -139,7 +146,7 @@ function AddFlashcardModal({ onClose, onSaved }) {
         {error && <div className="capture-modal__error">{error}</div>}
 
         <div className="capture-modal__actions">
-          <Button variant="bronze" size="md" onClick={handleSave}>Save Flashcard</Button>
+          <Button variant="bronze" size="md" disabled={submitting} onClick={handleSave}>Save Flashcard</Button>
           <Button variant="ghost" size="md" onClick={onClose}>Cancel</Button>
         </div>
       </div>
