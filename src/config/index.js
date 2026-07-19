@@ -122,9 +122,9 @@ export const MASTER_THEORY_DEPTH = {
 // CLUB CAMPAIGN WEIGHTS
 // ========================================
 export const CLUB_WEIGHTS = {
-  moves: 0.30,        // 30% - Number of moves played (more weight)
-  quality: 0.35,      // 35% - Move quality (less strict)
-  evaluation: 0.35,   // 35% - Final position evaluation
+ moves: 0.25,          // 25% - Survival
+  quality: 0.375,        // 37.5% - Book Quality
+  evaluation: 0.375,     // 37.5% - Evaluation
   movesMultiplier: 4, // Points per move (moves × 4)
   evalMultiplier: 12  // Evaluation scaling ((eval + 3) × 12)
 };
