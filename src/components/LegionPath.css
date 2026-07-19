@@ -11,12 +11,11 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 4px;
-  /* Generous vertical padding: the current-rank badge scales up to 1.12x
-     and pulses with a glowing box-shadow (blur up to ~26px). Since this
-     row clips vertically (see overflow-y below), the padding has to be
-     big enough to contain that glow/scale, or it gets cropped at the
-     top/bottom instead of the row just looking cramped. */
-  padding: 22px 4px 10px;
+  /* Modest vertical padding for the current-rank badge's glow pulse
+     (box-shadow blur up to ~16px) — no longer needs to accommodate a
+     scale-up transform, since the current badge stays the same size as
+     the rest now (see .legion-path__step--current below). */
+  padding: 12px 4px 10px;
   /* Safety net: rather than let the row clip/overflow past the screen
      edge on unusually narrow viewports, let it scroll horizontally as a
      last resort — on ordinary screens it fits and no scrollbar appears. */
@@ -39,13 +38,20 @@
   transition: transform var(--duration-base) var(--ease-standard);
 }
 
-/* future ranks: only the badge dims/desaturates — the label stays at full
-   opacity so the rank name is always legible, in both themes */
+/* future ranks: dimmed + a red ring, reading clearly as "not yet reached" */
 .legion-path__step:not(.legion-path__step--reached) .legion-path__node {
-  opacity: 0.55;
-  filter: saturate(0.55) brightness(0.9);
+  opacity: 0.65;
+  filter: saturate(0.6) brightness(0.92);
   transition: opacity var(--duration-base) var(--ease-standard),
               filter var(--duration-base) var(--ease-standard);
+}
+
+.legion-path__step:not(.legion-path__step--reached) .rank-badge {
+  box-shadow:
+    0 0 0 3px rgba(15,13,10,0.6),
+    0 0 0 4px color-mix(in srgb, var(--color-danger) 55%, transparent),
+    0 2px 6px rgba(0,0,0,0.45),
+    0 1px 0 rgba(255,255,255,0.12) inset;
 }
 
 /* gentle hover lift across the whole ladder, including future ranks */
@@ -54,8 +60,8 @@
 }
 
 .legion-path__step:not(.legion-path__step--reached):hover .legion-path__node {
-  opacity: 0.75;
-  filter: saturate(0.75) brightness(0.98);
+  opacity: 0.85;
+  filter: saturate(0.8) brightness(1);
 }
 
 /* thicker, more confident connecting line between ranks, tinted by the
@@ -120,14 +126,13 @@
   font-weight: 700;
 }
 
-/* completed ranks: a soft, steady ring in the campaign accent instead of
-   the plain resting badge border, so "conquered" territory reads at a
-   glance */
+/* completed ranks: a steady green ring, so "conquered" territory reads at
+   a glance */
 .legion-path__step--reached:not(.legion-path__step--current) .rank-badge {
   box-shadow:
     0 0 0 3px rgba(15,13,10,0.6),
-    0 0 0 4px color-mix(in srgb, var(--legion-accent, var(--gold)) 30%, transparent),
-    0 0 10px color-mix(in srgb, var(--legion-glow, var(--gold-glow)) 80%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--color-success) 55%, transparent),
+    0 0 10px color-mix(in srgb, var(--color-success) 45%, transparent),
     0 2px 6px rgba(0,0,0,0.45),
     0 1px 0 rgba(255,255,255,0.12) inset;
 }
@@ -136,15 +141,11 @@
   opacity: 1;
 }
 
-/* current rank: the strongest glow on the ladder, with a slow, gentle
-   pulse in the campaign accent — the eye should land here first */
+/* current rank: same size as every other badge — no scale-up — but the
+   strongest glow on the ladder, with a slow, gentle orange pulse so the
+   eye still lands here first */
 .legion-path__step--current {
   opacity: 1;
-  transform: scale(1.12);
-}
-
-.legion-path__step--current:hover {
-  transform: scale(1.12) translateY(-2px);
 }
 
 .legion-path__step--current .rank-badge--active {
@@ -155,16 +156,16 @@
   0%, 100% {
     box-shadow:
       0 0 0 3px rgba(15,13,10,0.6),
-      0 0 0 4px color-mix(in srgb, var(--legion-accent, var(--gold)) 22%, transparent),
-      0 0 16px var(--legion-glow, var(--bronze-glow)),
+      0 0 0 4px color-mix(in srgb, var(--color-warning) 45%, transparent),
+      0 0 12px color-mix(in srgb, var(--color-warning) 70%, transparent),
       0 2px 6px rgba(0,0,0,0.45),
       0 1px 0 rgba(255,255,255,0.14) inset;
   }
   50% {
     box-shadow:
       0 0 0 3px rgba(15,13,10,0.6),
-      0 0 0 5px color-mix(in srgb, var(--legion-accent, var(--gold)) 42%, transparent),
-      0 0 26px var(--legion-glow, var(--gold-glow)),
+      0 0 0 5px color-mix(in srgb, var(--color-warning) 65%, transparent),
+      0 0 18px color-mix(in srgb, var(--color-warning) 90%, transparent),
       0 2px 6px rgba(0,0,0,0.45),
       0 1px 0 rgba(255,255,255,0.18) inset;
   }
