@@ -445,10 +445,9 @@
    tall, premium gradient in the campaign's accent, matching border,
    soft ambient glow, and a confident hover lift / active depress. */
 .color-choice__start-btn.color-choice__start-btn {
-  width: 100%;
-  max-width: 252px;
+  width: auto;
   min-width: 0;
-  padding: 13px 21px;
+  padding: 13px 32px;
   font-size: 0.74rem;
   letter-spacing: 0.08em;
   gap: 8px;
@@ -797,9 +796,8 @@
   }
 
   .color-choice__start-btn.color-choice__start-btn {
-    width: 100%;
-    max-width: none;
-    padding: 8px 14px;
+    width: auto;
+    padding: 10px 24px;
     font-size: 0.63rem;
   }
 }
