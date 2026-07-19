@@ -9,12 +9,14 @@ import { Button } from './Button';
 import { EndGameSummary } from './EndGameSummary';
 import { IconBrokenStandard, IconRomanTemple, IconReset, IconCircularLaurel, IconVexillum, IconFortress } from './RomanIcons';
 import { legionVariant } from '../utils/legionVariant';
+import { useLeaveBattleConfirm, LeaveBattleDialog } from './LeaveBattleDialog';
 import './GameScreen.css';
 
 export function GameScreen({ app }) {
   const isPlayerTurn = app.game.turn() === app.playerColor;
   const campaignVariant = legionVariant(app);
   const hintEnabled = app.mode === 'practice' ? !app.hintUsed : (isPlayerTurn && !app.hintUsed);
+  const { showConfirm, leaving, handleTriggerClick, handleConfirmLeave, cancel } = useLeaveBattleConfirm(app);
 
   const gameCountText = app.gameCount > 0
     ? `Position reached ${app.gameCount.toLocaleString()} times`
@@ -86,8 +88,8 @@ export function GameScreen({ app }) {
               </Button>
             </>
           ) : (
-            <Button variant={campaignVariant} size="sm" onClick={() => window.location.reload()}>
-              <IconReset className="game-screen__btn-icon" aria-hidden="true" /> New Battle
+            <Button variant={campaignVariant} size="sm" onClick={handleTriggerClick}>
+              <IconBrokenStandard className="game-screen__btn-icon" aria-hidden="true" /> Quit Game
             </Button>
           )}
           <Button
@@ -102,6 +104,13 @@ export function GameScreen({ app }) {
           </Button>
         </div>
       )}
+      <LeaveBattleDialog
+        app={app}
+        showConfirm={showConfirm}
+        leaving={leaving}
+        onConfirm={handleConfirmLeave}
+        onCancel={cancel}
+      />
     </div>
   );
 }
