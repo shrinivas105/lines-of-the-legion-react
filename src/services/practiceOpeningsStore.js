@@ -81,7 +81,7 @@ function getDeletedBaseIndexes() {
 export function getEffectiveOpenings() {
   const deleted = getDeletedBaseIndexes();
   const base = BASE_OPENINGS
-    .map((row, index) => ({ ...row, source: 'base', originalIndex: index }))
+    .map((row, index) => ({ ...row, mode: normalizeMode(row.mode), source: 'base', originalIndex: index }))
     .filter(row => !deleted.includes(row.originalIndex));
   const user = getUserRows().map((row, index) => ({ ...row, source: row.source || 'user', originalIndex: index }));
   return [...base, ...user];

@@ -7,7 +7,7 @@ import { ChessBoard } from './ChessBoard';
 import { Panel } from './Panel';
 import { Button } from './Button';
 import { EndGameSummary } from './EndGameSummary';
-import { IconBrokenStandard, IconRomanTemple, IconReset, IconCircularLaurel, IconVexillum } from './RomanIcons';
+import { IconBrokenStandard, IconRomanTemple, IconReset, IconCircularLaurel, IconVexillum, IconFortress } from './RomanIcons';
 import { legionVariant } from '../utils/legionVariant';
 import './GameScreen.css';
 
@@ -68,9 +68,28 @@ export function GameScreen({ app }) {
 
       {!app.gameEnded && (
         <div className="game-screen__actions">
-          <Button variant={campaignVariant} size="sm" onClick={() => window.location.reload()}>
-            <IconReset className="game-screen__btn-icon" aria-hidden="true" /> New Battle
-          </Button>
+          {app.mode === 'practice' ? (
+            <>
+              <Button
+                variant={campaignVariant}
+                size="sm"
+                onClick={() => app.startPracticeOpening(app.practiceOpening)}
+              >
+                <IconReset className="game-screen__btn-icon" aria-hidden="true" /> Retry
+              </Button>
+              <Button
+                variant={campaignVariant}
+                size="sm"
+                onClick={() => app.startPracticePicker()}
+              >
+                <IconFortress className="game-screen__btn-icon" aria-hidden="true" /> Exit
+              </Button>
+            </>
+          ) : (
+            <Button variant={campaignVariant} size="sm" onClick={() => window.location.reload()}>
+              <IconReset className="game-screen__btn-icon" aria-hidden="true" /> New Battle
+            </Button>
+          )}
           <Button
             variant={campaignVariant}
             size="sm"
