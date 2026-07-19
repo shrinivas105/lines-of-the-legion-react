@@ -10,12 +10,12 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 4px;
-  /* Modest vertical padding for the current-rank badge's glow pulse
-     (box-shadow blur up to ~16px) — no longer needs to accommodate a
-     scale-up transform, since the current badge stays the same size as
-     the rest now (see .legion-path__step--current below). */
-  padding: 12px 4px 10px;
+  gap: 6px;
+  /* Even padding on all sides: the status ring (green/orange/red) extends
+     ~4px beyond each badge's own box via box-shadow. The previous 4px
+     horizontal padding left almost no margin for that ring on the
+     leftmost badge, so it clipped against the row's own edge. */
+  padding: 14px 12px 12px;
   /* Safety net: rather than let the row clip/overflow past the screen
      edge on unusually narrow viewports, let it scroll horizontally as a
      last resort — on ordinary screens it fits and no scrollbar appears. */
@@ -100,9 +100,9 @@
    further padding/object-fit tweaks. RankBadge's size="md" is only used
    here, so this is scoped locally rather than changing the shared default. */
 .legion-path__node .rank-badge--md {
-  width: 60px;
-  height: 60px;
-  font-size: 1.3rem;
+  width: 42px;
+  height: 42px;
+  font-size: 0.95rem;
 }
 
 .legion-path__label {
@@ -180,7 +180,7 @@
 @media (max-width: 480px) {
   .legion-path__steps {
     gap: 4px;
-    padding: 2px 2px;
+    padding: 12px 10px 10px;
   }
 
   .legion-path__connector {
@@ -208,9 +208,9 @@
   }
 
   .legion-path__node .rank-badge--md {
-    width: 36px;
-    height: 36px;
-    font-size: 0.8rem;
+    width: 26px;
+    height: 26px;
+    font-size: 0.65rem;
   }
 
   .legion-path__label {
