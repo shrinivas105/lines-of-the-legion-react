@@ -1,7 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="44" height="44">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="100%" height="100%">
   <g fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Top King Cross (Bright Polished Gold) -->
-    <path d="M 22 2 L 22 8 M 18 4 L 26 4" stroke="#D4AF37" stroke-width="2.5" />
+    <!-- Top King Ornament: Globus Cruciger (Orb & Cross, Bright Polished Gold) -->
+    <circle cx="22" cy="3.2" r="1.7" fill="#D4AF37" stroke="#000000" stroke-width="0.75" />
+    <path d="M 22 4.9 L 22 9.5 M 18.5 6.8 L 25.5 6.8" stroke="#D4AF37" stroke-width="2.75" />
     
     <!-- Heavy Imperial Crown / Wreath Hybrid Base (Widened) -->
     <path d="M 12 11 L 16 7 L 22 9 L 28 7 L 32 11 Z" fill="#D4AF37" />
