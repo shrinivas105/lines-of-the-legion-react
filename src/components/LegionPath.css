@@ -10,7 +10,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
+  gap: 4px;
   /* Generous vertical padding: the current-rank badge scales up to 1.12x
      and pulses with a glowing box-shadow (blur up to ~26px). Since this
      row clips vertically (see overflow-y below), the padding has to be
@@ -61,7 +61,7 @@
 /* thicker, more confident connecting line between ranks, tinted by the
    active campaign accent once the line has been "conquered" */
 .legion-path__connector {
-  flex: 0 0 26px;
+  flex: 0 0 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,13 +86,17 @@
   justify-content: center;
 }
 
-/* Ladder badges get a small bump over the base --md size (40px -> 46px)
-   — RankBadge's size="md" is only used here, so this is scoped locally
-   rather than changing the shared default. */
+/* Ladder badges get a real size bump over the base --md size (40px -> 60px,
+   up from an earlier 46px). At 46px the coin artwork's decorative border
+   and engraved rank name were too few pixels to render at all — they just
+   blurred into the background, which *looked* like a hard crop even
+   though nothing was actually being cut off. Sizing up is the fix, not
+   further padding/object-fit tweaks. RankBadge's size="md" is only used
+   here, so this is scoped locally rather than changing the shared default. */
 .legion-path__node .rank-badge--md {
-  width: 46px;
-  height: 46px;
-  font-size: 1.05rem;
+  width: 60px;
+  height: 60px;
+  font-size: 1.3rem;
 }
 
 .legion-path__label {
@@ -181,15 +185,15 @@
   }
 
   .legion-path__connector {
-    flex-basis: 12px;
+    flex-basis: 10px;
     font-size: 0.75rem;
     margin-top: 8px;
   }
 
   .legion-path__node .rank-badge--md {
-    width: 28px;
-    height: 28px;
-    font-size: 0.7rem;
+    width: 42px;
+    height: 42px;
+    font-size: 0.9rem;
   }
 
   .legion-path__label {
@@ -205,9 +209,9 @@
   }
 
   .legion-path__node .rank-badge--md {
-    width: 24px;
-    height: 24px;
-    font-size: 0.6rem;
+    width: 36px;
+    height: 36px;
+    font-size: 0.8rem;
   }
 
   .legion-path__label {
