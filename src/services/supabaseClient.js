@@ -172,7 +172,7 @@ export async function fetchPracticeOpenings() {
   }
 }
 
-// Inserts one row for the current user. The 20-cap is enforced by a
+// Inserts one row for the current user. The configured cap is enforced by a
 // database trigger (see supabase/migrations) — this surfaces that
 // rejection as a normal { success: false } result rather than throwing.
 export async function insertPracticeOpening(row) {

@@ -28,7 +28,7 @@ import { fetchPracticeOpenings, insertPracticeOpening, deletePracticeOpening } f
 const USER_ROWS_KEY = 'practiceOpeningsUserLines';
 const DELETED_BASE_KEY = 'practiceOpeningsDeletedBaseRows';
 const DEFAULT_CATEGORY = 'My Openings';
-export const MAX_OPENINGS = 20;
+export const MAX_OPENINGS = 60;
 
 function makeClientId() {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
@@ -110,7 +110,7 @@ function normalizeQualityStat(value) {
 // `source` here distinguishes how the row was created for display/analytics
 // purposes ('user' = manual entry or CSV import, 'captured' = the Analysis
 // screen's "Add to Practice" button) — both count identically toward the
-// 20-cap and both sync to the cloud the same way.
+// configured opening cap and both sync to the cloud the same way.
 export function addOpening({ name, fen, orientation, mode, category, source, moveNumber, topMoveChoices, qualityTrackedMoves }) {
   const row = {
     clientId: makeClientId(),
